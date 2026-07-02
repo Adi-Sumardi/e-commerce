@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -43,6 +44,13 @@ const SORT_OPTIONS = [
   { label: "Harga: Tertinggi", value: "price-desc" },
   { label: "Rating Tertinggi", value: "rating" },
 ];
+
+export const metadata: Metadata = {
+  title: "Semua Produk",
+  description:
+    "Jelajahi katalog produk Pratama Jaya: elektronik, fashion, rumah tangga, kecantikan, hobi & gaming, hingga sembako dengan harga terbaik.",
+  alternates: { canonical: "/products" },
+};
 
 export default async function ProductsPage({
   searchParams,

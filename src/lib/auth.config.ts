@@ -4,6 +4,9 @@ import type { NextAuthConfig } from "next-auth";
 // Prisma Client atau bcryptjs di sini — keduanya Node-only dan akan gagal di Edge runtime.
 // Provider (Credentials/Google) ditambahkan di src/lib/auth.ts untuk Node runtime.
 export const authConfig = {
+  // Di belakang reverse proxy Hostinger, host asli datang dari header X-Forwarded-Host.
+  // Tanpa ini NextAuth menolak semua request dengan error UntrustedHost (HTTP 503).
+  trustHost: true,
   pages: {
     signIn: "/login",
   },

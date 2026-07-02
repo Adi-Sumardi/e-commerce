@@ -1,3 +1,5 @@
+import { cache } from "react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import {
   BatteryCharging,
@@ -33,12 +35,41 @@ import { StarRating } from "@/components/shared/star-rating";
 import { notFound } from "next/navigation";
 import { CatalogService } from "@/server/services/catalog-service";
 import { auth } from "@/lib/auth";
+import { SITE_URL } from "@/lib/site";
 import { formatIDR } from "../../_data";
 
 const SPEC_ICONS = {
   battery: BatteryCharging,
   bluetooth: Bluetooth,
 } as const;
+
+// Dipakai oleh generateMetadata DAN page — cache() memastikan query DB cuma sekali.
+const getProductDetail = cache((slug: string) => CatalogService.getProductDetail(slug));
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const product = await getProductDetail(slug);
+  if (!product) {
+    return { title: "Produk tidak ditemukan" };
+  }
+
+  const description = product.description.replace(/\s+/g, " ").slice(0, 160);
+  return {
+    title: product.name,
+    description,
+    alternates: { canonical: `/products/${product.slug}` },
+    openGraph: {
+      title: product.name,
+      description,
+      url: `/products/${product.slug}`,
+      images: product.images.slice(0, 1).map((img) => ({ url: img.url, alt: img.alt })),
+    },
+  };
+}
 
 export default async function ProductDetailPage({
   params,
@@ -47,7 +78,7 @@ export default async function ProductDetailPage({
 }) {
   const { slug } = await params;
   const [product, session] = await Promise.all([
-    CatalogService.getProductDetail(slug),
+    getProductDetail(slug),
     auth(),
   ]);
 
@@ -55,8 +86,39 @@ export default async function ProductDetailPage({
     notFound();
   }
 
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description,
+    image: product.images.map((img) => img.url),
+    sku: product.colors[0]?.sku,
+    brand: { "@type": "Brand", name: product.storeName },
+    offers: {
+      "@type": "Offer",
+      url: `${SITE_URL}/products/${product.slug}`,
+      priceCurrency: "IDR",
+      price: product.price,
+      availability:
+        product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+    },
+    ...(product.reviews.length > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: product.rating,
+            reviewCount: product.reviews.length,
+          },
+        }
+      : {}),
+  };
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
       <SiteHeader />
       <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 lg:px-8">
         <Breadcrumb className="mb-6">

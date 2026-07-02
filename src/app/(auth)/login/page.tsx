@@ -1,7 +1,11 @@
-import Link from "next/image";
-import NextLink from "next/link";
+import type { Metadata } from "next";
 import { ShoppingBasket } from "lucide-react";
 import { LoginForm } from "./login-form";
+
+export const metadata: Metadata = {
+  title: "Masuk",
+  robots: { index: false, follow: false },
+};
 
 export default async function LoginPage({
   searchParams,

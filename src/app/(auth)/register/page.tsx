@@ -1,7 +1,12 @@
-import Link from "next/image";
+import type { Metadata } from "next";
 import NextLink from "next/link";
 import { ShoppingBasket } from "lucide-react";
 import { RegisterForm } from "./register-form";
+
+export const metadata: Metadata = {
+  title: "Daftar Akun",
+  robots: { index: false, follow: false },
+};
 
 export default function RegisterPage() {
   return (

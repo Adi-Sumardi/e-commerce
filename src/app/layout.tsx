@@ -5,6 +5,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { StorefrontSessionProvider } from "@/components/storefront/storefront-session-provider";
 import { AuthToast } from "@/components/shared/auth-toast";
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -22,13 +23,32 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pratama Jaya | Belanja Online Terpercaya",
-  description: "Toko online lengkap dengan pembayaran Xendit & pengiriman Biteship.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} | Belanja Online Terpercaya`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: "website",
+    locale: "id_ID",
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} | Belanja Online Terpercaya`,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Pratama Jaya",
+    title: SITE_NAME,
   },
 };
 

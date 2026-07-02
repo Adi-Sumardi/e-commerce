@@ -8,7 +8,11 @@ allowBuilds:
   "@prisma/client": true
   "@prisma/engines": true
   prisma: true
-  esbuild: true
+  # esbuild sengaja false KHUSUS builder Hostinger (pnpm 11): postinstall-nya
+  # cuma validasi versi binary, dan gagal EACCES di sana. esbuild hanya dipakai
+  # tsx untuk seed, yang tidak jalan di builder. Di lokal (pnpm 10, daftar
+  # onlyBuiltDependencies di bawah) tetap diizinkan.
+  esbuild: false
   sharp: false
   unrs-resolver: false
 

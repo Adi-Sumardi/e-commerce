@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import { Store, Bell, Shield, Database, Landmark, QrCode } from "lucide-react";
+import { Store, Bell, Shield, Landmark, QrCode } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { AdminTopbar } from "@/components/admin/admin-topbar";
@@ -8,13 +8,14 @@ import { ConfirmDeleteButton } from "@/components/admin/confirm-delete-button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { PaymentChannelFormDialog } from "./payment-channel-form-dialog";
 import {
   createPaymentChannelAction,
   updatePaymentChannelAction,
   deletePaymentChannelAction,
 } from "./payment-channel-actions";
+import { getStoreSettingsAction } from "./store-settings-actions";
+import { StoreSettingsForm } from "./store-settings-form";
 
 export default async function AdminSettingsPage() {
   const session = await auth();
@@ -24,6 +25,7 @@ export default async function AdminSettingsPage() {
 
   const user = session.user as any;
   const paymentChannels = await db.paymentChannel.findMany({ orderBy: { sortOrder: "asc" } });
+  const storeSettings = await getStoreSettingsAction();
 
   return (
     <>
@@ -43,37 +45,15 @@ export default async function AdminSettingsPage() {
             <Store className="size-5 text-primary" />
             <h2 className="text-base font-semibold">Informasi Toko</h2>
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="store-name">Nama Toko</Label>
-              <Input id="store-name" defaultValue="Pratama Jaya" readOnly className="bg-muted/50" />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="store-email">Email Toko</Label>
-              <Input id="store-email" defaultValue="info@pratamajaya.com" readOnly className="bg-muted/50" />
-            </div>
-            <div className="col-span-2 flex flex-col gap-1.5">
-              <Label htmlFor="store-desc">Deskripsi Toko</Label>
-              <Textarea
-                id="store-desc"
-                defaultValue="Toko online terpercaya untuk kebutuhan Anda. Kualitas terjamin, pengiriman cepat."
-                rows={3}
-                readOnly
-                className="bg-muted/50 resize-none"
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="store-phone">Nomor Telepon</Label>
-              <Input id="store-phone" defaultValue="+62 812-3456-7890" readOnly className="bg-muted/50" />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="store-wa">WhatsApp</Label>
-              <Input id="store-wa" defaultValue="+62 812-3456-7890" readOnly className="bg-muted/50" />
-            </div>
-          </div>
-          <p className="mt-3 text-xs text-muted-foreground">
-            * Pengaturan toko dikonfigurasi langsung melalui environment variables atau konfigurasi server.
-          </p>
+          <StoreSettingsForm
+            initialValues={{
+              name: storeSettings.name,
+              email: storeSettings.email,
+              description: storeSettings.description,
+              phone: storeSettings.phone,
+              whatsapp: storeSettings.whatsapp,
+            }}
+          />
         </section>
 
         {/* Account Info */}
@@ -137,29 +117,6 @@ export default async function AdminSettingsPage() {
           <p className="mt-3 text-xs text-muted-foreground">
             * Pengaturan notifikasi email memerlukan konfigurasi SMTP di environment.
           </p>
-        </section>
-
-        {/* System Info */}
-        <section className="rounded-xl border border-border bg-card p-6">
-          <div className="mb-4 flex items-center gap-2">
-            <Database className="size-5 text-primary" />
-            <h2 className="text-base font-semibold">Informasi Sistem</h2>
-          </div>
-          <div className="grid grid-cols-2 gap-3 text-sm">
-            {[
-              { label: "Framework", value: "Next.js App Router" },
-              { label: "Database", value: "PostgreSQL (Prisma v6)" },
-              { label: "Auth", value: "Auth.js v5 (Credentials)" },
-              { label: "Payment", value: `Transfer Manual (${paymentChannels.filter((c) => c.isActive).length} aktif)` },
-              { label: "Shipping", value: "Biteship API" },
-              { label: "Deployment", value: "Local Development" },
-            ].map(({ label, value }) => (
-              <div key={label} className="flex flex-col gap-0.5">
-                <span className="text-xs text-muted-foreground">{label}</span>
-                <span className="font-medium text-foreground">{value}</span>
-              </div>
-            ))}
-          </div>
         </section>
         </div>
 

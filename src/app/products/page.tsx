@@ -27,16 +27,6 @@ import { CatalogService } from "@/server/services/catalog-service";
 import { formatIDR } from "../_data";
 import { SidebarFilters } from "./sidebar-filters";
 
-const CATEGORY_NAV = [
-  { label: "Semua Produk", slug: "" },
-  { label: "Elektronik", slug: "elektronik" },
-  { label: "Fashion", slug: "fashion" },
-  { label: "Hobi & Gaming", slug: "hobi-gaming" },
-  { label: "Kecantikan", slug: "kecantikan" },
-  { label: "Rumah Tangga", slug: "rumah-tangga" },
-  { label: "Sembako", slug: "sembako" },
-];
-
 const SORT_OPTIONS = [
   { label: "Terlaris", value: "best-seller" },
   { label: "Terbaru", value: "newest" },
@@ -87,6 +77,7 @@ export default async function ProductsPage({
     sort,
   });
 
+  const categoryNavItems = [{ label: "Semua Produk", slug: "" }, ...categories.map((c) => ({ label: c.name, slug: c.slug }))];
   const activeCategory = categories.find((c) => c.slug === category);
   
   let pageTitle = activeCategory?.name ?? "Semua Produk";
@@ -144,7 +135,7 @@ export default async function ProductsPage({
               <div>
                 <h2 className="mb-4 text-base font-bold text-foreground">Kategori</h2>
                 <ul className="space-y-1">
-                  {CATEGORY_NAV.map((item) => {
+                  {categoryNavItems.map((item) => {
                     const isActive = (item.slug === "" && !category) || item.slug === category;
                     return (
                       <li key={item.slug}>

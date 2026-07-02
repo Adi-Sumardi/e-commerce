@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { FileUploadInput } from "@/components/shared/file-upload-input";
 import {
   Dialog,
   DialogContent,
@@ -35,8 +36,13 @@ export function BannerFormDialog({ mode, action, initialValues }: BannerFormDial
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [isActive, setIsActive] = useState(initialValues?.isActive ?? true);
+  const [imageUrl, setImageUrl] = useState(initialValues?.imageUrl ?? "");
 
   function handleSubmit(formData: FormData) {
+    if (!imageUrl) {
+      toast.error("Upload dulu gambar banner-nya.");
+      return;
+    }
     startTransition(async () => {
       try {
         await action(formData);
@@ -113,21 +119,13 @@ export function BannerFormDialog({ mode, action, initialValues }: BannerFormDial
                 <strong className="text-foreground">600 × 270 px</strong> (rasio 2.2:1 juga, cuma lebih kecil).
               </p>
               <p>Format JPG/PNG/WebP, maksimal ±500KB. Teks penting taruh di area kiri/tengah (bagian kanan gambar akan sedikit tertutup gradasi gelap).</p>
-              <p>
-                Setelah export dari Canva, upload ke layanan hosting gambar (mis. imgur.com, atau Cloudinary/S3 kalau sudah
-                dikonfigurasi), lalu tempel URL gambarnya ke kolom di bawah ini.
-              </p>
+              <p>Setelah export dari Canva, upload langsung lewat tombol di bawah ini.</p>
             </div>
           </div>
           <div className="flex flex-col gap-1">
-            <Label htmlFor={`${idPrefix}-imageUrl`}>URL Gambar</Label>
-            <Input
-              id={`${idPrefix}-imageUrl`}
-              name="imageUrl"
-              placeholder="https://images.unsplash.com/..."
-              defaultValue={initialValues?.imageUrl}
-              required
-            />
+            <Label htmlFor={`${idPrefix}-imageUrl`}>Gambar Banner</Label>
+            <FileUploadInput value={imageUrl} onChange={setImageUrl} label="Upload Gambar Banner" />
+            <input type="hidden" id={`${idPrefix}-imageUrl`} name="imageUrl" value={imageUrl} readOnly />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1">

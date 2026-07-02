@@ -1,0 +1,418 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Premium Wireless Headphones | TokoKita</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#943700",
+                    "surface-container": "#ededf9",
+                    "secondary-fixed-dim": "#ffb690",
+                    "inverse-on-surface": "#f0f0fb",
+                    "secondary-container": "#fd761a",
+                    "on-surface": "#191b23",
+                    "tertiary-fixed-dim": "#ffb596",
+                    "surface-dim": "#d9d9e5",
+                    "outline": "#737686",
+                    "on-tertiary-fixed": "#360f00",
+                    "surface-container-high": "#e7e7f3",
+                    "inverse-surface": "#2e3039",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#faf8ff",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-container-low": "#f3f3fe",
+                    "background": "#faf8ff",
+                    "surface-variant": "#e1e2ed",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-container": "#eeefff",
+                    "on-secondary-fixed-variant": "#783200",
+                    "primary": "#004ac6",
+                    "tertiary-fixed": "#ffdbcd",
+                    "error-container": "#ffdad6",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-secondary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#bc4800",
+                    "secondary-fixed": "#ffdbca",
+                    "surface-bright": "#faf8ff",
+                    "surface-container-highest": "#e1e2ed",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#0053db",
+                    "on-tertiary-container": "#ffede6",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#7d2d00",
+                    "on-secondary-fixed": "#341100",
+                    "primary-fixed": "#dbe1ff",
+                    "on-error": "#ffffff",
+                    "on-background": "#191b23",
+                    "secondary": "#9d4300",
+                    "outline-variant": "#c3c6d7",
+                    "on-surface-variant": "#434655",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "on-secondary-container": "#5c2400",
+                    "on-primary-fixed": "#00174b",
+                    "primary-container": "#2563eb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "margin-desktop": "auto",
+                    "base": "4px",
+                    "xl": "32px",
+                    "md": "16px",
+                    "max-width-desktop": "1280px",
+                    "sm": "8px",
+                    "margin-mobile": "16px",
+                    "2xl": "48px",
+                    "xs": "4px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "display": ["Inter"],
+                    "title-lg": ["Inter"],
+                    "label-md": ["Geist"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "display": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .active-dot {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- Top Navigation Bar -->
+<header class="bg-surface shadow-sm sticky top-0 z-50">
+<div class="flex justify-between items-center px-md lg:px-xl w-full max-w-max-width-desktop mx-auto h-16">
+<div class="flex items-center gap-lg">
+<h1 class="font-display text-display text-primary tracking-tight">Pratama Jaya</h1>
+<nav class="hidden md:flex gap-md items-center">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md text-body-md" href="#">Shop</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">Explore</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md" href="#">Deals</a>
+</nav>
+</div>
+<div class="flex-1 max-w-md mx-8 hidden lg:block">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 focus:ring-2 focus:ring-primary/25" placeholder="Search for headphones..." type="text">
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-2 hover:bg-surface-variant rounded-full relative">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="shopping_cart">shopping_cart</span>
+<span class="absolute top-1 right-1 w-4 h-4 bg-secondary text-on-secondary text-[10px] flex items-center justify-center rounded-full">2</span>
+</button>
+<button class="p-2 hover:bg-surface-variant rounded-full">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="notifications">notifications</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-1"></div>
+<button class="flex items-center gap-2 hover:bg-surface-variant px-3 py-1.5 rounded-full transition-all">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="account_circle">account_circle</span>
+<span class="text-body-md font-medium">Account</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-max-width-desktop mx-auto px-md lg:px-xl py-lg">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 text-label-md font-label-md text-on-surface-variant mb-lg">
+<a class="hover:text-primary" href="#">Home</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-primary" href="#">Electronics</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-primary" href="#">Audio</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface font-semibold">Premium Wireless Headphones</span>
+</nav>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-xl">
+<!-- Product Gallery (Bento Style) -->
+<div class="lg:col-span-7">
+<div class="grid grid-cols-4 grid-rows-4 gap-sm h-[500px] lg:h-[600px]">
+<div class="col-span-4 row-span-3 rounded-xl overflow-hidden shadow-sm relative group">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A professional studio product shot of sleek, matte black over-ear wireless headphones. The lighting is dramatic and moody with deep shadows and soft blue rim lights, emphasizing the metallic texture and premium build quality. The background is a minimalist, dark slate gray, creating a high-end corporate aesthetic for the TokoKita electronics brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLdXtyHM4y-aiZMfManB8zsHdMlkY1yDBsHUeFflrcDxJdywaMmlNtNjoRfuhrqANqc4eCTJ-MqzaT5dFzBJhiRnHXI4OXow4CTLEmg7FjJXdQDwIKUu5-wTc4I1UVXG-xn9ve7iuEKswD49SMf9h-FLFoeWK_Q1bu_RZOOAsEayrzUEQgoV6ACLU63Nh0f9iFKsj6o4g2Pq3lQFELGJxRr7B8fJzDiyAe73zriZONUitnIVOQbrFiKQ">
+<button class="absolute top-4 right-4 bg-white/90 p-2 rounded-full shadow-lg hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="favorite" style="font-variation-settings: 'FILL' 0;">favorite</span>
+</button>
+</div>
+<div class="col-span-1 row-span-1 rounded-xl overflow-hidden border-2 border-primary">
+<img class="w-full h-full object-cover cursor-pointer" data-alt="Close-up detail of the cushioned ear cups of the premium wireless headphones, showing the soft leather texture and fine stitching. Soft, warm natural lighting highlights the comfort-focused design in a modern living room setting. The TokoKita brand colors are reflected in the clean, white background tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDilUBUpvRK77J-CpjcIRVm5TYxzwxu35VDQbnZet8R82hGjmDvl-G0tMhZCBDiLk76VpBweZcT2BUDMbfqVLmmE6Ibpy37KfoONBH-4yPUqW2NvaXyFsQRKr-QdrS68Qg2wGqr1fREd9mkhQOGspYKW6PjIcCIRHVPTcVOML5A3UwbHt1sy7PmF7xE2qej8elMnxJF4sY6sc1NT7meD1UdTeMZhZUect7XgFRIJhqk39BDLedkPg3cfA">
+</div>
+<div class="col-span-1 row-span-1 rounded-xl overflow-hidden opacity-60 hover:opacity-100 transition-opacity">
+<img class="w-full h-full object-cover cursor-pointer" data-alt="A lifestyle shot of the headphones being folded into their compact travel case. The scene is bright and airy with high-key lighting, featuring a modern oak desk and a few minimalist tech accessories. Professional photography style for a reliable partner brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0us_Jk0oGRi03RRy76ZXlk9_e0wrzPKFAhLeXY3bMu1CU4uhUqMR4-52LjsBTtztK3132O2wp6n9agfeDAYqy0edIyNK-Zv4T_l6-saXciWwQ9zusJLCQMjT2Bj9_oUrV__j6_YJJLtzxoIz6WEzi3Ctv47N0pmhSAxlawevKD2H5ZeR7ZgHBXd-d-6RiMFnKA5sGHtyWiEzvN8-7gotRqEzJIkXMHIEKAJYA-g23sRBst7LC6eZzDA">
+</div>
+<div class="col-span-1 row-span-1 rounded-xl overflow-hidden opacity-60 hover:opacity-100 transition-opacity">
+<img class="w-full h-full object-cover cursor-pointer" data-alt="Minimalist technical view of the headphones' control buttons on the side, highlighting the metallic finish and precision-engineered inputs. The aesthetic is clean and professional with neutral gray background and sharp focus on industrial design elements." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAT6uiuAOnU2UFHYQWeOFes10dG3vnp3QkL30mn4k6o7vhxHYj9YAdrMKmi_puSYejzBpP33MiEhpUfLR4wyEI5pTV98NPwgygzUKWX3UGpohIHIFOzB7HfkgDvXJJKtMI-ZQ-_aaYu9-yNWy8VBaNwFDbBNunm4l9K9xdW3U53rKlHQxWucwSi0ceCOB6eQn8Zvl_ZwKsPaiHJSX9eR2uqthYhvtUIxEwRcef8lP2vvQAhRfsApdX3Iw">
+</div>
+<div class="col-span-1 row-span-1 rounded-xl overflow-hidden relative opacity-60 hover:opacity-100 transition-opacity group">
+<img class="w-full h-full object-cover cursor-pointer" data-alt="Wide shot of the headphones displayed on a sleek aluminum stand next to a high-end laptop. Elegant office environment with soft bokeh background and cool blue accents. Corporate professional style with emphasis on efficiency and technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFze1uapj3ZVM581qLVAvXbFYXn3KsiCgfRu7IJDtONDQP1bu-hs9DVZanW3jIdVE6APpHanYJrw1QRUT9xRPV9xzBXSJw4j6j9Xmvbd5rjjDXRFaosGTd1GJH0yksBJMDe9rKvQxANe4Me0TUTtly_0zLC4nheZGTHZM1XSFAOhLGl7Sx_lLj4StFrUQ3T2ph9MiPGWhe-crZVGoMTj9WET3Mfw1Rs1sWNAHx2xmtku_qEQWT9BKqiQ">
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center text-white font-bold text-label-md">+4</div>
+</div>
+</div>
+</div>
+<!-- Product Info -->
+<div class="lg:col-span-5 flex flex-col gap-lg">
+<section>
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-primary-container text-on-primary-container px-2 py-0.5 rounded text-label-md font-label-md">Official Store</span>
+<span class="text-on-surface-variant text-label-md">Pratama Jaya</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg lg:text-headline-lg mb-2">Premium Wireless Headphones v2</h2>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-body-lg">4.9</span>
+<span class="text-on-surface-variant text-body-md">(2.1k Reviews)</span>
+</div>
+<div class="w-[1px] h-4 bg-outline-variant"></div>
+<span class="text-on-surface-variant text-body-md">Terjual 5.4k+</span>
+</div>
+</section>
+<section class="bg-surface-container-low p-md rounded-xl">
+<div class="text-headline-md font-bold text-on-surface mb-1">Rp 2.499.000</div>
+<div class="flex items-center gap-2">
+<span class="bg-error-container text-error px-2 py-0.5 rounded-full text-label-md font-bold">15% OFF</span>
+<span class="text-on-surface-variant line-through text-body-md">Rp 2.940.000</span>
+</div>
+</section>
+<section class="flex flex-col gap-md">
+<div>
+<h3 class="font-title-lg text-title-lg mb-sm">Pilih Warna: <span class="text-on-surface-variant font-normal" id="color-label">Black</span></h3>
+<div class="flex gap-sm">
+<button class="w-12 h-12 rounded-full bg-[#191B23] border-4 border-primary ring-2 ring-transparent transition-all hover:scale-105 active:scale-95" onclick="updateColor('Black')"></button>
+<button class="w-12 h-12 rounded-full bg-[#E2E8F0] border-4 border-surface ring-2 ring-transparent transition-all hover:scale-105 active:scale-95" onclick="updateColor('Silver')"></button>
+</div>
+</div>
+<div>
+<h3 class="font-title-lg text-title-lg mb-sm">Jumlah</h3>
+<div class="flex items-center gap-4">
+<div class="flex items-center border border-outline-variant rounded-lg p-1 bg-surface">
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-variant rounded transition-colors" onclick="changeQty(-1)">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<input class="w-12 text-center border-none focus:ring-0 bg-transparent font-bold" id="qty" min="1" type="number" value="1">
+<button class="w-8 h-8 flex items-center justify-center hover:bg-surface-variant rounded transition-colors" onclick="changeQty(1)">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+<span class="text-on-surface-variant text-body-md">Stok: <span class="font-bold text-on-surface">142</span></span>
+</div>
+</div>
+</section>
+<!-- Transaction Actions -->
+<div class="flex flex-col gap-sm mt-4">
+<div class="grid grid-cols-2 gap-md">
+<button class="bg-surface border-2 border-primary text-primary py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary-container/10 transition-colors">
+<span class="material-symbols-outlined" data-icon="add_shopping_cart">add_shopping_cart</span>
+                            Keranjang
+                        </button>
+<button class="bg-secondary text-on-secondary py-3 rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all shadow-md">
+                            Beli Sekarang
+                        </button>
+</div>
+<div class="flex items-center justify-center gap-4 mt-2 py-2 border-t border-outline-variant/30">
+<button class="flex items-center gap-1 text-on-surface-variant text-label-md hover:text-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="chat">chat</span>
+                            Chat
+                        </button>
+<div class="w-[1px] h-3 bg-outline-variant"></div>
+<button class="flex items-center gap-1 text-on-surface-variant text-label-md hover:text-primary">
+<span class="material-symbols-outlined text-[18px]" data-icon="share">share</span>
+                            Bagikan
+                        </button>
+</div>
+</div>
+<!-- Kurir Selector & Payment Chips -->
+<section class="border border-outline-variant rounded-xl p-md flex flex-col gap-md">
+<div>
+<h4 class="font-title-lg text-title-lg mb-2">Pengiriman</h4>
+<div class="flex items-center justify-between p-3 bg-surface-container rounded-lg cursor-pointer hover:bg-surface-container-high transition-colors">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="local_shipping">local_shipping</span>
+<div>
+<p class="font-bold text-body-md">Reguler (Gratis Ongkir)</p>
+<p class="text-on-surface-variant text-label-md">Estimasi tiba 24 - 26 Okt</p>
+</div>
+</div>
+<span class="material-symbols-outlined">chevron_right</span>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- Detail Tabs & Reviews -->
+<section class="mt-2xl">
+<div class="border-b border-outline-variant flex gap-xl mb-lg">
+<button class="pb-4 text-primary border-b-4 border-primary font-bold">Deskripsi</button>
+<button class="pb-4 text-on-surface-variant hover:text-on-surface transition-colors font-medium">Spesifikasi</button>
+<button class="pb-4 text-on-surface-variant hover:text-on-surface transition-colors font-medium">Review (2.1k)</button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-xl">
+<!-- Content -->
+<div class="lg:col-span-2 space-y-lg">
+<article class="prose max-w-none text-on-surface-variant">
+<p class="text-body-lg leading-relaxed">
+                            Nikmati kualitas audio kelas dunia dengan <strong>Pratama Jaya Headphones v2</strong>. Dirancang untuk para profesional dan pecinta musik yang tidak ingin berkompromi dengan kualitas. Dilengkapi dengan Active Noise Cancelling (ANC) tingkat lanjut yang mampu meredam kebisingan sekitar hingga 98%, memberikan Anda fokus total dalam setiap nada.
+                        </p>
+<ul class="grid grid-cols-1 md:grid-cols-2 gap-md mt-lg list-none p-0">
+<li class="flex items-start gap-3 p-4 bg-surface-container-low rounded-xl">
+<span class="material-symbols-outlined text-primary" data-icon="battery_charging_full">battery_charging_full</span>
+<div>
+<p class="font-bold text-on-surface">Battery Life</p>
+<p class="text-body-md">Hingga 40 jam pemakaian terus menerus.</p>
+</div>
+</li>
+<li class="flex items-start gap-3 p-4 bg-surface-container-low rounded-xl">
+<span class="material-symbols-outlined text-primary" data-icon="bluetooth">bluetooth</span>
+<div>
+<p class="font-bold text-on-surface">Konektivitas</p>
+<p class="text-body-md">Bluetooth 5.2 dengan multipoint connection.</p>
+</div>
+</li>
+</ul>
+</article>
+<!-- Reviews Section -->
+<div class="pt-2xl border-t border-outline-variant">
+<h3 class="font-headline-md text-headline-md mb-lg">Ulasan Pembeli</h3>
+<div class="space-y-xl">
+<!-- Review Card 1 -->
+<div class="flex flex-col gap-md pb-lg border-b border-outline-variant/30">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold">A</div>
+<div>
+<p class="font-bold text-on-surface">Andi Wijaya</p>
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<span class="text-on-surface-variant text-label-md">2 hari yang lalu</span>
+</div>
+<p class="text-body-md italic text-on-surface-variant">"Suaranya jernih banget, bass-nya dapet tapi nggak berlebihan. ANC-nya juara buat dipake di kantor yang berisik. Seller juga responsif banget!"</p>
+<div class="flex gap-2">
+<img class="w-20 h-20 rounded-lg object-cover" data-alt="Close-up photograph of the headphones being unboxed by a customer on a clean white table, showing the premium packaging and protection. Warm domestic lighting creates a trustworthy consumer review atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuw7qx6F8e4TeVLeElp5KzxLLLoUpkFyMAQlzkpkXS0Mawce8E_T7sDz6rbR7a8aYeVJkwasQgOhvoOP_Ek2aX2FxecjpMGP6KUVi6EQX_-WHXHuLNaMg6xIIVBzqAAbhkXiWPFz0eKWZ1Md74bImvJJXFjZ-u3PvO0diyPXf9hAcSwIYAAsqlVFNoRzKhCTx53zT2WdEHiWYyqi--Lf9L5r1EkC0IIh2h7SFeawQJs0qQWn9OQYF83Q">
+</div>
+</div>
+<!-- Review Card 2 -->
+<div class="flex flex-col gap-md">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-bold">S</div>
+<div>
+<p class="font-bold text-on-surface">Siska Putri</p>
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-secondary text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<span class="text-on-surface-variant text-label-md">Seminggu yang lalu</span>
+</div>
+<p class="text-body-md italic text-on-surface-variant">"Barang original 100%, garansi resmi. Udah dicoba buat meeting zoom berjam-jam tetep nyaman di telinga."</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Content -->
+<aside class="space-y-lg">
+<div class="glass-card p-md rounded-2xl">
+<div class="flex items-center gap-3 mb-md">
+<div class="w-12 h-12 rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Modern office storefront logo for Pratama Jaya, featuring minimalist geometric shapes in primary blue and orange. Clean, reliable, and professional brand identity representation for an Indonesian electronics retailer." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCzoyZKBh7VKY0hHRhtle54JfCXWDninWrZtqOmA-mLzyJMHPwoItMz0jMGAU_RRw4tzs1oR7zzkRKgM1m0-BcEc4if0kodyVPG3MlAY-d_bGX6yi55MR4Pl8SdNfDPca37lZdt-6Bnbcx2o2Df06GYYneYZE3fYBpQTO1LUQn8P_JFtOMzDWaoPUGwhDyJqBtkryyQaCMGGFLjKMprqoWcSOch5Z3FsjUzUgypa11Zy6aEmL5jDarNg">
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Pratama Jaya</h4>
+<div class="flex items-center gap-1 text-label-md text-secondary">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="">Premium Seller</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-sm mb-md">
+<div class="text-center p-2 bg-surface rounded-lg border border-outline-variant/30">
+<p class="text-label-md text-on-surface-variant">Rating</p>
+<p class="font-bold text-body-md">4.9/5.0</p>
+</div>
+<div class="text-center p-2 bg-surface rounded-lg border border-outline-variant/30">
+<p class="text-label-md text-on-surface-variant">Pesanan</p>
+<p class="font-bold text-body-md">1.2jt+</p>
+</div>
+</div>
+<button class="w-full py-2 bg-primary text-on-primary rounded-lg font-bold text-body-md mb-2">Follow Toko</button>
+<button class="w-full py-2 bg-surface border border-outline-variant text-on-surface-variant rounded-lg font-bold text-body-md hover:bg-surface-variant">Kunjungi Toko</button>
+</div>
+<div class="p-md rounded-2xl border border-outline-variant bg-surface">
+<h4 class="font-bold mb-md">Promo Menarik</h4>
+<div class="flex flex-col gap-sm">
+<div class="p-3 bg-secondary-fixed text-on-secondary-fixed rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
+<span class="text-label-md font-bold">Cashback Rp 50.000</span>
+</div>
+<div class="p-3 bg-tertiary-fixed text-on-tertiary-fixed rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="redeem">redeem</span>
+<span class="text-label-md font-bold">Bonus Travel Case</span>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-highest border-t border-outline-variant mt-2xl">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-lg px-md lg:px-xl py-xl w-full max-w-max-width-desktop mx-auto">
+<div class="col-span-2 md:col-span-1">
+<h2 class="font-title-lg text-title-lg font-bold text-on-surface mb-md">Pratama Jaya</h2>
+<p class="text-on-surface-variant text-body-md mb-md">Solusi belanja kebutuhan teknologi terpercaya sejak 2018. Menghadirkan produk berkualitas dengan layanan terbaik.</p>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform">public</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform">share</span>
+</div></div></div></footer>
+
+</body></html>

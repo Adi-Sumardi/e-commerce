@@ -1,0 +1,436 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Order Tracking | TokoKita</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Theme Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#943700",
+                    "surface-container": "#ededf9",
+                    "secondary-fixed-dim": "#ffb690",
+                    "inverse-on-surface": "#f0f0fb",
+                    "secondary-container": "#fd761a",
+                    "on-surface": "#191b23",
+                    "tertiary-fixed-dim": "#ffb596",
+                    "surface-dim": "#d9d9e5",
+                    "outline": "#737686",
+                    "on-tertiary-fixed": "#360f00",
+                    "surface-container-high": "#e7e7f3",
+                    "inverse-surface": "#2e3039",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#faf8ff",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-container-low": "#f3f3fe",
+                    "background": "#faf8ff",
+                    "surface-variant": "#e1e2ed",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-container": "#eeefff",
+                    "on-secondary-fixed-variant": "#783200",
+                    "primary": "#004ac6",
+                    "tertiary-fixed": "#ffdbcd",
+                    "error-container": "#ffdad6",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-secondary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#bc4800",
+                    "secondary-fixed": "#ffdbca",
+                    "surface-bright": "#faf8ff",
+                    "surface-container-highest": "#e1e2ed",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#0053db",
+                    "on-tertiary-container": "#ffede6",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#7d2d00",
+                    "on-secondary-fixed": "#341100",
+                    "primary-fixed": "#dbe1ff",
+                    "on-error": "#ffffff",
+                    "on-background": "#191b23",
+                    "secondary": "#9d4300",
+                    "outline-variant": "#c3c6d7",
+                    "on-surface-variant": "#434655",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "on-secondary-container": "#5c2400",
+                    "on-primary-fixed": "#00174b",
+                    "primary-container": "#2563eb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "margin-desktop": "auto",
+                    "base": "4px",
+                    "xl": "32px",
+                    "md": "16px",
+                    "max-width-desktop": "1280px",
+                    "sm": "8px",
+                    "margin-mobile": "16px",
+                    "2xl": "48px",
+                    "xs": "4px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "display": ["Inter"],
+                    "title-lg": ["Inter"],
+                    "label-md": ["Geist"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "display": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .progress-line {
+            background: repeating-linear-gradient(90deg, #c3c6d7 0, #c3c6d7 4px, transparent 4px, transparent 8px);
+        }
+        .progress-line-active {
+            background: #004ac6;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- Top Navigation Bar (Shared Component Logic) -->
+<header class="bg-surface dark:bg-on-background shadow-sm fixed top-0 left-0 right-0 z-50">
+<div class="flex justify-between items-center px-md lg:px-xl w-full max-w-max-width-desktop mx-auto h-16">
+<div class="flex items-center gap-md">
+<span class="font-display text-display text-primary dark:text-primary-fixed">Pratama Jaya</span>
+</div>
+<div class="hidden md:flex items-center gap-lg">
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors font-body-md" href="#">Shop</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-body-md" href="#">My Orders</a>
+<a class="text-on-surface-variant dark:text-outline-variant hover:text-primary transition-colors font-body-md" href="#">Support</a>
+</div>
+<div class="flex items-center gap-md">
+<button class="p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-colors">
+<span class="material-symbols-outlined">shopping_cart</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-xs">
+                    PJ
+                </div>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-12 px-md lg:px-xl w-full max-w-max-width-desktop mx-auto">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-md mb-xl">
+<div>
+<nav class="flex items-center gap-xs text-on-surface-variant mb-xs">
+<span class="font-label-md text-label-md">My Orders</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="font-label-md text-label-md">#INV-20260701-001</span>
+</nav>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Track Your Shipment</h1>
+<p class="text-on-surface-variant font-body-md">Order from <span class="font-semibold">Pratama Jaya</span> • Estimated Arrival: July 5, 2024</p>
+</div>
+<div class="flex gap-sm">
+<button class="px-md py-sm border border-outline text-primary font-bold rounded-lg hover:bg-surface-container transition-all flex items-center gap-xs">
+<span class="material-symbols-outlined text-[20px]">help</span>
+                    Help Center
+                </button>
+<button class="px-md py-sm bg-primary text-on-primary font-bold rounded-lg hover:opacity-90 transition-all flex items-center gap-xs">
+<span class="material-symbols-outlined text-[20px]">print</span>
+                    Invoice
+                </button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<!-- Left Column: Tracking Visualization -->
+<div class="lg:col-span-8 space-y-lg">
+<!-- Progress Timeline Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-xl shadow-sm">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-xl gap-md">
+<div>
+<p class="text-on-surface-variant font-label-md uppercase tracking-wider mb-xs">Current Status</p>
+<div class="flex items-center gap-sm">
+<div class="h-3 w-3 bg-primary rounded-full animate-pulse"></div>
+<span class="font-headline-md text-headline-md text-primary">In Transit - Sorting Center</span>
+</div>
+</div>
+<div class="bg-secondary-container/10 px-md py-sm rounded-lg border border-secondary-container/20">
+<p class="text-on-secondary-container font-label-md">Courier Partner</p>
+<p class="font-bold text-on-surface flex items-center gap-xs">
+                                JNE Reguler 
+                                <span class="text-outline">|</span>
+<span class="text-primary cursor-pointer hover:underline">JNE12345678</span>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">content_copy</span>
+</p>
+</div>
+</div>
+<!-- Visual Progress Bar -->
+<div class="relative py-xl">
+<div class="absolute top-[50%] left-0 w-full h-[2px] progress-line -translate-y-1/2 z-0"></div>
+<div class="absolute top-[50%] left-0 w-[75%] h-[2px] progress-line-active -translate-y-1/2 z-0"></div>
+<div class="relative z-10 flex justify-between">
+<!-- Created -->
+<div class="flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg border-4 border-surface-container-lowest">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="mt-sm font-bold text-primary">Created</p>
+<p class="text-xs text-on-surface-variant">July 01, 10:20</p>
+</div>
+<!-- Paid -->
+<div class="flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg border-4 border-surface-container-lowest">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+<p class="mt-sm font-bold text-primary">Paid</p>
+<p class="text-xs text-on-surface-variant">July 01, 10:45</p>
+</div>
+<!-- Processing -->
+<div class="flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg border-4 border-surface-container-lowest">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">package_2</span>
+</div>
+<p class="mt-sm font-bold text-primary">Processing</p>
+<p class="text-xs text-on-surface-variant">July 02, 09:15</p>
+</div>
+<!-- Shipped -->
+<div class="flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-lg border-4 border-surface-container-lowest scale-110">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+</div>
+<p class="mt-sm font-bold text-primary">Shipped</p>
+<p class="text-xs text-on-surface-variant">July 02, 18:30</p>
+</div>
+<!-- Delivered -->
+<div class="flex flex-col items-center">
+<div class="w-10 h-10 rounded-full bg-outline-variant text-surface-container flex items-center justify-center shadow-none border-4 border-surface-container-lowest">
+<span class="material-symbols-outlined">home</span>
+</div>
+<p class="mt-sm font-bold text-outline-variant">Delivered</p>
+<p class="text-xs text-on-surface-variant">Expected July 05</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Status Log (Bento Style) -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<div class="p-md bg-surface-container-low border-b border-outline-variant flex justify-between items-center">
+<h2 class="font-title-lg text-title-lg text-on-surface">Detailed Tracking History</h2>
+<span class="px-sm py-1 bg-primary-container text-on-primary-container rounded-full text-xs font-bold uppercase">Real-time</span>
+</div>
+<div class="p-xl space-y-lg">
+<!-- Log Item 1 -->
+<div class="flex gap-lg">
+<div class="flex flex-col items-center">
+<div class="w-3 h-3 rounded-full bg-primary mt-1.5"></div>
+<div class="w-[2px] h-full bg-outline-variant/30 my-1"></div>
+</div>
+<div class="pb-lg">
+<p class="font-bold text-on-surface">Departed from Sorting Center - Jakarta Hub</p>
+<p class="text-on-surface-variant text-body-md mb-2">Package is on the way to the destination city hub.</p>
+<p class="font-label-md text-label-md text-outline">Today, 04:30 AM</p>
+</div>
+</div>
+<!-- Log Item 2 -->
+<div class="flex gap-lg">
+<div class="flex flex-col items-center">
+<div class="w-3 h-3 rounded-full bg-outline mt-1.5"></div>
+<div class="w-[2px] h-full bg-outline-variant/30 my-1"></div>
+</div>
+<div class="pb-lg">
+<p class="font-bold text-on-surface">Arrived at Sorting Center - Jakarta Hub</p>
+<p class="text-on-surface-variant text-body-md mb-2">Package received at the main sorting facility.</p>
+<p class="font-label-md text-label-md text-outline">July 02, 11:15 PM</p>
+</div>
+</div>
+<!-- Log Item 3 -->
+<div class="flex gap-lg">
+<div class="flex flex-col items-center">
+<div class="w-3 h-3 rounded-full bg-outline mt-1.5"></div>
+<div class="w-[2px] h-full bg-outline-variant/30 my-1"></div>
+</div>
+<div class="pb-lg">
+<p class="font-bold text-on-surface">Picked up by JNE Courier</p>
+<p class="text-on-surface-variant text-body-md mb-2">Package handed over by seller Pratama Jaya to courier partner.</p>
+<p class="font-label-md text-label-md text-outline">July 02, 06:45 PM</p>
+</div>
+</div>
+<!-- Log Item 4 -->
+<div class="flex gap-lg">
+<div class="flex flex-col items-center">
+<div class="w-3 h-3 rounded-full bg-outline mt-1.5"></div>
+</div>
+<div>
+<p class="font-bold text-on-surface">Seller has processed the order</p>
+<p class="text-on-surface-variant text-body-md mb-2">The order is being packed and prepared for shipment.</p>
+<p class="font-label-md text-label-md text-outline">July 02, 09:15 AM</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Contextual Info -->
+<div class="lg:col-span-4 space-y-lg">
+<!-- Map Placeholder -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm aspect-square md:aspect-video lg:aspect-square relative group">
+<img class="w-full h-full object-cover" data-alt="A clean, professional digital map interface showing a delivery route in Jakarta, Indonesia. Minimalist map pins in primary blue and orange, with a subtle blue dashed line connecting the origin and destination points. High-key light-mode aesthetic with soft shadows and professional UI overlays." data-location="Jakarta" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2F6JRTmJfLrx3vzDwWdirk01rEVQCaTJal5pU6kzOE1ItGXj6lLaccbmH0jSLsdwIc3kXcXFZZZVMNuupX_0RXtJLsrkoZbvua3wPpN1l3nU9zpOYJqQ8-_jhs2K3mK2Fj5VKN-hsO4PSh5hdrZhT1AMITz83CXGE_-Ujj3X65xT6woaeQPST9FfzvCW3-FawUMDrhhaaRz88TiKL-FjNbdcFiogIPCVO3StIDaUlvRxPdrhuDWN36Q">
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 to-transparent flex items-end p-md">
+<div class="text-white">
+<p class="font-bold">Live Location</p>
+<p class="text-sm opacity-90">Currently near: Jakarta Selatan Hub</p>
+</div>
+</div>
+<button class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-lg shadow-md hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-primary">fullscreen</span>
+</button>
+</div>
+<!-- Seller Info -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md shadow-sm">
+<div class="flex items-center gap-md mb-md">
+<div class="h-12 w-12 rounded-lg overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A clean, high-resolution logo for an Indonesian electronics shop called Pratama Jaya. The logo features minimalist blue and white geometric icons representing technology and reliability. Soft studio lighting and professional branding aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNhfa0gHzKTOMuR_v0U1GBYBEL0ehL7CuBQxYjjBQ1blvWFsQSEdXcWZLyD2wSjR8dMTst9mdP6ejS2YZXPnZ337ANfprHf-ezD05Z0sTobOJIesiqwP8Kv0pjUbaxU_4xeTJArtJ0--5S6jVeImGwN3P63ZRGTNLzCNzMSU7zfuPrEUu5cRFkGBPwF3eGlhEiX8xmdQXZlFAfA_0t-mceJi_m6b4Sa_zeNxA6heyf9JevRqsfmDMtTw">
+</div>
+<div>
+<p class="font-bold text-on-surface">Pratama Jaya</p>
+<p class="text-sm text-on-surface-variant flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">stars</span>
+                                4.9 (2.1k reviews)
+                            </p>
+</div>
+</div>
+<div class="flex gap-sm">
+<button class="flex-1 py-2 bg-surface-container text-on-surface font-bold rounded-lg hover:bg-surface-variant transition-colors text-sm">Chat Seller</button>
+<button class="flex-1 py-2 border border-outline text-on-surface font-bold rounded-lg hover:bg-surface-container transition-colors text-sm">Store Page</button>
+</div>
+</div>
+<!-- Delivery Address -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md shadow-sm">
+<div class="flex items-start gap-md">
+<span class="material-symbols-outlined text-primary bg-primary-container/20 p-2 rounded-lg">location_on</span>
+<div>
+<p class="font-bold text-on-surface">Delivery Address</p>
+<p class="text-on-surface-variant text-sm mt-1 leading-relaxed">
+<span class="font-semibold block text-on-surface">Budi Sudarsono</span>
+                                Jl. Kemang Raya No. 12, Unit 4B<br>
+                                Mampang Prapatan, Jakarta Selatan<br>
+                                DKI Jakarta, 12730
+                            </p>
+</div>
+</div>
+</div>
+<!-- Security Assurance -->
+<div class="bg-primary/5 border border-primary/20 rounded-xl p-md">
+<div class="flex gap-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<div>
+<p class="text-on-surface font-bold text-sm">Secure Purchase</p>
+<p class="text-on-surface-variant text-xs mt-1">Funds are held by Pratama Jaya until you confirm receipt. Your transaction is 100% protected.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (Shared Component Logic) -->
+<footer class="bg-surface-container-highest dark:bg-inverse-surface border-t border-outline-variant dark:border-outline mt-xl">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-lg px-md lg:px-xl py-xl w-full max-w-max-width-desktop mx-auto">
+<div class="col-span-2 md:col-span-1">
+<span class="font-title-lg text-title-lg font-bold text-on-surface block mb-md">Pratama Jaya</span>
+<p class="text-on-surface-variant font-body-md pr-xl">Indonesia's most reliable high-volume marketplace for all your tech and daily needs.</p>
+</div>
+<div>
+<h4 class="font-bold text-on-surface mb-md">Shop</h4>
+<ul class="space-y-sm text-on-surface-variant">
+<li class=""><a class="hover:text-primary underline transition-all font-body-md" href="#">Categories</a></li>
+<li class=""><a class="hover:text-primary underline transition-all font-body-md" href="#">Flash Sale</a></li>
+<li class=""><a class="hover:text-primary underline transition-all font-body-md" href="#">Official Stores</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-on-surface mb-md">Help</h4>
+<ul class="space-y-sm text-on-surface-variant">
+<li class=""><a class="hover:text-primary underline transition-all font-body-md" href="#">Customer Service</a></li>
+<li class=""><a class="hover:text-primary underline transition-all font-body-md" href="#">Logistics</a></li>
+<li class=""><a class="hover:text-primary underline transition-all font-body-md" href="#">Payments</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-on-surface mb-md">Legal</h4>
+<ul class="space-y-sm text-on-surface-variant">
+<li class=""><a class="hover:text-primary underline transition-all font-body-md" href="#">Privacy Policy</a></li>
+<li class=""><a class="hover:text-primary underline transition-all font-body-md" href="#">Terms</a></li>
+</ul>
+</div>
+</div>
+<div class="border-t border-outline-variant/30 py-md px-md lg:px-xl text-center">
+<p class="text-on-surface-variant font-body-md opacity-70">© 2024 Pratama Jaya Indonesia. All rights reserved.</p>
+</div>
+</footer>
+<!-- Bottom Nav for Mobile (Shared Component Logic Filter) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface border-t border-outline-variant z-50 flex justify-around items-center h-16 px-md">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-bold">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">explore</span>
+<span class="text-[10px] font-bold">Explore</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+<span class="text-[10px] font-bold">Orders</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-bold">Account</span>
+</button>
+</nav>
+<!-- Micro-interaction Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.addEventListener('mousedown', () => {
+                    btn.classList.add('scale-95');
+                });
+                btn.addEventListener('mouseup', () => {
+                    btn.classList.remove('scale-95');
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.classList.remove('scale-95');
+                });
+            });
+        });
+    </script>
+
+
+</body></html>

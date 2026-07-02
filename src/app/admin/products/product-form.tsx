@@ -1,0 +1,346 @@
+"use client";
+
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { Plus, Trash2, Loader2, Save } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+
+interface VariantRow {
+  key: string;
+  sku: string;
+  name: string;
+  price: string;
+  stock: string;
+}
+
+interface ProductFormProps {
+  categories: { id: string; name: string }[];
+  action: (formData: FormData) => Promise<{ id: string } | void>;
+  submitLabel: string;
+  initialValues?: {
+    name: string;
+    categoryId: string;
+    description: string;
+    basePrice: number;
+    compareAtPrice: number | null;
+    weightGrams: number;
+    lengthCm: number;
+    widthCm: number;
+    heightCm: number;
+    status: string;
+    isPreorder: boolean;
+    preorderPaymentType: string | null;
+    preorderDpPercentage: number | null;
+    preorderEstimatedDate: string | null;
+    images: string[];
+    variants: { sku: string; name: string; price: number; stock: number }[];
+  };
+}
+
+function makeKey() {
+  return Math.random().toString(36).slice(2);
+}
+
+export function ProductForm({ categories, action, submitLabel, initialValues }: ProductFormProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [isPreorder, setIsPreorder] = useState(initialValues?.isPreorder ?? false);
+  const [preorderPaymentType, setPreorderPaymentType] = useState(
+    initialValues?.preorderPaymentType ?? "FULL"
+  );
+  const [variants, setVariants] = useState<VariantRow[]>(
+    initialValues?.variants.length
+      ? initialValues.variants.map((v) => ({
+          key: makeKey(),
+          sku: v.sku,
+          name: v.name,
+          price: String(v.price),
+          stock: String(v.stock),
+        }))
+      : [{ key: makeKey(), sku: "", name: "", price: "", stock: "" }]
+  );
+
+  function addVariant() {
+    setVariants((prev) => [...prev, { key: makeKey(), sku: "", name: "", price: "", stock: "" }]);
+  }
+
+  function removeVariant(key: string) {
+    setVariants((prev) => (prev.length > 1 ? prev.filter((v) => v.key !== key) : prev));
+  }
+
+  function updateVariant(key: string, field: keyof VariantRow, value: string) {
+    setVariants((prev) => prev.map((v) => (v.key === key ? { ...v, [field]: value } : v)));
+  }
+
+  function handleSubmit(formData: FormData) {
+    startTransition(async () => {
+      try {
+        const result = await action(formData);
+        toast.success("Produk berhasil disimpan.");
+        if (result?.id) {
+          router.push(`/admin/products/${result.id}/edit`);
+        } else {
+          router.refresh();
+        }
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Gagal menyimpan produk.");
+      }
+    });
+  }
+
+  return (
+    <form action={handleSubmit} className="flex flex-col gap-6">
+      <div className="rounded-xl border border-border bg-card p-6">
+        <h2 className="mb-4 text-base font-semibold">Informasi Dasar</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-1 sm:col-span-2">
+            <Label htmlFor="name">Nama Produk</Label>
+            <Input id="name" name="name" defaultValue={initialValues?.name} required />
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="categoryId">Kategori</Label>
+            <select
+              id="categoryId"
+              name="categoryId"
+              defaultValue={initialValues?.categoryId ?? ""}
+              required
+              className="h-10 rounded-md border border-border bg-background px-3 text-sm"
+            >
+              <option value="" disabled>
+                Pilih kategori
+              </option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="status">Status</Label>
+            <select
+              id="status"
+              name="status"
+              defaultValue={initialValues?.status ?? "DRAFT"}
+              className="h-10 rounded-md border border-border bg-background px-3 text-sm"
+            >
+              <option value="DRAFT">Draft</option>
+              <option value="PUBLISHED">Aktif (Published)</option>
+              <option value="ARCHIVED">Arsip</option>
+            </select>
+          </div>
+          <div className="flex flex-col gap-1 sm:col-span-2">
+            <Label htmlFor="description">Deskripsi</Label>
+            <Textarea
+              id="description"
+              name="description"
+              rows={4}
+              defaultValue={initialValues?.description}
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-border bg-card p-6">
+        <h2 className="mb-4 text-base font-semibold">Harga & Diskon</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="basePrice">Harga Jual (Rp)</Label>
+            <Input
+              id="basePrice"
+              name="basePrice"
+              type="number"
+              min={0}
+              defaultValue={initialValues?.basePrice}
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="compareAtPrice">Harga Coret / Sebelum Diskon (Rp, opsional)</Label>
+            <Input
+              id="compareAtPrice"
+              name="compareAtPrice"
+              type="number"
+              min={0}
+              placeholder="Kosongkan jika tidak diskon"
+              defaultValue={initialValues?.compareAtPrice ?? ""}
+            />
+            <p className="text-xs text-muted-foreground">
+              Isi lebih besar dari Harga Jual supaya badge diskon otomatis muncul di storefront.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-border bg-card p-6">
+        <h2 className="mb-4 text-base font-semibold">Berat & Dimensi (untuk kalkulasi ongkir)</h2>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="weightGrams">Berat (gram)</Label>
+            <Input id="weightGrams" name="weightGrams" type="number" min={0} defaultValue={initialValues?.weightGrams ?? 100} required />
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="lengthCm">Panjang (cm)</Label>
+            <Input id="lengthCm" name="lengthCm" type="number" min={0} defaultValue={initialValues?.lengthCm ?? 10} required />
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="widthCm">Lebar (cm)</Label>
+            <Input id="widthCm" name="widthCm" type="number" min={0} defaultValue={initialValues?.widthCm ?? 10} required />
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="heightCm">Tinggi (cm)</Label>
+            <Input id="heightCm" name="heightCm" type="number" min={0} defaultValue={initialValues?.heightCm ?? 10} required />
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-preorder/30 bg-preorder/5 p-6">
+        <div className="mb-4 flex items-center gap-2">
+          <Checkbox
+            id="isPreorder"
+            name="isPreorder"
+            checked={isPreorder}
+            onCheckedChange={(checked) => setIsPreorder(checked === true)}
+          />
+          <Label htmlFor="isPreorder" className="text-base font-semibold text-preorder">
+            Produk ini Pre-Order
+          </Label>
+        </div>
+
+        {isPreorder && (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="flex flex-col gap-1">
+              <Label htmlFor="preorderPaymentType">Skema Pembayaran</Label>
+              <select
+                id="preorderPaymentType"
+                name="preorderPaymentType"
+                value={preorderPaymentType}
+                onChange={(e) => setPreorderPaymentType(e.target.value)}
+                className="h-10 rounded-md border border-border bg-background px-3 text-sm"
+              >
+                <option value="FULL">Bayar Penuh di Muka</option>
+                <option value="DOWN_PAYMENT">DP (Uang Muka)</option>
+              </select>
+            </div>
+            {preorderPaymentType === "DOWN_PAYMENT" && (
+              <div className="flex flex-col gap-1">
+                <Label htmlFor="preorderDpPercentage">Persentase DP (%)</Label>
+                <Input
+                  id="preorderDpPercentage"
+                  name="preorderDpPercentage"
+                  type="number"
+                  min={1}
+                  max={99}
+                  defaultValue={initialValues?.preorderDpPercentage ?? 30}
+                />
+              </div>
+            )}
+            <div className="flex flex-col gap-1">
+              <Label htmlFor="preorderEstimatedDate">Estimasi Tanggal Kirim</Label>
+              <Input
+                id="preorderEstimatedDate"
+                name="preorderEstimatedDate"
+                type="date"
+                defaultValue={initialValues?.preorderEstimatedDate ?? ""}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="rounded-xl border border-border bg-card p-6">
+        <h2 className="mb-2 text-base font-semibold">Gambar Produk</h2>
+        <p className="mb-3 text-xs text-muted-foreground">Satu URL gambar per baris. Gambar pertama jadi foto utama.</p>
+        <Textarea
+          name="images"
+          rows={4}
+          placeholder={"https://images.unsplash.com/...\nhttps://images.unsplash.com/..."}
+          defaultValue={initialValues?.images.join("\n")}
+        />
+      </div>
+
+      <div className="rounded-xl border border-border bg-card p-6">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-base font-semibold">Varian Produk</h2>
+          <Button type="button" variant="outline" size="sm" className="gap-1.5 cursor-pointer" onClick={addVariant}>
+            <Plus className="size-3.5" />
+            Tambah Varian
+          </Button>
+        </div>
+        <div className="flex flex-col gap-3">
+          {variants.map((v) => (
+            <div key={v.key} className="grid grid-cols-2 gap-2 rounded-lg border border-border/60 p-3 sm:grid-cols-[1fr_1fr_1fr_1fr_auto]">
+              <div className="flex flex-col gap-1">
+                <Label className="text-xs">SKU</Label>
+                <Input
+                  name="variant_sku"
+                  value={v.sku}
+                  onChange={(e) => updateVariant(v.key, "sku", e.target.value)}
+                  placeholder="SKU-001"
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <Label className="text-xs">Nama Varian</Label>
+                <Input
+                  name="variant_name"
+                  value={v.name}
+                  onChange={(e) => updateVariant(v.key, "name", e.target.value)}
+                  placeholder="Hitam / L"
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <Label className="text-xs">Harga (Rp)</Label>
+                <Input
+                  name="variant_price"
+                  type="number"
+                  min={0}
+                  value={v.price}
+                  onChange={(e) => updateVariant(v.key, "price", e.target.value)}
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <Label className="text-xs">Stok</Label>
+                <Input
+                  name="variant_stock"
+                  type="number"
+                  min={0}
+                  value={v.stock}
+                  onChange={(e) => updateVariant(v.key, "stock", e.target.value)}
+                  required
+                />
+              </div>
+              <div className="flex items-end">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="cursor-pointer text-destructive hover:bg-destructive/10"
+                  onClick={() => removeVariant(v.key)}
+                  disabled={variants.length === 1}
+                >
+                  <Trash2 className="size-4" />
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex justify-end">
+        <Button type="submit" disabled={isPending} className="gap-2 cursor-pointer">
+          {isPending ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
+          {submitLabel}
+        </Button>
+      </div>
+    </form>
+  );
+}

@@ -1,0 +1,393 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Checkout - TokoKita</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Geist:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#943700",
+                    "surface-container": "#ededf9",
+                    "secondary-fixed-dim": "#ffb690",
+                    "inverse-on-surface": "#f0f0fb",
+                    "secondary-container": "#fd761a",
+                    "on-surface": "#191b23",
+                    "tertiary-fixed-dim": "#ffb596",
+                    "surface-dim": "#d9d9e5",
+                    "outline": "#737686",
+                    "on-tertiary-fixed": "#360f00",
+                    "surface-container-high": "#e7e7f3",
+                    "inverse-surface": "#2e3039",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#faf8ff",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-container-low": "#f3f3fe",
+                    "background": "#faf8ff",
+                    "surface-variant": "#e1e2ed",
+                    "on-tertiary": "#ffffff",
+                    "on-primary-container": "#eeefff",
+                    "on-secondary-fixed-variant": "#783200",
+                    "primary": "#004ac6",
+                    "tertiary-fixed": "#ffdbcd",
+                    "error-container": "#ffdad6",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-secondary": "#ffffff",
+                    "error": "#ba1a1a",
+                    "tertiary-container": "#bc4800",
+                    "secondary-fixed": "#ffdbca",
+                    "surface-bright": "#faf8ff",
+                    "surface-container-highest": "#e1e2ed",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#0053db",
+                    "on-tertiary-container": "#ffede6",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#7d2d00",
+                    "on-secondary-fixed": "#341100",
+                    "primary-fixed": "#dbe1ff",
+                    "on-error": "#ffffff",
+                    "on-background": "#191b23",
+                    "secondary": "#9d4300",
+                    "outline-variant": "#c3c6d7",
+                    "on-surface-variant": "#434655",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "on-secondary-container": "#5c2400",
+                    "on-primary-fixed": "#00174b",
+                    "primary-container": "#2563eb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "16px",
+                    "margin-desktop": "auto",
+                    "base": "4px",
+                    "xl": "32px",
+                    "md": "16px",
+                    "max-width-desktop": "1280px",
+                    "sm": "8px",
+                    "margin-mobile": "16px",
+                    "2xl": "48px",
+                    "xs": "4px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "display": ["Inter"],
+                    "title-lg": ["Inter"],
+                    "label-md": ["Geist"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "display": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .step-active { color: var(--primary); }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen">
+<!-- Header / TopAppBar -->
+<header class="bg-surface dark:bg-on-background shadow-sm sticky top-0 z-50">
+<div class="flex justify-between items-center px-md lg:px-xl w-full max-w-max-width-desktop mx-auto h-16">
+<div class="flex items-center gap-md">
+<span class="font-display text-display text-primary dark:text-primary-fixed cursor-pointer">Pratama Jaya</span>
+</div>
+<div class="flex items-center gap-lg">
+<div class="hidden md:flex gap-md">
+<span class="text-on-surface-variant font-body-md">Butuh bantuan?</span>
+<a class="text-primary font-bold font-body-md hover:underline transition-colors" href="#">Chat Penjual</a>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-max-width-desktop mx-auto px-md lg:px-xl py-lg">
+<!-- Progress Indicator -->
+<nav class="flex items-center justify-center mb-xl">
+<ol class="flex items-center w-full max-w-2xl">
+<!-- Step 1: Complete -->
+<li class="flex w-full items-center text-primary after:content-[''] after:w-full after:h-1 after:border-b after:border-primary after:border-4 after:inline-block">
+<span class="flex items-center justify-center w-10 h-10 bg-primary text-white rounded-full lg:h-12 lg:w-12 shrink-0">
+<span class="material-symbols-outlined">check</span>
+</span>
+<div class="absolute mt-16 text-center">
+<span class="text-label-md font-label-md text-on-surface">Address</span>
+</div>
+</li>
+<!-- Step 2: Active -->
+<li class="flex w-full items-center text-primary after:content-[''] after:w-full after:h-1 after:border-b after:border-outline-variant after:border-4 after:inline-block">
+<span class="flex items-center justify-center w-10 h-10 bg-primary text-white rounded-full lg:h-12 lg:w-12 shrink-0 ring-4 ring-primary-fixed">
+                        2
+                    </span>
+<div class="absolute mt-16 text-center">
+<span class="text-label-md font-label-md text-primary font-bold">Shipping &amp; Payment</span>
+</div>
+</li>
+<!-- Step 3: Upcoming -->
+<li class="flex items-center">
+<span class="flex items-center justify-center w-10 h-10 bg-surface-container-high text-on-surface-variant rounded-full lg:h-12 lg:w-12 shrink-0">
+                        3
+                    </span>
+<div class="absolute mt-16 text-center">
+<span class="text-label-md font-label-md text-on-surface-variant">Confirmation</span>
+</div>
+</li>
+</ol>
+</nav>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg items-start mt-12">
+<!-- Left Column: Selection Details -->
+<div class="lg:col-span-8 flex flex-col gap-lg">
+<!-- Address Summary Card -->
+<section class="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
+<div class="flex justify-between items-start mb-md">
+<h2 class="font-headline-md text-headline-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">location_on</span>
+                            Alamat Pengiriman
+                        </h2>
+<button class="text-primary font-bold font-label-md hover:bg-primary-fixed px-md py-sm rounded-lg transition-colors">Ubah</button>
+</div>
+<div class="border-l-4 border-primary pl-md">
+<p class="font-bold font-title-lg text-on-surface">Pratama Jaya</p>
+<p class="text-on-surface-variant font-body-md mt-base">Jl. Merdeka No.1, Menteng, Jakarta Pusat, DKI Jakarta 10310</p>
+<p class="text-on-surface-variant font-body-md">0812-3456-7890</p>
+</div>
+</section>
+<!-- Shipping / Courier Selection -->
+<section class="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
+<h2 class="font-headline-md text-headline-md mb-lg flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">local_shipping</span>
+                        Pilih Kurir Pengiriman
+                    </h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<!-- JNE Option -->
+<label class="relative flex flex-col p-md border-2 border-primary rounded-xl cursor-pointer bg-primary-fixed-dim/10 hover:bg-primary-fixed-dim/20 transition-all">
+<input checked="" class="hidden" name="courier" type="radio" value="jne">
+<div class="flex justify-between items-start">
+<div class="w-12 h-6 bg-slate-200 rounded animate-pulse" data-alt="Official professional JNE logistics logo on a clean white background, high-resolution and sharp branding suitable for a premium e-commerce interface." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBY2fN5T_r3ZXgoh2VnohrPu3nTe2d81ar2tJKvQFw1WqCYJRZYfxSF0k1rceN4f2LgrxbA_vjCN8istwUTVlo7EItqGybeXHq2z6yM5UgeAkwgAX0G6DBdHCc0h1x_vhoFQYLwEWZ5-jWODp7xZ2GpBxz58vv_3rkfJbx_ADu8eVwkxp5BpE_1Kvg5bfIGDHmAVdh2NJL91DnuGSUeZM8qC0tfmuRHyi6SF8pRdUPOjEYSQOoBEwrfFQ')"></div>
+<span class="material-symbols-outlined text-primary">check_circle</span>
+</div>
+<p class="font-bold text-body-lg mt-md">JNE Reguler</p>
+<p class="text-on-surface-variant text-label-md">Estimasi 2-3 Hari</p>
+<p class="text-primary font-bold text-body-lg mt-base">Rp 18.000</p>
+</label>
+<!-- J&T Option -->
+<label class="relative flex flex-col p-md border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-all">
+<input class="hidden" name="courier" type="radio" value="jnt">
+<div class="flex justify-between items-start">
+<div class="w-12 h-6 bg-slate-200 rounded animate-pulse" data-alt="Official sharp J&amp;T Express logistics logo with its characteristic red and white colors, professionally presented for a high-end web shop checkout experience." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD2aV1M3FBMRtfuN0lrVmzLPV4hN68JFYZOLdMXtaMJU60BWxiFkAhsZVs3XfSY-P3WZMSm-WKN19J9VAe3NKuWtgQzsAGmArxOXVV01svk5HxP7KkiMdmo_e0aom6YxSgB5rwAkmQ8GiPniO0GC94atll4s4ov6ZEF5KibCO474CbnLuDk6lerADkjl2srnUCGZnltKt1lvgc3lfVm_M_GEVcVaTVZ1Wq_BYHLkgWO-aWDlj4wHYBnFA')"></div>
+</div>
+<p class="font-bold text-body-lg mt-md">J&amp;T Express</p>
+<p class="text-on-surface-variant text-label-md">Estimasi 1-2 Hari</p>
+<p class="text-primary font-bold text-body-lg mt-base">Rp 22.000</p>
+</label>
+<!-- SiCepat Option -->
+<label class="relative flex flex-col p-md border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-all">
+<input class="hidden" name="courier" type="radio" value="sicepat">
+<div class="flex justify-between items-start">
+<div class="w-12 h-6 bg-slate-200 rounded animate-pulse" data-alt="Modern SiCepat Ekspres company logo, minimalist design with clear typography, presented on a light neutral background for a clean Indonesian e-commerce user interface." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD4KcpPKc8h2Uc8Gj_WAw2WaU7Wh0TORgox5gY0JRHLKQy0r3MiaMuuvHP5T10swPjWSUC0EaGXvMPAsLE7KW05jg4zcelUQfG39-ovEQovuGXhrLsBmJhdK1dlq98hUSzPVCSIwMwToMcaHsrVl_sab8YliX4lpKaWVPMW5Oqq8uWi-8-6tEUvnnWqlOIt_0YaWWh28DmLsyucUi4HqwK38l2sbwePnKRs-HDfePMZlspcO3sDkqt5Mg')"></div>
+</div>
+<p class="font-bold text-body-lg mt-md">SiCepat REG</p>
+<p class="text-on-surface-variant text-label-md">Estimasi 2-4 Hari</p>
+<p class="text-primary font-bold text-body-lg mt-base">Rp 17.500</p>
+</label>
+</div>
+</section>
+<!-- Payment Method Selection -->
+<section class="bg-surface border border-outline-variant rounded-xl p-lg shadow-sm">
+<h2 class="font-headline-md text-headline-md mb-lg flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+                        Metode Pembayaran
+                    </h2>
+<div class="space-y-md">
+<!-- VA Section -->
+<div class="p-md border border-outline-variant rounded-xl bg-surface-container-low">
+<div class="flex items-center justify-between mb-md">
+<span class="font-bold text-on-surface">Virtual Account (Bank Transfer)</span>
+<span class="material-symbols-outlined text-on-surface-variant">keyboard_arrow_down</span>
+</div>
+<div class="flex gap-md overflow-x-auto pb-sm">
+<button class="shrink-0 w-24 h-12 border border-outline-variant rounded-lg bg-white flex items-center justify-center hover:border-primary transition-colors">
+<div class="w-16 h-8 bg-slate-100 rounded" data-alt="Official Bank Central Asia BCA logo for payment systems, high resolution, professional corporate colors, clean and trusted finance branding." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBGA_3efcVd3Pjros_8PVlpnTtDZ5tkW3wQwtHZyZRYaWRr-3lZ7OIzaKq-blQVTNnzykBrEMBym_I80Ddp3T_RI6gi6Izat4mNRqwL84lZBWBwKp4yKxpqWddXfgHgoU2jzp1IZODcOdqBuHq2DGh5XQU_SgRl_O3ZWilCtgUiR1AJfN4LNtTM7X_gPTDAASrqR9xiyFb3gwJSQDoykQIsG9fNZIx1-1YUJdgiPzGJDbz5Y8Pq1ZWJtQ')"></div>
+</button>
+<button class="shrink-0 w-24 h-12 border border-outline-variant rounded-lg bg-white flex items-center justify-center hover:border-primary transition-colors">
+<div class="w-16 h-8 bg-slate-100 rounded" data-alt="Official Bank Mandiri corporate logo for payment transactions, high-quality vector-like appearance, blue and gold tones, professional banking aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB6TPWvu1eq1Z6D5FFEkwiPmnj5VdLjPoDiTdVcVezSDTKZ4z3j8vuR1iO35GqlLnZwR5UE7edC2qUmYQPb7M6Ib6LGjQtTPPd0cqLTzAkgatH8tYLVLBFMKzd6rL73TWXoUL1hpN7G-U0o5-iN2kBtTZuZnb9nwUaPWHxUR4Txx8yckOw_i3f665Ld1dU8sNJUuTjCnqDGN579K-9THbI0bZkEbnjqT6o8TXVdQo7gqIJN-UxW3VoR8Q')"></div>
+</button>
+<button class="shrink-0 w-24 h-12 border border-outline-variant rounded-lg bg-white flex items-center justify-center hover:border-primary transition-colors">
+<div class="w-16 h-8 bg-slate-100 rounded" data-alt="Official Bank BNI logo for financial transactions, clean typography and corporate branding, optimized for e-commerce checkout integration." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDGx7OB7LhBW-SWcyHxwwysEZXo7BzZQWPQyrcIudFVGTUpLjsqHy6Ss7TgRD0N_rvywOYGZ-A5mE91ZrQS5hwZVamV0XMLJXSxTcY1sfZJ0ReSKq_wBmNMdxwX9qqPxtQo_TNmncQDvh8yMAcRsukuMNhDA-soFvWz7yq5w4nY5jrOfp6U9_eZWGQKElkT3vu-EFft2zpXGDb6X37lGNTfn2P5lur-v8qC_OgjcG8M1jbOzsP200zE_w')"></div>
+</button>
+</div>
+</div>
+<!-- E-Wallet / QRIS -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<label class="flex items-center gap-md p-md border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-all">
+<input class="w-5 h-5 text-primary border-outline-variant" name="payment" type="radio" value="qris">
+<div class="flex flex-col">
+<span class="font-bold">QRIS / E-Wallet</span>
+<span class="text-label-md text-on-surface-variant">GoPay, OVO, ShopeePay</span>
+</div>
+<div class="ml-auto w-12 h-12 bg-slate-200 rounded flex items-center justify-center" data-alt="Official QRIS Indonesian national QR code standard payment logo, colorful and vibrant, widely recognized symbol for mobile payments in Southeast Asia." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBVsXZsIAN3BIWLQprmqadzWVWDcF-uQ4NK1AOZSUvlHfjOQBifDobL4M7EUw2_paw8caE8tffddeQonQM2rlCyv_C582P-Juiu0SEZ3ZCxG5wkDavc_hr_rBlp6Boq9kLgEac8n7S6ooNa19ko61R--8XnQuXQbS6aUA5PFQQ1AvmHADXYraYVtZaBjGHRg3ZPkWJ0TPoEEQLY2RgPYvpFqJ4NnNyu0fh3NU3kUISSPvDP5FMe_rDFOQ')"></div>
+</label>
+<label class="flex items-center gap-md p-md border-2 border-primary rounded-xl cursor-pointer bg-primary-fixed-dim/10">
+<input checked="" class="w-5 h-5 text-primary border-outline-variant" name="payment" type="radio" value="gopay">
+<div class="flex flex-col">
+<span class="font-bold">GoPay</span>
+<span class="text-label-md text-on-surface-variant">Saldo &amp; PayLater</span>
+</div>
+<div class="ml-auto w-12 h-12 bg-slate-200 rounded flex items-center justify-center" data-alt="Professional GoPay wallet logo with its distinct modern blue circular branding, high-resolution fintech visual for Indonesia market." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDBp7LZfNThsq0k_3s-PYRu0FdQlbT2fvFZESzxDSxcQuiJO-Y0JuvIaOF-ZWVRMGdwvMf9LFccDxXcG96XieM_y11cxtiMHWjmRxnzzzYOaujZj4jjGoU6frnMbkVa-VOrP4X7vvQPIMD_8GMugpEvTpzgBXHGU956mkfKZaW4pCMR_6CvzTnguNQGXJAoGf_jVuQQNIPVnXcFScDjoLvPFh9Y1PiwDGrfJ0hLeniDMbJG3vq0pQyDlg')"></div>
+</label>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Order Summary Sidebar -->
+<div class="lg:col-span-4 sticky top-24">
+<section class="bg-surface border border-outline-variant rounded-xl shadow-lg overflow-hidden">
+<div class="bg-primary text-white p-lg">
+<h3 class="font-headline-md text-headline-md">Ringkasan Belanja</h3>
+</div>
+<div class="p-lg space-y-md">
+<div class="flex justify-between items-center text-on-surface-variant">
+<span class="font-body-md">Total Harga (3 Barang)</span>
+<span class="font-body-md font-semibold">Rp 2.480.000</span>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant">
+<span class="font-body-md">Total Ongkos Kirim</span>
+<span class="font-body-md font-semibold">Rp 18.000</span>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant">
+<span class="font-body-md">Asuransi Pengiriman</span>
+<span class="font-body-md font-semibold">Rp 16.000</span>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant">
+<span class="font-body-md">Biaya Layanan</span>
+<span class="font-body-md font-semibold">Rp 1.000</span>
+</div>
+<div class="h-px bg-outline-variant my-md"></div>
+<!-- Promo/Voucher Section -->
+<div class="bg-secondary-container/10 p-md rounded-lg flex items-center gap-md border border-secondary/20">
+<span class="material-symbols-outlined text-secondary">confirmation_number</span>
+<span class="text-label-md font-bold text-secondary">Makin Hemat dengan Promo!</span>
+<span class="material-symbols-outlined text-secondary ml-auto">chevron_right</span>
+</div>
+<div class="flex justify-between items-end pt-md">
+<span class="font-headline-md text-on-surface">Total Tagihan</span>
+<span class="font-headline-md text-primary">Rp 2.514.000</span>
+</div>
+<button class="w-full py-md bg-secondary text-white font-bold font-title-lg rounded-xl shadow-sm active:scale-95 duration-150 transition-all mt-lg hover:bg-on-secondary-fixed-variant">
+                            Pilih Pembayaran
+                        </button>
+<p class="text-label-md text-center text-on-surface-variant mt-md">Dengan membayar, Anda menyetujui <a class="text-primary underline" href="#">Syarat &amp; Ketentuan</a> Pratama Jaya.</p>
+</div>
+</section>
+<!-- Trust Badges -->
+<div class="mt-lg grid grid-cols-2 gap-md opacity-70">
+<div class="flex flex-col items-center p-md bg-surface-container rounded-lg">
+<span class="material-symbols-outlined text-on-surface-variant text-2xl">verified_user</span>
+<span class="text-label-md mt-sm text-center">Belanja Aman</span>
+</div>
+<div class="flex flex-col items-center p-md bg-surface-container rounded-lg">
+<span class="material-symbols-outlined text-on-surface-variant text-2xl">history</span>
+<span class="text-label-md mt-sm text-center">Garansi Uang Kembali</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="mt-2xl bg-surface-container-highest border-t border-outline-variant">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-lg px-md lg:px-xl py-xl w-full max-w-max-width-desktop mx-auto">
+<div>
+<span class="font-title-lg text-title-lg font-bold text-on-surface block mb-md">Shop</span>
+<ul class="space-y-sm">
+<li class=""><a class="text-on-surface-variant font-body-md hover:text-primary transition-all" href="#">Produk Terbaru</a></li>
+<li class=""><a class="text-on-surface-variant font-body-md hover:text-primary transition-all" href="#">Kategori</a></li>
+<li class=""><a class="text-on-surface-variant font-body-md hover:text-primary transition-all" href="#">Promo Gila</a></li>
+</ul>
+</div>
+<div>
+<span class="font-title-lg text-title-lg font-bold text-on-surface block mb-md">Bantuan</span>
+<ul class="space-y-sm">
+<li class=""><a class="text-on-surface-variant font-body-md hover:text-primary transition-all" href="#">Customer Service</a></li>
+<li class=""><a class="text-on-surface-variant font-body-md hover:text-primary transition-all" href="#">Cara Belanja</a></li>
+<li class=""><a class="text-on-surface-variant font-body-md hover:text-primary transition-all" href="#">Lacak Pesanan</a></li>
+</ul>
+</div>
+<div>
+<span class="font-title-lg text-title-lg font-bold text-on-surface block mb-md">Logistik</span>
+<ul class="space-y-sm">
+<li class=""><a class="text-on-surface-variant font-body-md hover:text-primary transition-all" href="#">JNE Express</a></li>
+<li class=""><a class="text-on-surface-variant font-body-md hover:text-primary transition-all" href="#">J&amp;T Express</a></li>
+<li class=""><a class="text-on-surface-variant font-body-md hover:text-primary transition-all" href="#">SiCepat</a></li>
+</ul>
+</div>
+<div>
+<span class="font-title-lg text-title-lg font-bold text-on-surface block mb-md">Pembayaran</span>
+<div class="flex flex-wrap gap-sm">
+<div class="w-10 h-6 bg-slate-200 rounded" data-alt="Bank transfer icon set for visa and mastercard, minimalist vector style for e-commerce footer representation." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAPY7NTbIlHs6T42URJNfhFrhdkA2hV13hycJMlk9sEalud4cR9M3nBL7JZTbQu9ISn5WKcIwAQKdU8FMlouNd6ROybPw1cmLRj1KPF-pOwZedRs6XuNSRVdzVq8T2SCZJNEEOzE-rXY7_CIV7crs2NRxVvmnHENrCe-5gD82GzRn-xKkX6HpazIOxA5dpnnrkP2x3k_tyFSMcWPpHIeB-2oKfdVvwMHGKTRkBw4edtq_bSpgotTLknpw')"></div>
+<div class="w-10 h-6 bg-slate-200 rounded" data-alt="Mobile wallet payment icon set for digital payments, flat modern design." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD54MbIvM7DMjFsvdVFj-EwX7wyB-AoSWYakt9M7Fv8M6skb8i0z6W3ZHe_JD2Xp2TRgbbcslyVlR2UJkmxPtAFMhYrAL3lWZR81YuP1hQmu_EjH9dNcXMp2aF4qmR61PkcLRwuoalS2CoQ8NBvPxftcvLDyFr8OgWndrtOe_nif_wh-3UGyU14W7nP-BtQDjr_XuDfKaTM0VEYFd56ycoj1eNVIP4e3HpKJJD8ijQu8jq4Iple5FPcaQ')"></div>
+<div class="w-10 h-6 bg-slate-200 rounded" data-alt="Convenience store payment icons representing Alfamart and Indomaret, minimalist vector graphics." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuArM_vsFOvHCgapAXlgIB4gNa-Hljr_ZgGLtgERluA5-vDMOap8_sZw7I7Frkkg5EGKuU51u2UayJmg5wqDRPaz45PUhPv8dVJhKS4YnWyeXM6z4-K3aOc1eqPe_fWbr6uyRBVUB2BW5YbOHaCYwqknr8hxSOR9BbUMGM8hgt_azzWCv-Q57uZvsPDBN_KIZ8FXvkAjiwbVbYhAxWqJR-nljWHXJgs1VW5bmECYoER99OxRwPy74zgghQ')"></div>
+</div>
+</div>
+</div>
+<div class="bg-surface-dim py-md text-center">
+<span class="text-label-md text-on-surface-variant">© 2024 Pratama Jaya Indonesia. All rights reserved.</span>
+</div>
+</footer>
+<script>
+        // Micro-interactions for Radio Selection
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const group = e.target.name;
+                const labels = document.querySelectorAll(`input[name="${group}"]`);
+                
+                labels.forEach(input => {
+                    const label = input.closest('label');
+                    if (label) {
+                        label.classList.remove('border-primary', 'bg-primary-fixed-dim/10', 'border-2');
+                        label.classList.add('border-outline-variant', 'border');
+                        const checkIcon = label.querySelector('.material-symbols-outlined');
+                        if(checkIcon) checkIcon.style.display = 'none';
+                    }
+                });
+
+                if (e.target.checked) {
+                    const activeLabel = e.target.closest('label');
+                    activeLabel.classList.add('border-primary', 'bg-primary-fixed-dim/10', 'border-2');
+                    activeLabel.classList.remove('border-outline-variant', 'border');
+                    const checkIcon = activeLabel.querySelector('.material-symbols-outlined');
+                    if(checkIcon) checkIcon.style.display = 'block';
+                }
+            });
+        });
+    </script>
+
+
+</body></html>

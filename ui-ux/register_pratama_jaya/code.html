@@ -1,0 +1,307 @@
+<!DOCTYPE html><html class="light" lang="id"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Daftar Akun Baru - Pratama Jaya</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Shared Components Hierarchy Implementation -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#9d4300",
+                    "on-secondary-container": "#5c2400",
+                    "primary-container": "#2563eb",
+                    "surface-container-low": "#f3f3fe",
+                    "surface-container-high": "#e7e7f3",
+                    "on-primary-container": "#eeefff",
+                    "tertiary-container": "#bc4800",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#ededf9",
+                    "error-container": "#ffdad6",
+                    "surface-bright": "#faf8ff",
+                    "on-tertiary-container": "#ffede6",
+                    "outline-variant": "#c3c6d7",
+                    "tertiary": "#943700",
+                    "on-error": "#ffffff",
+                    "surface-tint": "#0053db",
+                    "on-secondary-fixed-variant": "#783200",
+                    "error": "#ba1a1a",
+                    "inverse-surface": "#2e3039",
+                    "tertiary-fixed-dim": "#ffb596",
+                    "primary-fixed": "#dbe1ff",
+                    "on-surface": "#191b23",
+                    "on-secondary": "#ffffff",
+                    "surface-dim": "#d9d9e5",
+                    "secondary-fixed": "#ffdbca",
+                    "inverse-on-surface": "#f0f0fb",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface-variant": "#434655",
+                    "surface-container-highest": "#e1e2ed",
+                    "on-tertiary-fixed-variant": "#7d2d00",
+                    "surface-variant": "#e1e2ed",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "secondary-fixed-dim": "#ffb690",
+                    "on-background": "#191b23",
+                    "background": "#faf8ff",
+                    "inverse-primary": "#b4c5ff",
+                    "secondary-container": "#fd761a",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed": "#ffdbcd",
+                    "surface": "#faf8ff",
+                    "on-tertiary-fixed": "#360f00",
+                    "primary": "#004ac6",
+                    "outline": "#737686",
+                    "on-primary-fixed": "#00174b",
+                    "on-primary": "#ffffff",
+                    "on-secondary-fixed": "#341100"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "max-width-desktop": "1280px",
+                    "margin-desktop": "auto",
+                    "sm": "8px",
+                    "margin-mobile": "16px",
+                    "gutter": "16px",
+                    "lg": "24px",
+                    "2xl": "48px",
+                    "md": "16px",
+                    "base": "4px",
+                    "xl": "32px",
+                    "xs": "4px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "title-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "display": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Geist"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "display": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .strength-meter {
+            height: 4px;
+            transition: all 0.3s ease;
+        }
+        .bento-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid #E2E8F0;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen selection:bg-primary/20">
+<!-- Main Container: Focused Layout for Transactional Task (Shell suppressed per mandate) -->
+<main class="flex min-h-screen">
+<!-- Left Side: Aesthetic/Brand Panel (Visible on Desktop) -->
+<div class="hidden lg:flex w-1/2 relative bg-primary-fixed overflow-hidden items-center justify-center p-2xl">
+
+<div class="relative z-10 max-w-md space-y-lg text-on-primary-fixed">
+<h1 class="font-display text-display leading-tight">Mulai Perjalanan Belanja Anda Bersama Pratama Jaya.</h1>
+<p class="font-body-lg text-body-lg opacity-80">Nikmati akses eksklusif ke produk premium, pengiriman prioritas, dan penawaran terbaik setiap harinya.</p>
+<!-- Trust Badges -->
+<div class="grid gap-md pt-lg flex justify-center">
+<div class="flex items-center gap-sm bg-surface-container-lowest/20 p-md rounded-xl backdrop-blur-md">
+<span class="material-symbols-outlined text-primary-fixed-dim">verified_user</span>
+<span class="font-label-md text-label-md">Keamanan Terjamin</span>
+</div>
+<div class="flex items-center gap-sm bg-surface-container-lowest/20 p-md rounded-xl backdrop-blur-md">
+<span class="material-symbols-outlined text-primary-fixed-dim">local_shipping</span>
+<span class="font-label-md text-label-md">Kurir Terpercaya</span>
+</div>
+</div>
+</div>
+<!-- Absolute Image Accent -->
+<div class="absolute bottom-12 right-12 w-64 h-64 rounded-full overflow-hidden shadow-2xl border-4 border-surface-container-lowest/30">
+<img class="w-full h-full object-cover" data-alt="A sophisticated lifestyle product photography shot featuring high-end Indonesian home decor items on a minimalist marble table. The lighting is bright and airy with soft morning shadows, emphasizing a clean and premium corporate aesthetic. The color palette uses subtle tones of blue and white to align with the brand identity of Pratama Jaya." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQXmkwFPrW784W-ZizY0gGu6GR8lmqDLmZgT6Yz-Skhp5ClqGq9qwFX6pDVD15GF1OpKTc03JPCzOYkocCBRLbi8eqj4rivIOFBme8XvEt8s8IHm33he9IhaqRrZNJZdx2RSHiOOCfSUJ8Ay46TjF3835_r8uztfHDx4lWViCBYOl725XrV6USqy7TzcVkXlLh-l_l82Cu2pRdbCf0k4TsigfB6M94bI7kbrLNPe4A9iir2GT2Cm4K1g">
+</div>
+</div>
+<!-- Right Side: Registration Form -->
+<div class="w-full lg:w-1/2 flex items-center justify-center p-md md:p-xl bg-surface">
+<div class="w-full max-w-[480px] space-y-xl">
+<!-- Brand Header -->
+<div class="text-center lg:text-left space-y-xs">
+<div class="flex items-center justify-center lg:justify-start gap-sm mb-md">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-on-primary" style="font-variation-settings: 'FILL' 1;">shopping_basket</span>
+</div>
+<span class="font-display text-headline-md tracking-tight text-on-surface">Pratama Jaya</span>
+</div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-on-surface">Daftar Akun Baru</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Lengkapi data di bawah ini untuk mulai berbelanja.</p>
+</div>
+<!-- Registration Form -->
+<form class="space-y-lg" onsubmit="return false;">
+<!-- Full Name -->
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1" for="full_name">Nama Lengkap</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline group-focus-within:text-primary transition-colors">person</span>
+</div>
+<input class="w-full pl-xl pr-md py-3 bg-surface-container-lowest border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary/25 focus:border-primary outline-none transition-all font-body-md text-body-md" id="full_name" placeholder="John Doe" required="" type="text">
+</div>
+</div>
+<!-- Email or Phone -->
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1" for="email_phone">Email atau No. Handphone</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline group-focus-within:text-primary transition-colors">mail</span>
+</div>
+<input class="w-full pl-xl pr-md py-3 bg-surface-container-lowest border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary/25 focus:border-primary outline-none transition-all font-body-md text-body-md" id="email_phone" placeholder="contoh@email.com" required="" type="text">
+</div>
+</div>
+<!-- Password -->
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1" for="password">Kata Sandi</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline group-focus-within:text-primary transition-colors">lock</span>
+</div>
+<input class="w-full pl-xl pr-md py-3 bg-surface-container-lowest border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary/25 focus:border-primary outline-none transition-all font-body-md text-body-md" id="password" oninput="updateStrength(this.value)" placeholder="••••••••" required="" type="password">
+<button class="absolute inset-y-0 right-0 pr-md flex items-center text-outline-variant hover:text-on-surface" onclick="togglePassword('password')" type="button">
+<span class="material-symbols-outlined" id="eye_icon">visibility</span>
+</button>
+</div>
+<!-- Strength Indicator -->
+<div class="px-1 pt-1 space-y-1">
+<div class="flex gap-1">
+<div class="strength-meter w-1/4 rounded-full bg-surface-container-high" id="bar-1"></div>
+<div class="strength-meter w-1/4 rounded-full bg-surface-container-high" id="bar-2"></div>
+<div class="strength-meter w-1/4 rounded-full bg-surface-container-high" id="bar-3"></div>
+<div class="strength-meter w-1/4 rounded-full bg-surface-container-high" id="bar-4"></div>
+</div>
+<p class="font-label-md text-label-md text-on-surface-variant" id="strength-text">Kekuatan sandi</p>
+</div>
+</div>
+<!-- Confirm Password -->
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1" for="confirm_password">Konfirmasi Kata Sandi</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline group-focus-within:text-primary transition-colors">lock_reset</span>
+</div>
+<input class="w-full pl-xl pr-md py-3 bg-surface-container-lowest border border-outline-variant rounded-xl focus:ring-2 focus:ring-primary/25 focus:border-primary outline-none transition-all font-body-md text-body-md" id="confirm_password" placeholder="••••••••" required="" type="password">
+</div>
+</div>
+<!-- Terms Checkbox -->
+<div class="flex items-start gap-sm">
+<div class="flex items-center h-5">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 transition-all cursor-pointer" id="terms" required="" type="checkbox">
+</div>
+<label class="font-body-md text-body-md text-on-surface-variant cursor-pointer select-none" for="terms">
+                            Saya menyetujui Syarat &amp; Ketentuan serta Kebijakan Privasi Pratama Jaya
+                        </label>
+</div>
+<!-- CTA Button -->
+<button class="w-full py-4 bg-primary text-on-primary font-title-lg rounded-xl shadow-lg hover:bg-surface-tint active:scale-[0.98] transition-all duration-150 flex items-center justify-center gap-sm group" type="submit">
+                        Daftar Sekarang
+                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</form>
+<!-- Divider -->
+<div class="relative flex items-center py-md">
+<div class="flex-grow border-t border-outline-variant"></div>
+<span class="flex-shrink mx-md font-label-md text-label-md text-outline">Atau daftar dengan</span>
+<div class="flex-grow border-t border-outline-variant"></div>
+</div>
+<!-- Social Sign Up -->
+<div class="grid gap-md flex justify-center">
+<button class="flex items-center justify-center gap-sm py-3 px-md border border-outline-variant rounded-xl font-title-lg text-body-md hover:bg-surface-container-low transition-colors active:scale-95">
+<img alt="Google Logo" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPNQqIZyzQ6WMQIr4e_6DoLVmKlhdtoVaOjJ0TkNd75VzVUIPryh15FruaQADkjFsueYdgny5Z4dlCVRONpwcjfgPjKxZ6Ia0DSzAz2e6E2zLeIH-qqFtK3geMy8Qz78p8qzeBgRxq_x0wvqGwKYEeGkDjAMTg49cD7zsRHowSWjN4zsIX716DKIQUkbpjE31-c3un2xWuZb471kLuQHabNhxfO2f9VlXfHddF6LZjfb8V7cm7SKe_Gg">
+                        Google
+                    </button>
+
+</div>
+<!-- Login Link -->
+<div class="pt-md text-center">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Sudah punya akun? 
+                        <a class="text-primary font-bold hover:underline" href="#">Masuk</a>
+</p>
+</div>
+</div>
+</div>
+</main>
+<script>
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            const icon = document.getElementById('eye_icon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerText = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.innerText = 'visibility';
+            }
+        }
+
+        function updateStrength(password) {
+            const bars = [
+                document.getElementById('bar-1'),
+                document.getElementById('bar-2'),
+                document.getElementById('bar-3'),
+                document.getElementById('bar-4')
+            ];
+            const strengthText = document.getElementById('strength-text');
+            
+            let strength = 0;
+            if (password.length > 5) strength++;
+            if (password.length > 8 && /[A-Z]/.test(password)) strength++;
+            if (password.length > 10 && /[0-9]/.test(password)) strength++;
+            if (password.length > 12 && /[^A-Za-z0-9]/.test(password)) strength++;
+
+            const colors = ['bg-error', 'bg-secondary-container', 'bg-primary-container', 'bg-emerald-500'];
+            const labels = ['Lemah', 'Sedang', 'Kuat', 'Sangat Kuat'];
+
+            bars.forEach((bar, index) => {
+                bar.classList.remove('bg-error', 'bg-secondary-container', 'bg-primary-container', 'bg-emerald-500', 'bg-surface-container-high');
+                if (index < strength) {
+                    bar.classList.add(colors[strength - 1]);
+                } else {
+                    bar.classList.add('bg-surface-container-high');
+                }
+            });
+
+            if (password.length === 0) {
+                strengthText.innerText = 'Kekuatan sandi';
+                strengthText.className = 'font-label-md text-label-md text-on-surface-variant';
+            } else {
+                strengthText.innerText = labels[strength - 1] || 'Terlalu Pendek';
+                strengthText.className = `font-label-md text-label-md font-bold ${strength > 0 ? 'text-' + colors[strength - 1].replace('bg-', '') : 'text-on-surface-variant'}`;
+            }
+        }
+    </script>
+
+
+</body></html>

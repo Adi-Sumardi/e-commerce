@@ -93,6 +93,7 @@ export default async function OrderDetailPage({
                         src={payment.paymentChannel.qrisImageUrl}
                         alt={payment.paymentChannel.label}
                         fill
+                        unoptimized
                         className="object-contain"
                       />
                     </div>

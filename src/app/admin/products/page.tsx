@@ -150,6 +150,7 @@ export default async function AdminProductsPage({
                               src={image}
                               alt={product.name}
                               fill
+                              unoptimized
                               sizes="44px"
                               className="object-cover"
                             />

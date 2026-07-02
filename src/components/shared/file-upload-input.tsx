@@ -39,7 +39,7 @@ export function FileUploadInput({ value, onChange, label = "Upload Gambar" }: Fi
     <div className="flex flex-col gap-2">
       {value && (
         <div className="relative size-32 overflow-hidden rounded-lg border border-border bg-muted">
-          <Image src={value} alt="Preview" fill className="object-cover" />
+          <Image src={value} alt="Preview" fill className="object-cover" unoptimized />
         </div>
       )}
       <label className="flex w-fit cursor-pointer items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm transition-colors hover:bg-muted">

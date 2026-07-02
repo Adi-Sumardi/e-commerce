@@ -138,6 +138,7 @@ export default async function CustomerOrdersPage() {
                                 src={image}
                                 alt={item.productNameSnapshot}
                                 fill
+                                unoptimized
                                 sizes="64px"
                                 className="object-cover"
                               />

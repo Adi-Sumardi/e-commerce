@@ -173,6 +173,7 @@ export default async function WarehouseDashboardPage() {
                               src={image}
                               alt={item.productNameSnapshot}
                               fill
+                              unoptimized
                               sizes="48px"
                               className="object-cover"
                             />

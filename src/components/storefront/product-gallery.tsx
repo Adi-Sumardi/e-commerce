@@ -23,6 +23,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
           alt={active.alt}
           fill
           priority
+          unoptimized
           sizes="(max-width: 1024px) 100vw, 60vw"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
@@ -49,6 +50,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
               src={image.url}
               alt={image.alt}
               fill
+              unoptimized
               sizes="120px"
               className="object-cover"
             />

@@ -64,7 +64,7 @@ export default async function AdminBannersPage() {
                   <TableRow key={banner.id} className="hover:bg-muted/20 transition-colors">
                     <TableCell>
                       <div className="relative size-14 overflow-hidden rounded-lg border border-border bg-muted">
-                        <Image src={banner.imageUrl} alt={banner.title} fill sizes="56px" className="object-cover" />
+                        <Image src={banner.imageUrl} alt={banner.title} fill sizes="56px" className="object-cover" unoptimized />
                       </div>
                     </TableCell>
                     <TableCell>

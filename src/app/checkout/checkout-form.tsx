@@ -601,6 +601,7 @@ export default function CheckoutForm({ user }: CheckoutFormProps) {
                                   src={channel.qrisImageUrl}
                                   alt={channel.label}
                                   fill
+                                  unoptimized
                                   className="object-contain"
                                 />
                               </div>

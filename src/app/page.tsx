@@ -63,6 +63,7 @@ export default async function Home({
                 alt={mainBanner.title}
                 fill
                 priority
+                unoptimized
                 sizes="(max-width: 1024px) 100vw, 66vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -105,6 +106,7 @@ export default async function Home({
                       src={banner.imageUrl}
                       alt={banner.title}
                       fill
+                      unoptimized
                       sizes="33vw"
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                     />
@@ -229,6 +231,7 @@ export default async function Home({
                         src={product.image}
                         alt={product.name}
                         fill
+                        unoptimized
                         sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
                       />

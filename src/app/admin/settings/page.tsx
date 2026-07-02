@@ -170,7 +170,7 @@ export default async function AdminSettingsPage() {
                   ) : (
                     channel.qrisImageUrl && (
                       <div className="relative aspect-square w-full max-w-32 overflow-hidden rounded-lg border border-border">
-                        <Image src={channel.qrisImageUrl} alt={channel.label} fill className="object-contain" />
+                        <Image src={channel.qrisImageUrl} alt={channel.label} fill unoptimized className="object-contain" />
                       </div>
                     )
                   )}

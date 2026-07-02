@@ -299,7 +299,7 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
           <div className="mb-3 flex flex-wrap gap-3">
             {images.map((url, i) => (
               <div key={url} className="relative size-24 overflow-hidden rounded-lg border border-border bg-muted">
-                <NextImage src={url} alt={`Gambar ${i + 1}`} fill className="object-cover" />
+                <NextImage src={url} alt={`Gambar ${i + 1}`} fill unoptimized className="object-cover" />
                 {i === 0 && (
                   <span className="absolute bottom-0 left-0 right-0 bg-primary/80 py-0.5 text-center text-[10px] font-semibold text-primary-foreground">
                     Utama

@@ -109,8 +109,33 @@ export default async function AdminDashboardPage() {
     return `Rp ${value.toLocaleString("id-ID")}`;
   };
 
-  // Static chart data for aesthetic rendering
-  const salesChart = [40, 60, 35, 75, 55, 90, 65, 45, 80, 70];
+  // 6. Tren penjualan 30 hari terakhir (real data, dikelompokkan per hari)
+  const trendStart = new Date();
+  trendStart.setHours(0, 0, 0, 0);
+  trendStart.setDate(trendStart.getDate() - 29);
+  const trendOrders = await db.order.findMany({
+    where: {
+      createdAt: { gte: trendStart },
+      status: {
+        in: [OrderStatus.PAID, OrderStatus.PROCESSING, OrderStatus.SHIPPED, OrderStatus.DELIVERED],
+      },
+    },
+    select: { createdAt: true, total: true },
+  });
+  const dailyTotals = new Map<string, number>();
+  for (let i = 0; i < 30; i++) {
+    const d = new Date(trendStart);
+    d.setDate(d.getDate() + i);
+    dailyTotals.set(d.toISOString().slice(0, 10), 0);
+  }
+  for (const order of trendOrders) {
+    const key = order.createdAt.toISOString().slice(0, 10);
+    dailyTotals.set(key, (dailyTotals.get(key) ?? 0) + Number(order.total));
+  }
+  const dailyTotalsArr = Array.from(dailyTotals.values());
+  const maxDailyTotal = Math.max(...dailyTotalsArr, 1);
+  const salesChart = dailyTotalsArr.map((total) => Math.max(4, Math.round((total / maxDailyTotal) * 100)));
+
   const courierPerformance = [
     { name: "JNE Express", percent: 45, colorVar: "primary" as const },
     { name: "GoSend", percent: 32, colorVar: "secondary" as const },
@@ -204,19 +229,28 @@ export default async function AdminDashboardPage() {
               </select>
             </div>
             <div className="flex h-64 items-end gap-2 border-b border-l border-border/30 px-2">
-              {salesChart.map((value, index) => (
-                <div
-                  key={index}
-                  style={{ height: `${value}%` }}
-                  className="flex-1 rounded-t-sm bg-primary/20 transition-all hover:bg-primary/40"
-                />
-              ))}
+              {salesChart.map((value, index) => {
+                const day = new Date(trendStart);
+                day.setDate(day.getDate() + index);
+                const total = dailyTotalsArr[index];
+                return (
+                  <div
+                    key={index}
+                    style={{ height: `${value}%` }}
+                    title={`${day.toLocaleDateString("id-ID", { day: "2-digit", month: "short" })}: ${formatIDR(total)}`}
+                    className="flex-1 rounded-t-sm bg-primary/20 transition-all hover:bg-primary/40"
+                  />
+                );
+              })}
             </div>
             <div className="mt-4 flex justify-between px-2 text-xs text-muted-foreground">
-              <span>01 Jul</span>
-              <span>10 Jul</span>
-              <span>20 Jul</span>
-              <span>30 Jul</span>
+              {[0, 9, 19, 29].map((i) => {
+                const day = new Date(trendStart);
+                day.setDate(day.getDate() + i);
+                return (
+                  <span key={i}>{day.toLocaleDateString("id-ID", { day: "2-digit", month: "short" })}</span>
+                );
+              })}
             </div>
           </div>
 

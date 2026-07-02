@@ -15,7 +15,8 @@ set -euo pipefail
 
 # ==== KONFIGURASI — WAJIB DIISI SESUAI SERVER KAMU ====
 APP_DIR="$HOME/domains/pratamajaya.id/public_html"
-REPO_DIR="$HOME/repo"
+# Lokasi repo dideteksi otomatis dari posisi script ini (folder hasil git clone).
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 NODE_VERSION_DIR=""   # contoh: "20" — isi kalau nodevenv butuh path spesifik, lihat catatan di bawah
 # ========================================================
 

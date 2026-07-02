@@ -9,7 +9,8 @@
 set -euo pipefail
 
 APP_DIR="$HOME/domains/pratamajaya.id/public_html"
-REPO_DIR="$HOME/repo"
+# Lokasi repo dideteksi otomatis dari posisi script ini (folder hasil git clone).
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 echo "==> Mengaktifkan Node.js (nodevenv Hostinger)..."
 NODEVENV_ACTIVATE=$(find "$HOME/nodevenv" -maxdepth 5 -name activate -path "*public_html*" 2>/dev/null | head -n1 || true)

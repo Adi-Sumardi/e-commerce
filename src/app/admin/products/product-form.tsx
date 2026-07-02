@@ -2,7 +2,8 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2, Loader2, Save } from "lucide-react";
+import NextImage from "next/image";
+import { Plus, Trash2, Loader2, Save, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -77,7 +78,43 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
     setVariants((prev) => prev.map((v) => (v.key === key ? { ...v, [field]: value } : v)));
   }
 
+  const [images, setImages] = useState<string[]>(initialValues?.images ?? []);
+  const [uploadingImages, setUploadingImages] = useState(false);
+
+  async function handleImageFiles(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    if (files.length === 0) return;
+
+    setUploadingImages(true);
+    try {
+      const uploaded: string[] = [];
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const res = await fetch("/api/upload", { method: "POST", body: formData });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Gagal upload gambar.");
+        uploaded.push(data.url);
+      }
+      setImages((prev) => [...prev, ...uploaded]);
+      toast.success(`${uploaded.length} gambar berhasil diupload.`);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Gagal upload gambar.");
+    } finally {
+      setUploadingImages(false);
+      e.target.value = "";
+    }
+  }
+
+  function removeImage(url: string) {
+    setImages((prev) => prev.filter((img) => img !== url));
+  }
+
   function handleSubmit(formData: FormData) {
+    if (images.length === 0) {
+      toast.error("Upload minimal satu gambar produk.");
+      return;
+    }
     startTransition(async () => {
       try {
         const result = await action(formData);
@@ -207,6 +244,7 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
             name="isPreorder"
             checked={isPreorder}
             onCheckedChange={(checked) => setIsPreorder(checked === true)}
+            className="border-preorder/50 bg-background"
           />
           <Label htmlFor="isPreorder" className="text-base font-semibold text-preorder">
             Produk ini Pre-Order
@@ -256,13 +294,42 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
 
       <div className="rounded-xl border border-border bg-card p-6">
         <h2 className="mb-2 text-base font-semibold">Gambar Produk</h2>
-        <p className="mb-3 text-xs text-muted-foreground">Satu URL gambar per baris. Gambar pertama jadi foto utama.</p>
-        <Textarea
-          name="images"
-          rows={4}
-          placeholder={"https://images.unsplash.com/...\nhttps://images.unsplash.com/..."}
-          defaultValue={initialValues?.images.join("\n")}
-        />
+        <p className="mb-3 text-xs text-muted-foreground">Upload satu atau beberapa gambar. Gambar pertama jadi foto utama.</p>
+        {images.length > 0 && (
+          <div className="mb-3 flex flex-wrap gap-3">
+            {images.map((url, i) => (
+              <div key={url} className="relative size-24 overflow-hidden rounded-lg border border-border bg-muted">
+                <NextImage src={url} alt={`Gambar ${i + 1}`} fill className="object-cover" />
+                {i === 0 && (
+                  <span className="absolute bottom-0 left-0 right-0 bg-primary/80 py-0.5 text-center text-[10px] font-semibold text-primary-foreground">
+                    Utama
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={() => removeImage(url)}
+                  className="absolute right-1 top-1 flex size-5 items-center justify-center rounded-full bg-black/60 text-white cursor-pointer hover:bg-black/80"
+                  aria-label="Hapus gambar"
+                >
+                  <X className="size-3.5" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <label className="flex w-fit cursor-pointer items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm transition-colors hover:bg-muted">
+          {uploadingImages ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
+          Upload Gambar
+          <input
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            multiple
+            className="hidden"
+            onChange={handleImageFiles}
+            disabled={uploadingImages}
+          />
+        </label>
+        <input type="hidden" name="images" value={images.join("\n")} readOnly />
       </div>
 
       <div className="rounded-xl border border-border bg-card p-6">

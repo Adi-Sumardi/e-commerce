@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -58,8 +59,15 @@ export function AdminSidebar() {
       <div className="flex h-full flex-col gap-1 p-4">
         {/* Brand */}
         <div className="mb-4 px-3 py-5">
-          <div className="text-lg font-bold text-primary">Pratama Jaya</div>
-          <p className="text-xs text-sidebar-foreground/50 mt-0.5">
+          <Image
+            src="/logo/logo-panjang-frontend.png"
+            alt="Pratama Jaya"
+            width={880}
+            height={232}
+            className="h-8 w-auto"
+            priority
+          />
+          <p className="text-xs text-sidebar-foreground/50 mt-1.5">
             {roleLabel === "Staff Gudang" ? "Warehouse Panel" : "Admin Panel"}
           </p>
         </div>

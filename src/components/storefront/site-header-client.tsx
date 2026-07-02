@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
 import {
@@ -201,8 +202,15 @@ function HeaderSearchParamsConsumer({
       {/* Main topbar */}
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-6 px-4 lg:px-8">
         <div className="flex flex-1 items-center gap-6">
-          <Link href="/" className="whitespace-nowrap text-2xl font-bold text-primary">
-            Pratama Jaya
+          <Link href="/" className="shrink-0">
+            <Image
+              src="/logo/logo-panjang-frontend.png"
+              alt="Pratama Jaya"
+              width={880}
+              height={232}
+              className="h-8 w-auto"
+              priority
+            />
           </Link>
           {variant === "default" && (
             <div className="hidden max-w-3xl flex-1 items-center gap-4 md:flex">
@@ -308,8 +316,15 @@ export function SiteHeaderClient({ variant = "default", categories }: SiteHeader
       <Suspense
         fallback={
           <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-6 px-4 lg:px-8">
-            <Link href="/" className="whitespace-nowrap text-2xl font-bold text-primary">
-              Pratama Jaya
+            <Link href="/" className="shrink-0">
+              <Image
+                src="/logo/logo-panjang-frontend.png"
+                alt="Pratama Jaya"
+                width={880}
+                height={232}
+                className="h-8 w-auto"
+                priority
+              />
             </Link>
           </div>
         }

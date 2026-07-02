@@ -39,7 +39,7 @@ export default async function WarehouseDashboardPage() {
   }
 
   // 1. Fetch user warehouse
-  let staffRelation = await db.warehouseStaff.findFirst({
+  const staffRelation = await db.warehouseStaff.findFirst({
     where: { userId: user.id },
     include: { warehouse: true },
   });

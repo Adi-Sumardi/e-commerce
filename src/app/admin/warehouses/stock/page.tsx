@@ -21,7 +21,7 @@ export default async function WarehouseStockPage() {
 
   const user = session.user as any;
 
-  let staffRelation = await db.warehouseStaff.findFirst({
+  const staffRelation = await db.warehouseStaff.findFirst({
     where: { userId: user.id },
     include: { warehouse: true },
   });

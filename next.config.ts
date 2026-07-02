@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Build mandiri (self-contained server.js) — dibutuhkan untuk deploy ke
+  // Hostinger Node.js App (Passenger), bukan platform serverless seperti
+  // Vercel. Lihat docs/DEPLOYMENT.md.
+  output: "standalone",
   images: {
     remotePatterns: [
       {

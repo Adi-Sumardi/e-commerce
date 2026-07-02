@@ -17,6 +17,34 @@ const googleProvider =
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
+  callbacks: {
+    ...authConfig.callbacks,
+    // Override jwt: login Google tidak lewat authorize(), jadi user DB-nya
+    // harus dibuat/di-link di sini. Tanpa ini token.id berisi ID Google (sub)
+    // yang tidak ada di tabel users -> halaman account/orders menganggap
+    // sesi invalid dan me-redirect ke login (terasa seperti auto-logout).
+    jwt: async ({ token, user, account }) => {
+      if (user) {
+        if (account?.provider === "google" && user.email) {
+          const dbUser = await db.user.upsert({
+            where: { email: user.email },
+            update: {},
+            create: {
+              name: user.name ?? user.email,
+              email: user.email,
+              role: "CUSTOMER",
+            },
+          });
+          token.id = dbUser.id;
+          token.role = dbUser.role;
+        } else {
+          token.role = (user as { role?: string }).role;
+          token.id = user.id;
+        }
+      }
+      return token;
+    },
+  },
   providers: [
     ...googleProvider,
     Credentials({

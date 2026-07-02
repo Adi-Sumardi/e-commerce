@@ -55,5 +55,7 @@ Buka [http://localhost:3000](http://localhost:3000).
 
 ## Deployment
 
-Production: **Hostinger Business Web Hosting** (Node.js App) + MySQL, domain **pratamajaya.id**,
-deploy otomatis via GitHub Actions setiap push ke `main`. Detail di [`docs/TECHSTACK.md`](./docs/TECHSTACK.md) §6.
+Production: **Hostinger Business Web Hosting** (Node.js App) + MySQL, domain **pratamajaya.id**.
+Deploy **manual via SSH/Termius** pakai `deploy/deploy.sh` (setup pertama) dan `deploy/update.sh`
+(update selanjutnya) — lihat [`deploy/README.md`](./deploy/README.md) dan
+[`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) untuk panduan lengkap termasuk setup hPanel.

@@ -154,9 +154,10 @@ resend, react-email
 
 - **Production**: Hostinger Business Web Hosting (hPanel → Setup Node.js App, dijalankan via Passenger), domain **pratamajaya.id**.
 - **Database**: MySQL bawaan Hostinger (satu server dengan aplikasi, tidak perlu managed DB terpisah).
-- **CI/CD**: GitHub Actions — build & deploy otomatis ke Hostinger setiap push ke `main` (lihat `.github/workflows/`).
+- **CI**: GitHub Actions (`.github/workflows/ci.yml`) — cuma gerbang kualitas (build/lint/typecheck) tiap push/PR, **bukan** deploy otomatis.
+- **Deploy**: manual via SSH/Termius pakai `deploy/deploy.sh` & `deploy/update.sh` (lihat `deploy/README.md` & `docs/DEPLOYMENT.md`) — dipilih ketimbang CI/CD penuh supaya lebih gampang di-debug selama proses setup awal di Hostinger.
 - **Webhook URL**: harus HTTPS publik → gunakan `https://pratamajaya.id` yang didaftarkan di dashboard Xendit & Biteship (begitu diaktifkan).
-- **Secrets**: dikelola via GitHub Actions Secrets (bukan Vercel), tidak pernah commit ke repo.
+- **Secrets**: `.env` disimpan langsung di server (`APP_DIR/.env`), tidak pernah commit ke repo.
 
 ---
 

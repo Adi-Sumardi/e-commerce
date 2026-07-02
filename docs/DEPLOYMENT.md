@@ -1,8 +1,15 @@
 # Panduan Deploy ke Hostinger (Business Web Hosting)
 
 Dokumen ini menjelaskan **setup manual satu kali** yang wajib kamu lakukan sendiri di hPanel
-Hostinger (Claude tidak punya akses ke akun hosting kamu), plus cara kerja CI/CD-nya setelah
-setup ini selesai.
+Hostinger (Claude tidak punya akses ke akun hosting kamu). Deploy aktualnya (build + kirim
+file + migrate + restart) dilakukan **manual via SSH/Termius** pakai script di
+[`deploy/deploy.sh`](../deploy/deploy.sh) dan [`deploy/update.sh`](../deploy/update.sh) —
+lihat [`deploy/README.md`](../deploy/README.md) untuk cara pakainya.
+
+> Sempat dicoba pakai GitHub Actions CI/CD otomatis, tapi diputuskan pindah ke deploy manual
+> karena lebih gampang di-debug pas awal-awal setup di Hostinger (tiap error kelihatan
+> langsung di terminal, gak perlu bolak-balik cek log GitHub Actions). `.github/workflows/ci.yml`
+> yang tersisa cuma jalanin build/lint/typecheck sebagai gerbang kualitas, **tidak** deploy.
 
 ---
 
@@ -39,69 +46,41 @@ setup ini selesai.
 2. Catat **SSH Host** (biasanya seperti `srv123.hostinger.com` atau sebuah IP) dan **SSH Port** (Hostinger biasanya **bukan 22**, sering `65002` — cek di halaman SSH Access-nya).
 3. Catat juga **SSH Username** yang ditampilkan di situ.
 
-### 2.4 Generate SSH key khusus untuk deploy (jangan pakai key pribadi kamu)
-Di komputer kamu (bukan di server), buat key pair baru khusus CI/CD:
+### 2.4 Generate SSH key buat Termius (jangan pakai key pribadi kamu)
+Di komputer kamu (bukan di server), buat key pair baru khusus akses server ini:
 
 ```bash
-ssh-keygen -t ed25519 -C "github-actions-deploy" -f ./pratamajaya-deploy-key -N ""
+ssh-keygen -t ed25519 -C "termius-hostinger" -f ~/.ssh/pratamajaya_hostinger -N ""
 ```
 
-Ini menghasilkan 2 file: `pratamajaya-deploy-key` (private) dan `pratamajaya-deploy-key.pub` (public).
-
-1. Buka isi `pratamajaya-deploy-key.pub`, tempel ke hPanel → **Advanced → SSH Access → Manage SSH Keys** (atau append manual ke `~/.ssh/authorized_keys` di server via SSH/File Manager).
-2. Simpan isi `pratamajaya-deploy-key` (private key, termasuk baris `-----BEGIN...-----` sampai `-----END...-----`) — ini nanti ditempel ke GitHub Secret `SSH_PRIVATE_KEY`.
-3. **Hapus file private key dari komputer kamu setelah ditempel ke GitHub Secrets** (atau simpan di password manager, jangan commit ke repo manapun).
+1. Lihat isi public key: `cat ~/.ssh/pratamajaya_hostinger.pub`, tempel ke hPanel → **Advanced → SSH Access → Manage SSH Keys**.
+2. Di Termius: **Keychain → "+ New Key" → Import Existing Key**, pilih file `~/.ssh/pratamajaya_hostinger` (yang tanpa `.pub`).
+3. Bikin Host baru di Termius pakai Host/Port/Username dari §2.3, pilih key ini buat authentication.
 
 ---
 
-## 3. GitHub Secrets
+## 3. Deploy
 
-Buka repo → **Settings → Secrets and variables → Actions → New repository secret**, tambahkan semua ini:
+Setelah §2 selesai (Node.js App + database + SSH access semua siap), connect ke server via
+Termius lalu ikuti [`deploy/README.md`](../deploy/README.md) — intinya:
 
-| Secret | Isi | Contoh |
-|---|---|---|
-| `SSH_HOST` | Host SSH dari hPanel (§2.3) | `srv123.hostinger.com` |
-| `SSH_PORT` | Port SSH dari hPanel (§2.3) | `65002` |
-| `SSH_USERNAME` | Username SSH dari hPanel (§2.3) | `u123456789` |
-| `SSH_PRIVATE_KEY` | Isi lengkap private key dari §2.4 | `-----BEGIN OPENSSH PRIVATE KEY-----...` |
-| `APP_PATH` | Application root dari §2.2 | `/home/u123456789/domains/pratamajaya.id/pratamajaya-app` |
-| `DATABASE_URL` | Connection string MySQL dari §2.1 | `mysql://u123456_dbuser:PASSWORD@localhost:3306/u123456_pratamajaya` |
-| `AUTH_SECRET` | Random string (generate baru, JANGAN pakai punya dev lokal) | hasil `openssl rand -base64 32` |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Opsional, kosongkan kalau belum pakai login Google | |
-| `XENDIT_SECRET_KEY` / `XENDIT_WEBHOOK_TOKEN` | Opsional, kosongkan kalau Xendit belum diaktifkan | |
-| `BITESHIP_API_KEY` / `BITESHIP_WEBHOOK_SECRET` | Opsional, kosongkan kalau Biteship belum diaktifkan | |
-| `RESEND_API_KEY` | Opsional, kosongkan kalau email transaksional belum dipakai | |
+```bash
+# setup pertama kali
+cd ~ && git clone git@github.com:Adi-Sumardi/e-commerce.git repo
+cd repo && bash deploy/deploy.sh
 
-> Secret yang dikosongkan tetap boleh dibuat sebagai secret kosong (`""`) — workflow tidak akan error, cuma fitur terkait (mis. login Google) tidak aktif sampai diisi nanti.
+# update selanjutnya
+cd ~/repo && bash deploy/update.sh
+```
 
----
+## 4. Troubleshooting umum
 
-## 4. Cara Kerja CI/CD
-
-File: [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml)
-
-1. **Trigger**: setiap `git push` ke branch `main` (juga bisa dipicu manual lewat tab **Actions → Deploy to Hostinger → Run workflow**). Pull request ke `main` cuma menjalankan job build/lint/typecheck (gerbang kualitas), **tidak** deploy.
-2. **Job `build`**: install dependencies, `tsc --noEmit`, `eslint`, `prisma generate`, lalu `next build` (menghasilkan `output: standalone` — bundel Node.js mandiri di `.next/standalone/`, sudah termasuk Prisma Client + engine binary Linux karena di-build di runner Ubuntu, sesuai environment Hostinger).
-3. **Job `deploy`** (jalan hanya kalau `build` sukses & di branch `main`):
-   - Salin (`rsync`) hasil build ke server via SSH ke `APP_PATH` — folder `public/uploads` di server **tidak pernah ditimpa/dihapus** (biar bukti transfer customer yang sudah ada tidak hilang tiap deploy).
-   - Tulis file `.env` produksi di server dari GitHub Secrets.
-   - Jalankan `prisma migrate deploy` **di server** (via SSH, terhubung ke MySQL lewat `localhost` — **tidak perlu** mengaktifkan "Remote MySQL access" di Hostinger sama sekali, lebih aman).
-   - Restart aplikasi dengan cara standar Passenger: `touch tmp/restart.txt` di `APP_PATH` (Passenger otomatis reload app begitu file ini disentuh/berubah).
-
----
-
-## 5. Deploy pertama kali — checklist
-
-- [ ] Database MySQL dibuat & kredensialnya sudah bener (§2.1)
-- [ ] Node.js App dibuat di hPanel, domain `pratamajaya.id` sudah di-assign ke app ini (§2.2)
-- [ ] SSH aktif & key deploy sudah ditambahkan (§2.3–2.4)
-- [ ] Semua GitHub Secrets di §3 sudah diisi
-- [ ] Push ke `main` (atau jalankan manual via tab Actions) → cek tab **Actions** di GitHub, pastikan job `build` dan `deploy` hijau semua
-- [ ] Buka `https://pratamajaya.id` — kalau belum muncul, cek di hPanel **Node.js App → Logs** buat lihat error startup, dan pastikan "Application startup file" persis `server.js`
-
-## 6. Troubleshooting umum
-
-- **Domain nampilin halaman default Hostinger, bukan app**: cek lagi domain sudah di-assign ke Node.js App yang benar di hPanel (§2.2), dan/atau document root domain memang menunjuk ke `APP_PATH`.
-- **Error 500 / app tidak jalan setelah deploy**: cek **Node.js App → Logs** di hPanel. Penyebab umum: `.env` belum ke-generate (cek step "Write production .env" di GitHub Actions run log), atau `DATABASE_URL` salah format.
-- **Migration gagal jalan**: cek user MySQL di §2.1 punya privilege `ALTER`/`CREATE` (bukan cuma SELECT/INSERT) — Prisma migrate butuh itu.
-- **SSH connection refused dari GitHub Actions**: double-check `SSH_PORT` (sering BUKAN 22 di Hostinger) dan pastikan public key beneran ke-attach ke akun yang sesuai dengan `SSH_USERNAME`.
+- **`node`/`npm` tidak ketemu di Termius**: Node.js App di hPanel belum lengkap ke-setup —
+  balik ke §2.2, pastikan Application root & startup file (`server.js`) sudah benar.
+- **Domain nampilin halaman default Hostinger, bukan app**: cek lagi domain sudah di-assign
+  ke Node.js App yang benar di hPanel (§2.2), dan `APP_DIR` di `deploy.sh`/`update.sh` sama
+  persis dengan Application root yang ditampilkan hPanel.
+- **Error 500 / app tidak jalan setelah deploy**: cek hPanel **Node.js App → Logs**. Penyebab
+  umum: `.env` di `APP_DIR` belum diisi lengkap, atau `DATABASE_URL` salah format.
+- **Migration gagal jalan**: cek user MySQL (§2.1) punya privilege `ALTER`/`CREATE` (bukan
+  cuma SELECT/INSERT) — Prisma migrate butuh itu.

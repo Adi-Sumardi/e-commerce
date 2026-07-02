@@ -1,0 +1,54 @@
+name: CI
+
+# Deploy ke Hostinger sekarang dilakukan MANUAL via SSH/Termius, lihat deploy/README.md.
+# Workflow ini cuma jadi gerbang kualitas (build/lint/typecheck) di tiap push/PR,
+# TIDAK deploy otomatis.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+env:
+  NODE_VERSION: "20"
+  PNPM_VERSION: "10"
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm exec tsc --noEmit
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Generate Prisma Client
+        run: pnpm exec prisma generate
+
+      - name: Build (standalone output)
+        run: pnpm build
+        env:
+          # Placeholder format-valid, bukan kredensial produksi asli — build tidak
+          # pernah benar-benar query ke DB.
+          DATABASE_URL: "mysql://build:build@127.0.0.1:3306/build_placeholder"
+          NEXTAUTH_SECRET: "build-placeholder"
+          AUTH_SECRET: "build-placeholder"
+          NEXTAUTH_URL: "https://pratamajaya.id"

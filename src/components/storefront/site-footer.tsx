@@ -1,3 +1,5 @@
+import Image from "next/image";
+import Link from "next/link";
 import { Globe, MessageCircle, Smile } from "lucide-react";
 
 export function SiteFooter() {
@@ -5,7 +7,13 @@ export function SiteFooter() {
     <footer className="border-t border-border bg-accent">
       <div className="mx-auto grid w-full max-w-7xl grid-cols-2 gap-6 px-4 py-8 md:grid-cols-4 lg:px-8">
         <div className="col-span-2 md:col-span-1">
-          <span className="text-lg font-bold text-foreground">Pratama Jaya</span>
+          <Image
+            src="/logo/logo-panjang-frontend.png"
+            alt="Pratama Jaya"
+            width={880}
+            height={232}
+            className="h-8 w-auto"
+          />
           <p className="mt-4 text-sm text-muted-foreground">
             Pratama Jaya adalah marketplace terpercaya di Indonesia yang menyediakan
             berbagai kebutuhan harian dengan harga terbaik.
@@ -35,45 +43,45 @@ export function SiteFooter() {
           <span className="text-sm font-bold tracking-wider text-foreground uppercase">
             Layanan Pelanggan
           </span>
-          <a className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="#">
+          <Link className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="/help">
             Pusat Bantuan
-          </a>
-          <a className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="#">
+          </Link>
+          <Link className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="/how-to-buy">
             Cara Pembelian
-          </a>
-          <a className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="#">
+          </Link>
+          <Link className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="/shipping-info">
             Pengiriman
-          </a>
-          <a className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="#">
+          </Link>
+          <Link className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="/returns">
             Pengembalian Barang
-          </a>
+          </Link>
         </div>
         <div className="flex flex-col gap-2">
           <span className="text-sm font-bold tracking-wider text-foreground uppercase">Jelajahi</span>
-          <a className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="#">
+          <Link className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="/products">
             Shop
-          </a>
-          <a className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="#">
+          </Link>
+          <Link className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="/products">
             Flash Sale
-          </a>
-          <a className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="#">
+          </Link>
+          <Link className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="/vouchers">
             Voucher
-          </a>
-          <a className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="#">
+          </Link>
+          <Link className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="/products">
             Katalog Digital
-          </a>
+          </Link>
         </div>
         <div className="flex flex-col gap-2">
           <span className="text-sm font-bold tracking-wider text-foreground uppercase">Kebijakan</span>
-          <a className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="#">
+          <Link className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="/privacy">
             Privacy Policy
-          </a>
-          <a className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="#">
+          </Link>
+          <Link className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="/terms">
             Terms &amp; Conditions
-          </a>
-          <a className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="#">
+          </Link>
+          <Link className="text-sm text-muted-foreground underline transition-all hover:text-primary" href="/security">
             Keamanan Transaksi
-          </a>
+          </Link>
         </div>
       </div>
       <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-4 border-t border-border px-4 py-6 md:flex-row lg:px-8">

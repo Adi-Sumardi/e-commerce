@@ -20,6 +20,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useAdminUiStore } from "@/store/admin-ui-store";
 
 const SUPER_ADMIN_NAV = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -46,6 +47,8 @@ const WAREHOUSE_STAFF_NAV = [
 export function AdminSidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const mobileSidebarOpen = useAdminUiStore((state) => state.mobileSidebarOpen);
+  const closeMobileSidebar = useAdminUiStore((state) => state.closeMobileSidebar);
 
   const user = session?.user as any;
   const name = user?.name ?? "Admin";
@@ -57,7 +60,19 @@ export function AdminSidebar() {
   const navItems = role === "STAFF_GUDANG" ? WAREHOUSE_STAFF_NAV : SUPER_ADMIN_NAV;
 
   return (
-    <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground md:flex">
+    <>
+      {mobileSidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={closeMobileSidebar}
+          aria-hidden="true"
+        />
+      )}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex h-screen w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-transform duration-200 md:sticky md:top-0 md:z-0 md:translate-x-0 ${
+          mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
       <div className="flex h-full flex-col gap-1 p-4">
         {/* Brand */}
         <div className="mb-4 px-3 py-5">
@@ -89,6 +104,7 @@ export function AdminSidebar() {
               <Link
                 key={`${item.href}-${idx}`}
                 href={item.href}
+                onClick={closeMobileSidebar}
                 className={`flex items-center gap-3.5 rounded-xl px-3.5 py-2.5 text-sm transition-all ${
                   isActive
                     ? "bg-primary/10 font-semibold text-primary"
@@ -115,6 +131,7 @@ export function AdminSidebar() {
           </div>
         </div>
       </div>
-    </aside>
+      </aside>
+    </>
   );
 }

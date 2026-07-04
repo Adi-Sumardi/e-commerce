@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronDown, Search, LogOut, User } from "lucide-react";
+import Image from "next/image";
+import { ChevronDown, Menu, Search, LogOut, User } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,13 +14,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AdminNotificationBell } from "./admin-notification-bell";
+import { useAdminUiStore } from "@/store/admin-ui-store";
 
-interface AdminTopbarProps {
-  title?: string;
-}
-
-export function AdminTopbar({ title = "Pratama Jaya" }: AdminTopbarProps) {
+export function AdminTopbar() {
   const { data: session } = useSession();
+  const toggleMobileSidebar = useAdminUiStore((state) => state.toggleMobileSidebar);
   const user = session?.user as { name?: string; email?: string; role?: string } | undefined;
   const name = user?.name ?? "Admin";
   const roleLabel =
@@ -33,8 +32,23 @@ export function AdminTopbar({ title = "Pratama Jaya" }: AdminTopbarProps) {
 
   return (
     <header className="sticky top-0 z-10 flex h-16 w-full items-center justify-between border-b border-border/20 bg-card px-4 shadow-sm lg:px-8">
-      <div className="flex items-center gap-4">
-        <span className="text-xl leading-none font-bold text-primary">{title}</span>
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={toggleMobileSidebar}
+          aria-label="Buka menu"
+          className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg text-foreground transition-colors hover:bg-muted md:hidden"
+        >
+          <Menu className="size-5" />
+        </button>
+        <Image
+          src="/logo/pratama-jaya.png"
+          alt="Pratama Jaya"
+          width={780}
+          height={224}
+          unoptimized
+          className="h-7 w-auto md:hidden"
+        />
       </div>
       <div className="flex items-center gap-6">
         <div className="hidden w-80 items-center gap-2 rounded-full border border-border bg-muted px-4 py-1.5 lg:flex">

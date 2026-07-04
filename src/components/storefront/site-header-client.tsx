@@ -206,10 +206,10 @@ function HeaderSearchParamsConsumer({
             <Image
               src="/logo/pratama-jaya.png"
               alt="Pratama Jaya"
-              width={640}
-              height={426}
+              width={780}
+              height={224}
               unoptimized
-              className="h-10 w-auto"
+              className="h-12 w-auto"
               priority
             />
           </Link>
@@ -321,10 +321,10 @@ export function SiteHeaderClient({ variant = "default", categories }: SiteHeader
               <Image
                 src="/logo/pratama-jaya.png"
                 alt="Pratama Jaya"
-                width={640}
-                height={426}
+                width={780}
+                height={224}
                 unoptimized
-                className="h-10 w-auto"
+                className="h-12 w-auto"
                 priority
               />
             </Link>

@@ -64,10 +64,10 @@ export function AdminSidebar() {
           <Image
             src="/logo/pratama-jaya.png"
             alt="Pratama Jaya"
-            width={640}
-            height={426}
+            width={780}
+            height={224}
             unoptimized
-            className="h-10 w-auto"
+            className="h-10 w-auto rounded-md bg-white p-1.5"
             priority
           />
           <p className="text-xs text-sidebar-foreground/50 mt-1.5">

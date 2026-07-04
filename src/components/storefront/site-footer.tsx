@@ -10,10 +10,10 @@ export function SiteFooter() {
           <Image
             src="/logo/pratama-jaya.png"
             alt="Pratama Jaya"
-            width={640}
-            height={426}
+            width={780}
+            height={224}
             unoptimized
-            className="h-10 w-auto"
+            className="h-11 w-auto"
           />
           <p className="mt-4 text-sm text-muted-foreground">
             Pratama Jaya adalah marketplace terpercaya di Indonesia yang menyediakan

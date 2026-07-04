@@ -27,6 +27,7 @@ export default async function EditProductPage({
       include: {
         images: { orderBy: { sortOrder: "asc" } },
         variants: { orderBy: { sku: "asc" } },
+        specs: { orderBy: { sortOrder: "asc" } },
       },
     }),
   ]);
@@ -55,6 +56,7 @@ export default async function EditProductPage({
             confirmMessage={`Hapus produk "${product.name}"? Tindakan tidak dapat dibatalkan.`}
             successMessage="Produk berhasil dihapus."
             action={deleteProductAction.bind(null, product.id)}
+            redirectTo="/admin/products"
           />
         </div>
 
@@ -88,6 +90,7 @@ export default async function EditProductPage({
               price: Number(v.price),
               stock: v.stock,
             })),
+            specs: product.specs.map((s) => ({ label: s.label, value: s.value })),
           }}
         />
       </div>

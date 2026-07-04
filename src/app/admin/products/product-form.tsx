@@ -19,6 +19,12 @@ interface VariantRow {
   stock: string;
 }
 
+interface SpecRow {
+  key: string;
+  label: string;
+  value: string;
+}
+
 interface ProductFormProps {
   categories: { id: string; name: string }[];
   action: (formData: FormData) => Promise<{ id: string } | void>;
@@ -40,6 +46,7 @@ interface ProductFormProps {
     preorderEstimatedDate: string | null;
     images: string[];
     variants: { sku: string; name: string; price: number; stock: number }[];
+    specs: { label: string; value: string }[];
   };
 }
 
@@ -76,6 +83,24 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
 
   function updateVariant(key: string, field: keyof VariantRow, value: string) {
     setVariants((prev) => prev.map((v) => (v.key === key ? { ...v, [field]: value } : v)));
+  }
+
+  const [specs, setSpecs] = useState<SpecRow[]>(
+    initialValues?.specs.length
+      ? initialValues.specs.map((s) => ({ key: makeKey(), label: s.label, value: s.value }))
+      : []
+  );
+
+  function addSpec() {
+    setSpecs((prev) => [...prev, { key: makeKey(), label: "", value: "" }]);
+  }
+
+  function removeSpec(key: string) {
+    setSpecs((prev) => prev.filter((s) => s.key !== key));
+  }
+
+  function updateSpec(key: string, field: "label" | "value", value: string) {
+    setSpecs((prev) => prev.map((s) => (s.key === key ? { ...s, [field]: value } : s)));
   }
 
   const [images, setImages] = useState<string[]>(initialValues?.images ?? []);
@@ -400,6 +425,58 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
             </div>
           ))}
         </div>
+      </div>
+
+      <div className="rounded-xl border border-border bg-card p-6">
+        <div className="mb-1 flex items-center justify-between">
+          <h2 className="text-base font-semibold">Spesifikasi Produk</h2>
+          <Button type="button" variant="outline" size="sm" className="gap-1.5 cursor-pointer" onClick={addSpec}>
+            <Plus className="size-3.5" />
+            Tambah Spesifikasi
+          </Button>
+        </div>
+        <p className="mb-3 text-xs text-muted-foreground">
+          Opsional. Tampil di tab &quot;Spesifikasi&quot; halaman produk (mis. Bahan: Katun, Berat: 250g).
+        </p>
+        {specs.length > 0 && (
+          <div className="flex flex-col gap-3">
+            {specs.map((s) => (
+              <div key={s.key} className="grid grid-cols-2 gap-2 rounded-lg border border-border/60 p-3 sm:grid-cols-[1fr_1fr_auto]">
+                <div className="flex flex-col gap-1">
+                  <Label className="text-xs">Nama Spesifikasi</Label>
+                  <Input
+                    name="spec_label"
+                    value={s.label}
+                    onChange={(e) => updateSpec(s.key, "label", e.target.value)}
+                    placeholder="Bahan"
+                    required
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Label className="text-xs">Nilai</Label>
+                  <Input
+                    name="spec_value"
+                    value={s.value}
+                    onChange={(e) => updateSpec(s.key, "value", e.target.value)}
+                    placeholder="Katun 100%"
+                    required
+                  />
+                </div>
+                <div className="flex items-end">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="cursor-pointer text-destructive hover:bg-destructive/10"
+                    onClick={() => removeSpec(s.key)}
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="flex justify-end">

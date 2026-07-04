@@ -204,11 +204,12 @@ function HeaderSearchParamsConsumer({
         <div className="flex flex-1 items-center gap-6">
           <Link href="/" className="shrink-0">
             <Image
-              src="/logo/logo-panjang-frontend.png"
+              src="/logo/pratama-jaya.png"
               alt="Pratama Jaya"
-              width={880}
-              height={232}
-              className="h-8 w-auto"
+              width={640}
+              height={426}
+              unoptimized
+              className="h-10 w-auto"
               priority
             />
           </Link>
@@ -318,11 +319,12 @@ export function SiteHeaderClient({ variant = "default", categories }: SiteHeader
           <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-6 px-4 lg:px-8">
             <Link href="/" className="shrink-0">
               <Image
-                src="/logo/logo-panjang-frontend.png"
+                src="/logo/pratama-jaya.png"
                 alt="Pratama Jaya"
-                width={880}
-                height={232}
-                className="h-8 w-auto"
+                width={640}
+                height={426}
+                unoptimized
+                className="h-10 w-auto"
                 priority
               />
             </Link>

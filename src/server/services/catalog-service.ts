@@ -184,10 +184,7 @@ export class CatalogService {
       stock: totalStock,
       images,
       description: prod.description,
-      specs: [
-        { icon: "battery" as const, title: "Daya Tahan", detail: "Penggunaan optimal sepanjang hari." },
-        { icon: "bluetooth" as const, title: "Konektivitas", detail: "Mendukung koneksi nirkabel stabil." },
-      ],
+      specs: prod.specs.map((s) => ({ title: s.label, detail: s.value })),
       reviews,
       isPreorder: prod.isPreorder,
       preorderPaymentType: prod.preorderPaymentType,

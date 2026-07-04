@@ -60,11 +60,12 @@ export function AdminSidebar() {
         {/* Brand */}
         <div className="mb-4 px-3 py-5">
           <Image
-            src="/logo/logo-panjang-frontend.png"
+            src="/logo/pratama-jaya.png"
             alt="Pratama Jaya"
-            width={880}
-            height={232}
-            className="h-8 w-auto"
+            width={640}
+            height={426}
+            unoptimized
+            className="h-10 w-auto"
             priority
           />
           <p className="text-xs text-sidebar-foreground/50 mt-1.5">

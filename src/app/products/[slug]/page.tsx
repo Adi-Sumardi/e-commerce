@@ -2,10 +2,9 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import {
-  BatteryCharging,
-  Bluetooth,
   CalendarClock,
   Gift,
+  ListChecks,
   ShieldCheck,
   Ticket,
   Wallet,
@@ -37,11 +36,6 @@ import { CatalogService } from "@/server/services/catalog-service";
 import { auth } from "@/lib/auth";
 import { SITE_URL } from "@/lib/site";
 import { formatIDR } from "../../_data";
-
-const SPEC_ICONS = {
-  battery: BatteryCharging,
-  bluetooth: Bluetooth,
-} as const;
 
 // Dipakai oleh generateMetadata DAN page — cache() memastikan query DB cuma sekali.
 const getProductDetail = cache((slug: string) => CatalogService.getProductDetail(slug));
@@ -238,46 +232,29 @@ export default async function ProductDetailPage({
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
               <div className="lg:col-span-2">
                 <TabsContent value="description" className="space-y-6">
-                  <p className="text-base leading-relaxed text-muted-foreground">
+                  <p className="whitespace-pre-line text-base leading-relaxed text-muted-foreground">
                     {product.description}
                   </p>
-                  <ul className="mt-6 grid list-none grid-cols-1 gap-4 p-0 md:grid-cols-2">
-                    {product.specs.map((spec) => {
-                      const Icon = SPEC_ICONS[spec.icon];
-                      return (
-                        <li
-                          key={spec.title}
-                          className="flex items-start gap-3 rounded-xl bg-muted p-4"
-                        >
-                          <Icon className="size-5 text-primary" />
-                          <div>
-                            <p className="font-bold text-foreground">{spec.title}</p>
-                            <p className="text-sm text-muted-foreground">{spec.detail}</p>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
                 </TabsContent>
 
                 <TabsContent value="specs">
-                  <ul className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    {product.specs.map((spec) => {
-                      const Icon = SPEC_ICONS[spec.icon];
-                      return (
-                        <li
-                          key={spec.title}
-                          className="flex items-start gap-3 rounded-xl bg-muted p-4"
-                        >
-                          <Icon className="size-5 text-primary" />
-                          <div>
-                            <p className="font-bold text-foreground">{spec.title}</p>
-                            <p className="text-sm text-muted-foreground">{spec.detail}</p>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  {product.specs.length > 0 ? (
+                    <dl className="divide-y divide-border overflow-hidden rounded-xl border border-border">
+                      {product.specs.map((spec) => (
+                        <div key={spec.title} className="grid grid-cols-2 gap-4 bg-card p-4 odd:bg-muted/40">
+                          <dt className="text-sm font-semibold text-foreground">{spec.title}</dt>
+                          <dd className="text-sm text-muted-foreground">{spec.detail}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center gap-2 rounded-xl bg-muted p-10 text-center">
+                      <ListChecks className="size-6 text-muted-foreground" />
+                      <p className="text-sm text-muted-foreground">
+                        Belum ada spesifikasi untuk produk ini.
+                      </p>
+                    </div>
+                  )}
                 </TabsContent>
 
                 <TabsContent value="reviews" className="space-y-6">

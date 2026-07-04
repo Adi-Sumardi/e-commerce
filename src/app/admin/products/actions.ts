@@ -39,6 +39,7 @@ interface ParsedProductForm {
   preorderEstimatedDate: Date | null;
   images: string[];
   variants: { sku: string; name: string; price: number; stock: number }[];
+  specs: { label: string; value: string }[];
 }
 
 function parseProductForm(formData: FormData): ParsedProductForm {
@@ -85,6 +86,12 @@ function parseProductForm(formData: FormData): ParsedProductForm {
     }))
     .filter((v) => v.sku && v.name && !isNaN(v.price));
 
+  const specLabels = formData.getAll("spec_label") as string[];
+  const specValues = formData.getAll("spec_value") as string[];
+  const specs = specLabels
+    .map((label, i) => ({ label: label?.trim(), value: specValues[i]?.trim() }))
+    .filter((s) => s.label && s.value);
+
   if (!name || !categoryId || isNaN(basePrice)) {
     throw new Error("Nama, kategori, dan harga dasar wajib diisi dengan benar.");
   }
@@ -110,6 +117,7 @@ function parseProductForm(formData: FormData): ParsedProductForm {
     preorderEstimatedDate,
     images,
     variants,
+    specs,
   };
 }
 
@@ -145,6 +153,9 @@ export async function createProductAction(formData: FormData) {
       variants: {
         create: parsed.variants,
       },
+      specs: {
+        create: parsed.specs.map((s, i) => ({ ...s, sortOrder: i })),
+      },
     },
   });
 
@@ -164,6 +175,7 @@ export async function updateProductAction(productId: string, formData: FormData)
 
   await db.$transaction([
     db.productImage.deleteMany({ where: { productId } }),
+    db.productSpec.deleteMany({ where: { productId } }),
     db.product.update({
       where: { id: productId },
       data: {
@@ -184,6 +196,9 @@ export async function updateProductAction(productId: string, formData: FormData)
         preorderEstimatedDate: parsed.preorderEstimatedDate,
         images: {
           create: parsed.images.map((url, i) => ({ url, sortOrder: i })),
+        },
+        specs: {
+          create: parsed.specs.map((s, i) => ({ ...s, sortOrder: i })),
         },
       },
     }),

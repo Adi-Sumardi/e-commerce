@@ -229,9 +229,21 @@ model Product {
 
   variants ProductVariant[]
   images   ProductImage[]
+  specs    ProductSpec[]
   reviews  Review[]
 
   @@map("products")
+}
+
+model ProductSpec {
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  label     String
+  value     String
+  sortOrder Int     @default(0)
+
+  @@map("product_specs")
 }
 
 model ProductVariant {

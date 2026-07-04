@@ -8,11 +8,12 @@ export function SiteFooter() {
       <div className="mx-auto grid w-full max-w-7xl grid-cols-2 gap-6 px-4 py-8 md:grid-cols-4 lg:px-8">
         <div className="col-span-2 md:col-span-1">
           <Image
-            src="/logo/logo-panjang-frontend.png"
+            src="/logo/pratama-jaya.png"
             alt="Pratama Jaya"
-            width={880}
-            height={232}
-            className="h-8 w-auto"
+            width={640}
+            height={426}
+            unoptimized
+            className="h-10 w-auto"
           />
           <p className="mt-4 text-sm text-muted-foreground">
             Pratama Jaya adalah marketplace terpercaya di Indonesia yang menyediakan

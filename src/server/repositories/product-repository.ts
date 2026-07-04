@@ -83,6 +83,9 @@ export class ProductRepository {
         variants: {
           orderBy: { price: "asc" },
         },
+        specs: {
+          orderBy: { sortOrder: "asc" },
+        },
         reviews: {
           include: {
             user: true,

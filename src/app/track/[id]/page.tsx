@@ -5,7 +5,6 @@ import {
   ChevronRight,
   Copy,
   CreditCard,
-  Fullscreen,
   Home,
   MapPin,
   Package,
@@ -296,26 +295,33 @@ export default async function OrderTrackingPage({
 
           {/* Right column */}
           <div className="space-y-6 lg:col-span-4">
-            <div className="group relative aspect-square overflow-hidden rounded-xl border border-border bg-card shadow-sm md:aspect-video lg:aspect-square">
-              <Image
-                src="https://placehold.co/600x600/e2e8f0/64748b/png?text=Peta+Rute+Pengiriman"
-                alt="Peta rute pengiriman"
-                fill
-                sizes="(max-width: 1024px) 100vw, 33vw"
-                className="object-cover"
-              />
-              <div className="absolute inset-0 flex items-end bg-gradient-to-t from-foreground/50 to-transparent p-4">
-                <div className="text-white">
-                  <p className="font-bold text-sm">Lokasi Kurir</p>
-                  <p className="text-xs opacity-90">Kurir sedang mengambil paket dari Gudang Jakarta</p>
-                </div>
-              </div>
-              <button
-                aria-label="Perbesar peta"
-                className="absolute top-4 right-4 rounded-lg bg-card/90 p-2 shadow-md backdrop-blur-sm transition-colors hover:bg-card cursor-pointer"
-              >
-                <Fullscreen className="size-5 text-primary" />
-              </button>
+            <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+              <p className="mb-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                Nomor Resi
+              </p>
+              {order.shipment?.waybillNumber ? (
+                <>
+                  <p className="mb-4 font-mono text-lg font-bold text-foreground">
+                    {order.shipment.waybillNumber}
+                  </p>
+                  {order.shipment.trackingUrl ? (
+                    <Link href={order.shipment.trackingUrl} target="_blank" rel="noopener noreferrer">
+                      <Button className="w-full gap-2 font-bold cursor-pointer">
+                        <Truck className="size-4" />
+                        Lacak di Biteship
+                      </Button>
+                    </Link>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">
+                      Link pelacakan langsung belum tersedia untuk pengiriman ini.
+                    </p>
+                  )}
+                </>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Nomor resi akan muncul di sini setelah pesanan diserahkan ke kurir oleh gudang.
+                </p>
+              )}
             </div>
 
             {/* Seller info */}

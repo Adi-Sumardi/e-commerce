@@ -15,6 +15,7 @@ import {
   Boxes,
   Truck,
   Bell,
+  MapPinned,
   GalleryHorizontal,
   MessageSquare,
 } from "lucide-react";
@@ -31,6 +32,7 @@ const SUPER_ADMIN_NAV = [
   { label: "Ulasan", href: "/admin/reviews", icon: MessageSquare },
   { label: "Laporan", href: "/admin/reports", icon: BarChart3 },
   { label: "Data Gudang", href: "/admin/warehouses", icon: Warehouse },
+  { label: "Cek Ongkir", href: "/admin/shipping", icon: MapPinned },
   { label: "Dashboard Gudang", href: "/admin/warehouses/dashboard", icon: Bell },
   { label: "Pengaturan", href: "/admin/settings", icon: Settings },
 ];

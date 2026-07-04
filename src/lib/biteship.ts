@@ -13,6 +13,35 @@ function biteshipHeaders() {
   };
 }
 
+export interface BiteshipArea {
+  id: string;
+  name: string;
+  country_name: string;
+  administrative_division_level_1_name: string;
+  administrative_division_level_2_name: string;
+  administrative_division_level_3_name: string | null;
+  postal_code: number;
+}
+
+// Pencarian area (kota/kecamatan/kode pos) untuk resolve area_id asli —
+// dipakai form alamat customer, form gudang, dan halaman cek ongkir admin.
+export async function searchBiteshipAreas(query: string): Promise<BiteshipArea[]> {
+  if (!query || query.trim().length < 3) return [];
+
+  const url = new URL(`${BITESHIP_BASE_URL}/maps/areas`);
+  url.searchParams.set("countries", "ID");
+  url.searchParams.set("input", query.trim());
+  url.searchParams.set("type", "single");
+
+  const res = await fetch(url.toString(), { headers: biteshipHeaders() });
+  if (!res.ok) {
+    throw new Error(`Biteship area search error: ${res.status} ${await res.text()}`);
+  }
+
+  const data = await res.json();
+  return data.areas ?? [];
+}
+
 export interface BiteshipRateItem {
   name: string;
   value: number;

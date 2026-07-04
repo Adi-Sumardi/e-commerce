@@ -125,10 +125,14 @@ export async function addAddressAction(data: {
   district: string;
   postalCode: string;
   fullAddress: string;
+  biteshipAreaId: string;
 }) {
   const session = await auth();
   if (!session || !session.user?.id) {
     throw new Error("Unauthorized");
+  }
+  if (!data.biteshipAreaId) {
+    throw new Error("Area tujuan Biteship wajib dipilih dari hasil pencarian.");
   }
 
   // If this is the first address, make it default
@@ -147,7 +151,7 @@ export async function addAddressAction(data: {
       district: data.district,
       postalCode: data.postalCode,
       fullAddress: data.fullAddress,
-      biteshipAreaId: "loc-55555", // Mock area ID for Biteship rates
+      biteshipAreaId: data.biteshipAreaId,
       isDefault: !existing,
     },
   });

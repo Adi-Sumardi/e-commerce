@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useCartStore } from "@/store/cart-store";
+import { AreaSearchInput } from "@/components/shared/area-search-input";
 import { formatIDR } from "../_data";
 import { getCheckoutDataAction, placeOrderAction, addAddressAction, applyVoucherAction } from "./actions";
 import { Input } from "@/components/ui/input";
@@ -68,6 +69,7 @@ export default function CheckoutForm({ user }: CheckoutFormProps) {
   const [district, setDistrict] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [fullAddress, setFullAddress] = useState("");
+  const [biteshipAreaId, setBiteshipAreaId] = useState("");
   const [addingAddress, setAddingAddress] = useState(false);
 
   useEffect(() => {
@@ -166,6 +168,10 @@ export default function CheckoutForm({ user }: CheckoutFormProps) {
       toast.error("Harap isi semua kolom alamat.");
       return;
     }
+    if (!biteshipAreaId) {
+      toast.error("Harap cari dan pilih kecamatan/kota tujuan dari daftar pencarian.");
+      return;
+    }
 
     setAddingAddress(true);
     try {
@@ -178,6 +184,7 @@ export default function CheckoutForm({ user }: CheckoutFormProps) {
         district,
         postalCode,
         fullAddress,
+        biteshipAreaId,
       });
       setAddress(newAddress);
       setShowAddressForm(false);
@@ -356,65 +363,52 @@ export default function CheckoutForm({ user }: CheckoutFormProps) {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="phone">No. Telepon / HP</Label>
-                      <input
-                        id="phone"
-                        required
-                        className="w-full rounded-lg border border-border bg-background p-2 mt-1 focus:ring-primary"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="Contoh: 081234567890"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="postalCode">Kode Pos</Label>
-                      <input
-                        id="postalCode"
-                        required
-                        className="w-full rounded-lg border border-border bg-background p-2 mt-1 focus:ring-primary"
-                        value={postalCode}
-                        onChange={(e) => setPostalCode(e.target.value)}
-                      />
-                    </div>
+                  <div>
+                    <Label htmlFor="phone">No. Telepon / HP</Label>
+                    <input
+                      id="phone"
+                      required
+                      className="w-full rounded-lg border border-border bg-background p-2 mt-1 focus:ring-primary"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="Contoh: 081234567890"
+                    />
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4">
-                    <div>
-                      <Label htmlFor="province">Provinsi</Label>
-                      <input
-                        id="province"
-                        required
-                        className="w-full rounded-lg border border-border bg-background p-2 mt-1 focus:ring-primary"
-                        value={province}
-                        onChange={(e) => setProvince(e.target.value)}
-                        placeholder="DKI Jakarta"
+                  <div>
+                    <Label>Kecamatan / Kota Tujuan</Label>
+                    <div className="mt-1">
+                      <AreaSearchInput
+                        onSelect={(area) => {
+                          setBiteshipAreaId(area.id);
+                          setProvince(area.administrative_division_level_1_name);
+                          setCity(area.administrative_division_level_2_name);
+                          setDistrict(area.administrative_division_level_3_name ?? area.name);
+                          setPostalCode(String(area.postal_code));
+                        }}
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="city">Kota / Kabupaten</Label>
-                      <input
-                        id="city"
-                        required
-                        className="w-full rounded-lg border border-border bg-background p-2 mt-1 focus:ring-primary"
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
-                        placeholder="Jakarta Pusat"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="district">Kecamatan</Label>
-                      <input
-                        id="district"
-                        required
-                        className="w-full rounded-lg border border-border bg-background p-2 mt-1 focus:ring-primary"
-                        value={district}
-                        onChange={(e) => setDistrict(e.target.value)}
-                        placeholder="Menteng"
-                      />
-                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Cari dan pilih lokasi supaya ongkos kirim dihitung akurat sesuai kurir Biteship.
+                    </p>
                   </div>
+
+                  {biteshipAreaId && (
+                    <div className="grid grid-cols-3 gap-4 rounded-lg bg-muted p-3 text-sm">
+                      <div>
+                        <p className="text-xs text-muted-foreground">Provinsi</p>
+                        <p className="font-semibold">{province}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">Kota/Kabupaten</p>
+                        <p className="font-semibold">{city}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">Kode Pos</p>
+                        <p className="font-semibold">{postalCode}</p>
+                      </div>
+                    </div>
+                  )}
 
                   <div>
                     <Label htmlFor="fullAddress">Alamat Lengkap</Label>

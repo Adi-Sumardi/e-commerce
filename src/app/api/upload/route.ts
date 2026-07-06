@@ -3,12 +3,8 @@ import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
 import { auth } from "@/lib/auth";
+import { getUploadDir } from "@/lib/upload-dir";
 
-// Upload disimpan di disk lokal server (public/uploads) — cocok untuk dev/VPS.
-// Kalau nanti deploy ke platform serverless (mis. Vercel), filesystem-nya
-// ephemeral (tidak permanen) — perlu diganti ke object storage (S3/Cloudinary/
-// Vercel Blob/Supabase Storage) sebelum production. Lihat docs/MEMORY.md.
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 const MAX_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES: Record<string, string> = {
   "image/png": "png",
@@ -38,10 +34,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Ukuran file maksimal 5MB." }, { status: 400 });
   }
 
-  await mkdir(UPLOAD_DIR, { recursive: true });
+  const uploadDir = getUploadDir();
+  await mkdir(uploadDir, { recursive: true });
   const filename = `${randomUUID()}.${ext}`;
   const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(UPLOAD_DIR, filename), buffer);
+  await writeFile(path.join(uploadDir, filename), buffer);
 
   return NextResponse.json({ url: `/uploads/${filename}` });
 }

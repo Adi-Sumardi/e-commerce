@@ -35,7 +35,6 @@ import { notFound } from "next/navigation";
 import { CatalogService } from "@/server/services/catalog-service";
 import { auth } from "@/lib/auth";
 import { SITE_URL } from "@/lib/site";
-import { formatIDR } from "../../_data";
 
 // Dipakai oleh generateMetadata DAN page — cache() memastikan query DB cuma sekali.
 const getProductDetail = cache((slug: string) => CatalogService.getProductDetail(slug));
@@ -163,22 +162,6 @@ export default async function ProductDetailPage({
                 <div className="h-4 w-px bg-border" />
                 <span className="text-sm text-muted-foreground">{product.soldLabel}</span>
               </div>
-            </section>
-
-            <section className="rounded-xl bg-muted p-4">
-              <div className="mb-1 text-2xl font-bold text-foreground">
-                {formatIDR(product.price)}
-              </div>
-              {product.discountLabel && product.originalPrice && (
-                <div className="flex items-center gap-2">
-                  <Badge className="bg-destructive/10 font-bold text-destructive">
-                    {product.discountLabel}
-                  </Badge>
-                  <span className="text-sm text-muted-foreground line-through">
-                    {formatIDR(product.originalPrice)}
-                  </span>
-                </div>
-              )}
             </section>
 
             {product.isPreorder && (

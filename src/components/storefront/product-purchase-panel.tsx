@@ -11,15 +11,19 @@ import {
   Truck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useCartStore } from "@/store/cart-store";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { formatIDR } from "@/app/_data";
 
 interface ProductPurchasePanelProps {
   product: {
     id: string;
     slug: string;
     name: string;
+    price: number;
+    originalPrice: number | null;
     isPreorder: boolean;
     stock: number;
     images: { url: string; alt: string }[];
@@ -42,6 +46,11 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
 
   const selectedColor = product.colors.find((c) => c.name === color);
   const currentStock = selectedColor ? selectedColor.stock : product.stock;
+  const activePrice = selectedColor ? selectedColor.price : product.price;
+  const hasDiscount = product.originalPrice !== null && product.originalPrice > activePrice;
+  const discountPercent = hasDiscount
+    ? Math.round(((product.originalPrice! - activePrice) / product.originalPrice!) * 100)
+    : null;
 
   function changeQty(delta: number) {
     const maxQty = product.isPreorder ? 999 : currentStock;
@@ -85,6 +94,17 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
 
   return (
     <section className="flex flex-col gap-4">
+      <div className="rounded-xl bg-muted p-4">
+        <div className="mb-1 text-2xl font-bold text-foreground">{formatIDR(activePrice)}</div>
+        {hasDiscount && (
+          <div className="flex items-center gap-2">
+            <Badge className="bg-destructive/10 font-bold text-destructive">{discountPercent}% OFF</Badge>
+            <span className="text-sm text-muted-foreground line-through">
+              {formatIDR(product.originalPrice!)}
+            </span>
+          </div>
+        )}
+      </div>
       {product.colors.length > 0 && (
         <div>
           <h3 className="mb-2 text-lg font-semibold">

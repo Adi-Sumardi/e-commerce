@@ -35,6 +35,8 @@ const SUPER_ADMIN_NAV = [
   { label: "Data Gudang", href: "/admin/warehouses", icon: Warehouse },
   { label: "Cek Ongkir", href: "/admin/shipping", icon: MapPinned },
   { label: "Dashboard Gudang", href: "/admin/warehouses/dashboard", icon: Bell },
+  { label: "Stok Gudang", href: "/admin/warehouses/stock", icon: Boxes },
+  { label: "Pengiriman", href: "/admin/warehouses/shipments", icon: Truck },
   { label: "Pengaturan", href: "/admin/settings", icon: Settings },
 ];
 

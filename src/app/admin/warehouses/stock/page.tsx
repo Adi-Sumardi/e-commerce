@@ -43,19 +43,11 @@ export default async function WarehouseStockPage() {
     );
   }
 
-  const stocks = await db.warehouseStock.findMany({
-    where: { warehouseId: warehouse.id },
-    include: {
-      productVariant: {
-        include: {
-          product: {
-            include: {
-              images: { orderBy: { sortOrder: "asc" }, take: 1 },
-            },
-          },
-        },
-      },
-    },
+  // Stok dikelola secara global per varian produk (lihat ProductVariant.stock,
+  // diedit di Admin > Produk) — belum ada alokasi stok per gudang di sistem ini,
+  // jadi halaman ini menampilkan stok toko secara keseluruhan, bukan per lokasi.
+  const stocks = await db.productVariant.findMany({
+    include: { product: true },
     orderBy: { stock: "asc" }, // low stock first
   });
 
@@ -71,7 +63,7 @@ export default async function WarehouseStockPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Stok Gudang</h1>
           <p className="text-sm text-muted-foreground">
-            {warehouse.name} — {warehouse.code}
+            Stok produk toko (seluruh gudang) — dikelola dari Admin &gt; Produk
           </p>
         </div>
 
@@ -114,14 +106,13 @@ export default async function WarehouseStockPage() {
                   </TableCell>
                 </TableRow>
               ) : (
-                stocks.map((stock) => {
-                  const variant = stock.productVariant;
+                stocks.map((variant) => {
                   const product = variant.product;
-                  const isLow = stock.stock > 0 && stock.stock <= LOW_STOCK_THRESHOLD;
-                  const isOut = stock.stock === 0;
+                  const isLow = variant.stock > 0 && variant.stock <= LOW_STOCK_THRESHOLD;
+                  const isOut = variant.stock === 0;
 
                   return (
-                    <TableRow key={stock.id} className={`hover:bg-muted/20 transition-colors ${isOut ? "bg-red-50/40 dark:bg-red-950/10" : isLow ? "bg-amber-50/40 dark:bg-amber-950/10" : ""}`}>
+                    <TableRow key={variant.id} className={`hover:bg-muted/20 transition-colors ${isOut ? "bg-red-50/40 dark:bg-red-950/10" : isLow ? "bg-amber-50/40 dark:bg-amber-950/10" : ""}`}>
                       <TableCell>
                         <div>
                           <p className="font-semibold text-sm">{product.name}</p>
@@ -133,7 +124,7 @@ export default async function WarehouseStockPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <span className={`font-bold text-sm ${isOut ? "text-red-600" : isLow ? "text-amber-600" : "text-foreground"}`}>
-                          {stock.stock}
+                          {variant.stock}
                         </span>
                       </TableCell>
                       <TableCell className="text-center">

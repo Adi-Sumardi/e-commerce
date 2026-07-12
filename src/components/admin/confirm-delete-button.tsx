@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 interface ConfirmDeleteButtonProps {
   confirmMessage: string;
-  action: () => Promise<void>;
+  action: () => Promise<{ error?: string } | void>;
   successMessage?: string;
   /** Kalau diisi, redirect ke path ini setelah berhasil hapus (dipakai saat menghapus item yang sedang dibuka, mis. halaman edit produk). */
   redirectTo?: string;
@@ -31,7 +31,15 @@ export function ConfirmDeleteButton({
     submittedRef.current = true;
     startTransition(async () => {
       try {
-        await action();
+        const result = await action();
+        // Error validasi (mis. "sudah pernah dipesan") dikembalikan sebagai
+        // data, bukan throw — Next.js meredaksi pesan thrown error jadi
+        // generik di production, jadi throw cuma cocok untuk error tak
+        // terduga yang MEMANG harus disamarkan.
+        if (result && "error" in result && result.error) {
+          toast.error(result.error);
+          return;
+        }
         toast.success(successMessage, {
           icon: <CheckCircle2 className="size-5" />,
           description: "Perubahan sudah tersimpan.",

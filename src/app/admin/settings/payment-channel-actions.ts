@@ -77,7 +77,7 @@ export async function deletePaymentChannelAction(channelId: string) {
 
   const paymentCount = await db.payment.count({ where: { paymentChannelId: channelId } });
   if (paymentCount > 0) {
-    throw new Error("Rekening/QRIS ini sudah pernah dipakai transaksi, nonaktifkan saja daripada dihapus.");
+    return { error: "Rekening/QRIS ini sudah pernah dipakai transaksi, nonaktifkan saja daripada dihapus." };
   }
 
   await db.paymentChannel.delete({ where: { id: channelId } });

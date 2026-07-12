@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/table";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ProductDeleteButton } from "./product-delete-button";
 
 function formatIDRLocal(n: number) {
   return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(n);
@@ -197,6 +198,7 @@ export default async function AdminProductsPage({
                           >
                             <Edit className="size-4 text-blue-500" />
                           </Link>
+                          <ProductDeleteButton productId={product.id} productName={product.name} />
                         </div>
                       </TableCell>
                     </TableRow>

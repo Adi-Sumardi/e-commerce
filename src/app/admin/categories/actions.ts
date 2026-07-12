@@ -71,7 +71,7 @@ export async function deleteCategoryAction(categoryId: string) {
 
   const productCount = await db.product.count({ where: { categoryId } });
   if (productCount > 0) {
-    throw new Error("Kategori masih dipakai produk, tidak bisa dihapus.");
+    return { error: "Kategori masih dipakai produk, tidak bisa dihapus." };
   }
 
   await db.category.delete({ where: { id: categoryId } });

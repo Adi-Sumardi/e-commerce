@@ -238,7 +238,7 @@ export async function deleteProductAction(productId: string) {
     where: { productVariant: { productId } },
   });
   if (orderItemCount > 0) {
-    throw new Error("Produk ini sudah pernah dipesan, tidak bisa dihapus (arsipkan saja).");
+    return { requiresForceConfirm: true as const, orderCount: orderItemCount };
   }
 
   try {
@@ -252,5 +252,21 @@ export async function deleteProductAction(productId: string) {
   }
 
   revalidatePath("/admin/products");
+  revalidatePath("/");
+}
+
+// Dipakai kalau admin secara eksplisit konfirmasi mau hapus produk BESERTA
+// riwayat penjualannya (order item terkait) — hanya dipanggil setelah user
+// menyetujui peringatan kedua di ProductDeleteButton, bukan default behavior.
+export async function forceDeleteProductAction(productId: string) {
+  await requireSuperAdmin();
+
+  await db.$transaction([
+    db.orderItem.deleteMany({ where: { productVariant: { productId } } }),
+    db.product.delete({ where: { id: productId } }),
+  ]);
+
+  revalidatePath("/admin/products");
+  revalidatePath("/admin/orders");
   revalidatePath("/");
 }

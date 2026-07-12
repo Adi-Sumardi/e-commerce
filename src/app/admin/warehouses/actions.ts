@@ -64,10 +64,10 @@ export async function deleteWarehouseAction(warehouseId: string) {
     db.warehouseStaff.count({ where: { warehouseId } }),
   ]);
   if (orderCount > 0) {
-    throw new Error("Gudang ini sudah punya riwayat order, tidak bisa dihapus (nonaktifkan saja).");
+    return { error: "Gudang ini sudah punya riwayat order, tidak bisa dihapus (nonaktifkan saja)." };
   }
   if (staffCount > 0) {
-    throw new Error("Masih ada staff yang ditugaskan ke gudang ini — pindahkan/hapus staff dulu.");
+    return { error: "Masih ada staff yang ditugaskan ke gudang ini — pindahkan/hapus staff dulu." };
   }
 
   await db.warehouse.delete({ where: { id: warehouseId } });

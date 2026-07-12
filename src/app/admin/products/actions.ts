@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
-import { ProductStatus, PreorderPaymentType } from "@prisma/client";
+import { ProductStatus, PreorderPaymentType, Prisma } from "@prisma/client";
 
 async function requireSuperAdmin() {
   const session = await auth();
@@ -241,7 +241,16 @@ export async function deleteProductAction(productId: string) {
     throw new Error("Produk ini sudah pernah dipesan, tidak bisa dihapus (arsipkan saja).");
   }
 
-  await db.product.delete({ where: { id: productId } });
+  try {
+    await db.product.delete({ where: { id: productId } });
+  } catch (error) {
+    // P2025 = record sudah tidak ada (mis. klik hapus dobel yang lolos race
+    // client) — anggap berhasil, jangan lempar error generik ke user.
+    const alreadyDeleted =
+      error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025";
+    if (!alreadyDeleted) throw error;
+  }
+
   revalidatePath("/admin/products");
   revalidatePath("/");
 }

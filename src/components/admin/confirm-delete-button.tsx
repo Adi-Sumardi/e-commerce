@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -21,6 +21,7 @@ export function ConfirmDeleteButton({
   redirectTo,
 }: ConfirmDeleteButtonProps) {
   const [isPending, startTransition] = useTransition();
+  const submittedRef = useRef(false);
   const router = useRouter();
 
   return (
@@ -30,7 +31,11 @@ export function ConfirmDeleteButton({
       className="size-8 cursor-pointer text-destructive hover:bg-destructive/10 hover:text-destructive"
       disabled={isPending}
       onClick={() => {
+        // isPending baru true setelah React commit — klik ganda yang sangat cepat
+        // bisa lolos sebelum itu, jadi tambah guard sinkron di sini juga.
+        if (submittedRef.current) return;
         if (!confirm(confirmMessage)) return;
+        submittedRef.current = true;
         startTransition(async () => {
           try {
             await action();
@@ -39,11 +44,18 @@ export function ConfirmDeleteButton({
               description: "Perubahan sudah tersimpan.",
               duration: 3500,
             });
+            // revalidatePath() di server action cuma invalidate cache sisi
+            // server — refresh eksplisit di sini supaya halaman tujuan (baik
+            // redirect maupun halaman saat ini) benar-benar ambil data baru,
+            // bukan versi lama dari Router Cache sisi client.
             if (redirectTo) {
               router.push(redirectTo);
             }
+            router.refresh();
           } catch (error) {
             toast.error(error instanceof Error ? error.message : "Gagal menghapus.");
+          } finally {
+            submittedRef.current = false;
           }
         });
       }}

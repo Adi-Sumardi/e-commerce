@@ -2,7 +2,7 @@
 
 import { useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, Trash2 } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
@@ -24,6 +24,35 @@ export function ConfirmDeleteButton({
   const submittedRef = useRef(false);
   const router = useRouter();
 
+  function runDelete() {
+    // isPending baru true setelah React commit — klik ganda yang sangat cepat
+    // bisa lolos sebelum itu, jadi tambah guard sinkron di sini juga.
+    if (submittedRef.current) return;
+    submittedRef.current = true;
+    startTransition(async () => {
+      try {
+        await action();
+        toast.success(successMessage, {
+          icon: <CheckCircle2 className="size-5" />,
+          description: "Perubahan sudah tersimpan.",
+          duration: 3500,
+        });
+        // revalidatePath() di server action cuma invalidate cache sisi
+        // server — refresh eksplisit di sini supaya halaman tujuan (baik
+        // redirect maupun halaman saat ini) benar-benar ambil data baru,
+        // bukan versi lama dari Router Cache sisi client.
+        if (redirectTo) {
+          router.push(redirectTo);
+        }
+        router.refresh();
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Gagal menghapus.");
+      } finally {
+        submittedRef.current = false;
+      }
+    });
+  }
+
   return (
     <Button
       variant="ghost"
@@ -31,32 +60,17 @@ export function ConfirmDeleteButton({
       className="size-8 cursor-pointer text-destructive hover:bg-destructive/10 hover:text-destructive"
       disabled={isPending}
       onClick={() => {
-        // isPending baru true setelah React commit — klik ganda yang sangat cepat
-        // bisa lolos sebelum itu, jadi tambah guard sinkron di sini juga.
-        if (submittedRef.current) return;
-        if (!confirm(confirmMessage)) return;
-        submittedRef.current = true;
-        startTransition(async () => {
-          try {
-            await action();
-            toast.success(successMessage, {
-              icon: <CheckCircle2 className="size-5" />,
-              description: "Perubahan sudah tersimpan.",
-              duration: 3500,
-            });
-            // revalidatePath() di server action cuma invalidate cache sisi
-            // server — refresh eksplisit di sini supaya halaman tujuan (baik
-            // redirect maupun halaman saat ini) benar-benar ambil data baru,
-            // bukan versi lama dari Router Cache sisi client.
-            if (redirectTo) {
-              router.push(redirectTo);
-            }
-            router.refresh();
-          } catch (error) {
-            toast.error(error instanceof Error ? error.message : "Gagal menghapus.");
-          } finally {
-            submittedRef.current = false;
-          }
+        toast(confirmMessage, {
+          icon: <AlertTriangle className="size-5 text-destructive" />,
+          duration: 8000,
+          action: {
+            label: "Hapus",
+            onClick: runDelete,
+          },
+          cancel: {
+            label: "Batal",
+            onClick: () => {},
+          },
         });
       }}
     >

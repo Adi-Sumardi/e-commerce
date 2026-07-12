@@ -15,8 +15,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { createVoucherAction } from "./actions";
-import { DeleteVoucherButton } from "./delete-voucher-button";
+import { ConfirmDeleteButton } from "@/components/admin/confirm-delete-button";
+import { createVoucherAction, deleteVoucherAction } from "./actions";
 
 function formatIDR(n: number) {
   return new Intl.NumberFormat("id-ID", {
@@ -185,7 +185,11 @@ export default async function AdminVouchersPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <DeleteVoucherButton voucherId={voucher.id} />
+                        <ConfirmDeleteButton
+                          confirmMessage={`Hapus voucher "${voucher.code}"? Tindakan tidak dapat dibatalkan.`}
+                          successMessage="Voucher berhasil dihapus."
+                          action={deleteVoucherAction.bind(null, voucher.id)}
+                        />
                       </TableCell>
                     </TableRow>
                   );

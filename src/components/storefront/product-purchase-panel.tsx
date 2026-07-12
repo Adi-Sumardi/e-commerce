@@ -12,6 +12,13 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { WhatsappIcon, InstagramIcon, FacebookIcon, TiktokIcon } from "@/components/shared/social-icons";
 import { useCartStore } from "@/store/cart-store";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -90,6 +97,41 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
     if (success) {
       router.push("/cart");
     }
+  }
+
+  async function handleShare(platform: "whatsapp" | "instagram" | "facebook" | "tiktok") {
+    const shareUrl = `${window.location.origin}/products/${product.slug}`;
+    const shareText = `${product.name} - Pratama Jaya`;
+
+    if (platform === "whatsapp") {
+      window.open(`https://wa.me/?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`, "_blank");
+      return;
+    }
+    if (platform === "facebook") {
+      window.open(
+        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+        "_blank"
+      );
+      return;
+    }
+
+    // Instagram & TikTok tidak punya web share URL resmi untuk konten
+    // arbitrer — coba native share sheet (kalau ada Instagram/TikTok
+    // terpasang, muncul di situ), fallback ke copy link.
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: shareText, url: shareUrl });
+        return;
+      } catch {
+        // user membatalkan share sheet — jangan lanjut ke fallback copy
+        return;
+      }
+    }
+
+    await navigator.clipboard.writeText(shareUrl);
+    toast.success(
+      `Link disalin! Buka ${platform === "instagram" ? "Instagram" : "TikTok"} lalu tempel di story/bio.`
+    );
   }
 
   return (
@@ -190,10 +232,34 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
             Chat
           </button>
           <div className="h-3 w-px bg-border" />
-          <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary cursor-pointer">
-            <Share2 className="size-4" />
-            Bagikan
-          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary cursor-pointer">
+                  <Share2 className="size-4" />
+                  Bagikan
+                </button>
+              }
+            />
+            <DropdownMenuContent align="center" className="w-44">
+              <DropdownMenuItem onClick={() => handleShare("whatsapp")} className="cursor-pointer gap-2">
+                <WhatsappIcon className="size-4 text-[#25D366]" />
+                WhatsApp
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleShare("facebook")} className="cursor-pointer gap-2">
+                <FacebookIcon className="size-4 text-[#1877F2]" />
+                Facebook
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleShare("instagram")} className="cursor-pointer gap-2">
+                <InstagramIcon className="size-4 text-[#E4405F]" />
+                Instagram
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleShare("tiktok")} className="cursor-pointer gap-2">
+                <TiktokIcon className="size-4 text-foreground" />
+                TikTok
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 

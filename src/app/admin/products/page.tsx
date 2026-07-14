@@ -153,7 +153,7 @@ export default async function AdminProductsPage({
                               fill
                               unoptimized
                               sizes="44px"
-                              className="object-cover"
+                              className="object-contain"
                             />
                           </div>
                           <div>

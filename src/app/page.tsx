@@ -233,7 +233,7 @@ export default async function Home({
                         fill
                         unoptimized
                         sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="object-contain transition-transform duration-300 group-hover:scale-105"
                       />
                       {product.discount && (
                         <Badge className="absolute left-3 top-3 bg-destructive text-[10px] font-bold text-white">

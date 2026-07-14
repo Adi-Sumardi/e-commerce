@@ -78,7 +78,7 @@ export function CartContent() {
                     fill
                     unoptimized
                     sizes="80px"
-                    className="object-cover"
+                    className="object-contain"
                   />
                 </div>
 

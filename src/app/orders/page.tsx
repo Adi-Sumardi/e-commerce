@@ -140,7 +140,7 @@ export default async function CustomerOrdersPage() {
                                 fill
                                 unoptimized
                                 sizes="64px"
-                                className="object-cover"
+                                className="object-contain"
                               />
                             </div>
                             <div className="min-w-0 flex-1">

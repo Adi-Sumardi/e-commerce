@@ -175,7 +175,7 @@ export default async function WarehouseDashboardPage() {
                               fill
                               unoptimized
                               sizes="48px"
-                              className="object-cover"
+                              className="object-contain"
                             />
                           </div>
                           <div className="min-w-0 flex-1">

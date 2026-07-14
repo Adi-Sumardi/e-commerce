@@ -25,7 +25,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
           priority
           unoptimized
           sizes="(max-width: 1024px) 100vw, 60vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          className="object-contain transition-transform duration-700 group-hover:scale-105"
         />
         <button
           aria-label="Tambahkan ke favorit"
@@ -52,7 +52,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
               fill
               unoptimized
               sizes="120px"
-              className="object-cover"
+              className="object-contain"
             />
             {isLast && (
               <div className="absolute inset-0 flex items-center justify-center bg-foreground/40 text-sm font-bold text-white">

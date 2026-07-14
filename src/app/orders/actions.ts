@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import { sendWhatsappMessage } from "@/lib/whatsapp";
 
 export async function submitPaymentProofAction(orderId: string, proofUrl: string) {
   const session = await auth();
@@ -52,6 +53,18 @@ export async function submitPaymentProofAction(orderId: string, proofUrl: string
     });
   } catch (err) {
     console.warn("Gagal membuat notifikasi konfirmasi pembayaran:", err);
+  }
+
+  // Notifikasi WhatsApp ke admin — perlu segera dicek & diapprove.
+  if (process.env.ADMIN_WHATSAPP_NUMBER) {
+    try {
+      await sendWhatsappMessage(
+        process.env.ADMIN_WHATSAPP_NUMBER,
+        `Pembayaran perlu diapprove\nOrder #${order.orderNumber} baru saja mengirim bukti transfer. Cek & konfirmasi di dashboard admin.`
+      );
+    } catch (err) {
+      console.warn("Gagal mengirim notifikasi WhatsApp ke admin:", err);
+    }
   }
 
   revalidatePath(`/orders/${orderId}`);

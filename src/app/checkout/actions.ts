@@ -3,6 +3,7 @@
 import { auth } from "@/lib/auth";
 import { CheckoutService } from "@/server/services/checkout-service";
 import { AddressRepository } from "@/server/repositories/address-repository";
+import { sendWhatsappMessage } from "@/lib/whatsapp";
 import { db } from "@/lib/db";
 
 export async function getCheckoutDataAction(items: { productVariantId: string; quantity: number }[]) {
@@ -198,7 +199,12 @@ export async function simulateMockPaymentAction(paymentId: string) {
   try {
     const order = await db.order.findUnique({
       where: { id: payment.orderId },
-      select: { warehouseId: true, orderNumber: true, userId: true },
+      select: {
+        warehouseId: true,
+        orderNumber: true,
+        userId: true,
+        warehouse: { select: { phone: true } },
+      },
     });
 
     if (order && order.warehouseId) {
@@ -212,6 +218,13 @@ export async function simulateMockPaymentAction(paymentId: string) {
           message: `Order #${order.orderNumber} telah dibayar dan siap diproses di gudang.`,
         },
       });
+
+      if (order.warehouse?.phone) {
+        await sendWhatsappMessage(
+          order.warehouse.phone,
+          `Order siap dikirim\nOrder #${order.orderNumber} sudah dibayar (simulasi). Segera proses & kirim barangnya.`
+        );
+      }
     }
   } catch (err) {
     console.warn("Failed to create dashboard notification:", err);

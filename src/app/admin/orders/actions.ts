@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
+import { sendWhatsappMessage } from "@/lib/whatsapp";
 
 async function requireSuperAdmin() {
   const session = await auth();
@@ -18,7 +19,10 @@ export async function confirmManualPaymentAction(orderId: string) {
 
   const order = await db.order.findUnique({
     where: { id: orderId },
-    include: { payments: { orderBy: { createdAt: "desc" }, take: 1 } },
+    include: {
+      payments: { orderBy: { createdAt: "desc" }, take: 1 },
+      warehouse: { select: { phone: true } },
+    },
   });
 
   if (!order) {
@@ -68,6 +72,17 @@ export async function confirmManualPaymentAction(orderId: string) {
       });
     } catch (err) {
       console.warn("Gagal membuat notifikasi gudang:", err);
+    }
+
+    if (order.warehouse?.phone) {
+      try {
+        await sendWhatsappMessage(
+          order.warehouse.phone,
+          `Order siap dikirim\nOrder #${order.orderNumber} sudah dikonfirmasi lunas. Segera proses & kirim barangnya.`
+        );
+      } catch (err) {
+        console.warn("Gagal mengirim notifikasi WhatsApp ke gudang:", err);
+      }
     }
   }
 

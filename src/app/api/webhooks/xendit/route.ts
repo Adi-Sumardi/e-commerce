@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyXenditCallbackToken } from "@/lib/xendit";
+import { sendWhatsappMessage } from "@/lib/whatsapp";
 import { db } from "@/lib/db";
 
 // Referensi: docs/SRS.md FR-4.2, FR-4.3 — webhook wajib idempotent & terverifikasi.
@@ -59,7 +60,12 @@ export async function POST(req: NextRequest) {
     try {
       const order = await db.order.findUnique({
         where: { id: payment.orderId },
-        select: { warehouseId: true, orderNumber: true, userId: true },
+        select: {
+          warehouseId: true,
+          orderNumber: true,
+          userId: true,
+          warehouse: { select: { phone: true } },
+        },
       });
 
       if (order && order.warehouseId) {
@@ -73,6 +79,13 @@ export async function POST(req: NextRequest) {
             message: `Order #${order.orderNumber} telah sukses dibayar via Xendit.`,
           },
         });
+
+        if (order.warehouse?.phone) {
+          await sendWhatsappMessage(
+            order.warehouse.phone,
+            `Order siap dikirim\nOrder #${order.orderNumber} sudah sukses dibayar via Xendit. Segera proses & kirim barangnya.`
+          );
+        }
       }
     } catch (err) {
       console.warn("Failed to create webhook dashboard notification:", err);

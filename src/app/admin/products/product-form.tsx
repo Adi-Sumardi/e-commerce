@@ -15,6 +15,8 @@ interface VariantRow {
   key: string;
   sku: string;
   name: string;
+  type: "TEXT" | "COLOR";
+  colorHex: string;
   price: string;
   stock: string;
 }
@@ -45,7 +47,14 @@ interface ProductFormProps {
     preorderDpPercentage: number | null;
     preorderEstimatedDate: string | null;
     images: string[];
-    variants: { sku: string; name: string; price: number; stock: number }[];
+    variants: {
+      sku: string;
+      name: string;
+      type: "TEXT" | "COLOR";
+      colorHex: string | null;
+      price: number;
+      stock: number;
+    }[];
     specs: { label: string; value: string }[];
   };
 }
@@ -67,14 +76,19 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
           key: makeKey(),
           sku: v.sku,
           name: v.name,
+          type: v.type,
+          colorHex: v.colorHex ?? "#191B23",
           price: String(v.price),
           stock: String(v.stock),
         }))
-      : [{ key: makeKey(), sku: "", name: "", price: "", stock: "" }]
+      : [{ key: makeKey(), sku: "", name: "", type: "TEXT", colorHex: "#191B23", price: "", stock: "" }]
   );
 
   function addVariant() {
-    setVariants((prev) => [...prev, { key: makeKey(), sku: "", name: "", price: "", stock: "" }]);
+    setVariants((prev) => [
+      ...prev,
+      { key: makeKey(), sku: "", name: "", type: "TEXT", colorHex: "#191B23", price: "", stock: "" },
+    ]);
   }
 
   function removeVariant(key: string) {
@@ -82,7 +96,9 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
   }
 
   function updateVariant(key: string, field: keyof VariantRow, value: string) {
-    setVariants((prev) => prev.map((v) => (v.key === key ? { ...v, [field]: value } : v)));
+    setVariants((prev) =>
+      prev.map((v) => (v.key === key ? ({ ...v, [field]: value } as VariantRow) : v))
+    );
   }
 
   const [specs, setSpecs] = useState<SpecRow[]>(
@@ -367,60 +383,98 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
         </div>
         <div className="flex flex-col gap-3">
           {variants.map((v) => (
-            <div key={v.key} className="grid grid-cols-2 gap-2 rounded-lg border border-border/60 p-3 sm:grid-cols-[1fr_1fr_1fr_1fr_auto]">
-              <div className="flex flex-col gap-1">
-                <Label className="text-xs">SKU</Label>
-                <Input
-                  name="variant_sku"
-                  value={v.sku}
-                  onChange={(e) => updateVariant(v.key, "sku", e.target.value)}
-                  placeholder="SKU-001"
-                  required
-                />
+            <div key={v.key} className="flex flex-col gap-2 rounded-lg border border-border/60 p-3">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-[1fr_1fr_auto]">
+                <div className="flex flex-col gap-1">
+                  <Label className="text-xs">Tipe Varian</Label>
+                  <select
+                    name="variant_type"
+                    value={v.type}
+                    onChange={(e) => updateVariant(v.key, "type", e.target.value)}
+                    className="h-10 rounded-md border border-border bg-background px-3 text-sm"
+                  >
+                    <option value="TEXT">Teks / Nama</option>
+                    <option value="COLOR">Warna</option>
+                  </select>
+                </div>
+                {v.type === "COLOR" ? (
+                  <div className="flex flex-col gap-1">
+                    <Label className="text-xs">Warna</Label>
+                    <div className="flex h-10 items-center gap-2">
+                      <input
+                        type="color"
+                        name="variant_color_hex"
+                        value={v.colorHex}
+                        onChange={(e) => updateVariant(v.key, "colorHex", e.target.value)}
+                        className="size-10 shrink-0 cursor-pointer rounded-md border border-border bg-background p-1"
+                      />
+                      <Input
+                        value={v.colorHex}
+                        onChange={(e) => updateVariant(v.key, "colorHex", e.target.value)}
+                        placeholder="#191B23"
+                        className="font-mono"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <input type="hidden" name="variant_color_hex" value={v.colorHex} readOnly />
+                )}
               </div>
-              <div className="flex flex-col gap-1">
-                <Label className="text-xs">Nama Varian</Label>
-                <Input
-                  name="variant_name"
-                  value={v.name}
-                  onChange={(e) => updateVariant(v.key, "name", e.target.value)}
-                  placeholder="Hitam / L"
-                  required
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                <Label className="text-xs">Harga (Rp)</Label>
-                <Input
-                  name="variant_price"
-                  type="number"
-                  min={0}
-                  value={v.price}
-                  onChange={(e) => updateVariant(v.key, "price", e.target.value)}
-                  required
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                <Label className="text-xs">Stok</Label>
-                <Input
-                  name="variant_stock"
-                  type="number"
-                  min={0}
-                  value={v.stock}
-                  onChange={(e) => updateVariant(v.key, "stock", e.target.value)}
-                  required
-                />
-              </div>
-              <div className="flex items-end">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  className="cursor-pointer text-destructive hover:bg-destructive/10"
-                  onClick={() => removeVariant(v.key)}
-                  disabled={variants.length === 1}
-                >
-                  <Trash2 className="size-4" />
-                </Button>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-[1fr_1fr_1fr_1fr_auto]">
+                <div className="flex flex-col gap-1">
+                  <Label className="text-xs">SKU</Label>
+                  <Input
+                    name="variant_sku"
+                    value={v.sku}
+                    onChange={(e) => updateVariant(v.key, "sku", e.target.value)}
+                    placeholder="SKU-001"
+                    required
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Label className="text-xs">Nama Varian</Label>
+                  <Input
+                    name="variant_name"
+                    value={v.name}
+                    onChange={(e) => updateVariant(v.key, "name", e.target.value)}
+                    placeholder="Hitam / L"
+                    required
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Label className="text-xs">Harga (Rp)</Label>
+                  <Input
+                    name="variant_price"
+                    type="number"
+                    min={0}
+                    value={v.price}
+                    onChange={(e) => updateVariant(v.key, "price", e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <Label className="text-xs">Stok</Label>
+                  <Input
+                    name="variant_stock"
+                    type="number"
+                    min={0}
+                    value={v.stock}
+                    onChange={(e) => updateVariant(v.key, "stock", e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="flex items-end">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="cursor-pointer text-destructive hover:bg-destructive/10"
+                    onClick={() => removeVariant(v.key)}
+                    disabled={variants.length === 1}
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                </div>
               </div>
             </div>
           ))}

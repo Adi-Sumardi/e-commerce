@@ -78,6 +78,8 @@ export default async function EditProductPage({
             variants: product.variants.map((v) => ({
               sku: v.sku,
               name: v.name,
+              type: v.type,
+              colorHex: v.colorHex,
               price: Number(v.price),
               stock: v.stock,
             })),

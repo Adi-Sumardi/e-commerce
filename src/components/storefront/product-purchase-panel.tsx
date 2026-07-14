@@ -34,10 +34,11 @@ interface ProductPurchasePanelProps {
     isPreorder: boolean;
     stock: number;
     images: { url: string; alt: string }[];
-    colors: {
+    variants: {
       id: string;
       sku: string;
       name: string;
+      type: "TEXT" | "COLOR";
       hex: string;
       price: number;
       stock: number;
@@ -46,12 +47,13 @@ interface ProductPurchasePanelProps {
 }
 
 export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
-  const [color, setColor] = useState(product.colors[0]?.name ?? "");
+  const [color, setColor] = useState(product.variants[0]?.name ?? "");
   const [quantity, setQuantity] = useState(1);
   const addItem = useCartStore((state) => state.addItem);
   const router = useRouter();
 
-  const selectedColor = product.colors.find((c) => c.name === color);
+  const isColorPicker = product.variants.some((v) => v.type === "COLOR");
+  const selectedColor = product.variants.find((c) => c.name === color);
   const currentStock = selectedColor ? selectedColor.stock : product.stock;
   const activePrice = selectedColor ? selectedColor.price : product.price;
   const hasDiscount = product.originalPrice !== null && product.originalPrice > activePrice;
@@ -66,7 +68,7 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
 
   function handleAddToCart(silent = false) {
     if (!selectedColor) {
-      toast.error("Silakan pilih warna terlebih dahulu.");
+      toast.error(isColorPicker ? "Silakan pilih warna terlebih dahulu." : "Silakan pilih varian terlebih dahulu.");
       return false;
     }
 
@@ -147,28 +149,47 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
           </div>
         )}
       </div>
-      {product.colors.length > 0 && (
+      {product.variants.length > 0 && (
         <div>
           <h3 className="mb-2 text-lg font-semibold">
-            Pilih Warna: <span className="font-normal text-muted-foreground">{color}</span>
+            {isColorPicker ? "Pilih Warna" : "Pilih Varian"}:{" "}
+            <span className="font-normal text-muted-foreground">{color}</span>
           </h3>
-          <div className="flex gap-2">
-            {product.colors.map((c) => (
-              <button
-                key={c.name}
-                onClick={() => {
-                  setColor(c.name);
-                  setQuantity(1);
-                }}
-                aria-label={`Pilih warna ${c.name}`}
-                style={{ backgroundColor: c.hex }}
-                className={`size-12 rounded-full ring-2 transition-all hover:scale-105 active:scale-95 ${
-                  color === c.name
-                    ? "border-4 border-primary ring-transparent"
-                    : "border-4 border-card ring-transparent"
-                }`}
-              />
-            ))}
+          <div className="flex flex-wrap gap-2">
+            {product.variants.map((v) =>
+              v.type === "COLOR" ? (
+                <button
+                  key={v.name}
+                  onClick={() => {
+                    setColor(v.name);
+                    setQuantity(1);
+                  }}
+                  aria-label={`Pilih warna ${v.name}`}
+                  style={{ backgroundColor: v.hex }}
+                  className={`size-12 rounded-full ring-2 transition-all hover:scale-105 active:scale-95 ${
+                    color === v.name
+                      ? "border-4 border-primary ring-transparent"
+                      : "border-4 border-card ring-transparent"
+                  }`}
+                />
+              ) : (
+                <button
+                  key={v.name}
+                  onClick={() => {
+                    setColor(v.name);
+                    setQuantity(1);
+                  }}
+                  aria-label={`Pilih varian ${v.name}`}
+                  className={`min-w-12 rounded-lg border-2 px-4 py-2 text-sm font-semibold transition-all hover:scale-105 active:scale-95 ${
+                    color === v.name
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border bg-card text-foreground"
+                  }`}
+                >
+                  {v.name}
+                </button>
+              )
+            )}
           </div>
         </div>
       )}

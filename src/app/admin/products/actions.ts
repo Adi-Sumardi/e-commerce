@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
-import { ProductStatus, PreorderPaymentType, Prisma } from "@prisma/client";
+import { ProductStatus, PreorderPaymentType, VariantType, Prisma } from "@prisma/client";
 
 async function requireSuperAdmin() {
   const session = await auth();
@@ -38,7 +38,14 @@ interface ParsedProductForm {
   preorderDpPercentage: number | null;
   preorderEstimatedDate: Date | null;
   images: string[];
-  variants: { sku: string; name: string; price: number; stock: number }[];
+  variants: {
+    sku: string;
+    name: string;
+    type: VariantType;
+    colorHex: string | null;
+    price: number;
+    stock: number;
+  }[];
   specs: { label: string; value: string }[];
 }
 
@@ -74,16 +81,23 @@ function parseProductForm(formData: FormData): ParsedProductForm {
 
   const skus = formData.getAll("variant_sku") as string[];
   const names = formData.getAll("variant_name") as string[];
+  const types = formData.getAll("variant_type") as string[];
+  const colorHexes = formData.getAll("variant_color_hex") as string[];
   const prices = formData.getAll("variant_price") as string[];
   const stocks = formData.getAll("variant_stock") as string[];
 
   const variants = skus
-    .map((sku, i) => ({
-      sku: sku?.trim(),
-      name: names[i]?.trim(),
-      price: parseFloat(prices[i]),
-      stock: parseInt(stocks[i], 10) || 0,
-    }))
+    .map((sku, i) => {
+      const type: VariantType = types[i] === "COLOR" ? "COLOR" : "TEXT";
+      return {
+        sku: sku?.trim(),
+        name: names[i]?.trim(),
+        type,
+        colorHex: type === "COLOR" ? (colorHexes[i]?.trim() || "#191B23") : null,
+        price: parseFloat(prices[i]),
+        stock: parseInt(stocks[i], 10) || 0,
+      };
+    })
     .filter((v) => v.sku && v.name && !isNaN(v.price));
 
   const specLabels = formData.getAll("spec_label") as string[];
@@ -212,8 +226,23 @@ export async function updateProductAction(productId: string, formData: FormData)
   for (const variant of parsed.variants) {
     await db.productVariant.upsert({
       where: { sku: variant.sku },
-      update: { name: variant.name, price: variant.price, stock: variant.stock, productId },
-      create: { productId, sku: variant.sku, name: variant.name, price: variant.price, stock: variant.stock },
+      update: {
+        name: variant.name,
+        type: variant.type,
+        colorHex: variant.colorHex,
+        price: variant.price,
+        stock: variant.stock,
+        productId,
+      },
+      create: {
+        productId,
+        sku: variant.sku,
+        name: variant.name,
+        type: variant.type,
+        colorHex: variant.colorHex,
+        price: variant.price,
+        stock: variant.stock,
+      },
     });
   }
 

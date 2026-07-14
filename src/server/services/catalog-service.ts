@@ -124,27 +124,17 @@ export class CatalogService {
       ? `${Math.round(((compareAtPrice! - basePrice) / compareAtPrice!) * 100)}% OFF`
       : null;
 
-    // Format colors from variants or default if empty
-    const colors = prod.variants.map((v) => {
-      let hex = "#191B23";
-      if (v.name.toLowerCase().includes("silver") || v.name.toLowerCase().includes("white")) {
-        hex = "#E2E8F0";
-      } else if (v.name.toLowerCase().includes("blue")) {
-        hex = "#2563eb";
-      } else if (v.name.toLowerCase().includes("sand")) {
-        hex = "#d2b48c";
-      }
-      return {
-        id: v.id,
-        sku: v.sku,
-        name: v.name,
-        hex,
-        price: Number(v.price),
-        stock: v.stock,
-      };
-    });
+    const variants = prod.variants.map((v) => ({
+      id: v.id,
+      sku: v.sku,
+      name: v.name,
+      type: v.type,
+      hex: v.colorHex ?? "#191B23",
+      price: Number(v.price),
+      stock: v.stock,
+    }));
 
-    const totalStock = colors.reduce((acc, curr) => acc + curr.stock, 0);
+    const totalStock = variants.reduce((acc, curr) => acc + curr.stock, 0);
 
     const images = prod.images.map((img) => ({
       url: img.url,
@@ -180,7 +170,7 @@ export class CatalogService {
       price: basePrice,
       originalPrice,
       discountLabel,
-      colors,
+      variants,
       stock: totalStock,
       images,
       description: prod.description,

@@ -1,11 +1,8 @@
 import { cache } from "react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import {
   CalendarClock,
-  Gift,
   ListChecks,
-  ShieldCheck,
   Ticket,
   Wallet,
 } from "lucide-react";
@@ -18,7 +15,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Tabs,
   TabsContent,
@@ -34,7 +30,9 @@ import { StarRating } from "@/components/shared/star-rating";
 import { notFound } from "next/navigation";
 import { CatalogService } from "@/server/services/catalog-service";
 import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
 import { SITE_URL } from "@/lib/site";
+import { formatIDR } from "@/app/_data";
 
 // Dipakai oleh generateMetadata DAN page — cache() memastikan query DB cuma sekali.
 const getProductDetail = cache((slug: string) => CatalogService.getProductDetail(slug));
@@ -70,9 +68,15 @@ export default async function ProductDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [product, session] = await Promise.all([
+  const now = new Date();
+  const [product, session, activeVouchers] = await Promise.all([
     getProductDetail(slug),
     auth(),
+    db.voucher.findMany({
+      where: { startDate: { lte: now }, endDate: { gte: now } },
+      orderBy: { endDate: "asc" },
+      take: 2,
+    }),
   ]);
 
   if (!product) {
@@ -85,7 +89,7 @@ export default async function ProductDetailPage({
     name: product.name,
     description: product.description,
     image: product.images.map((img) => img.url),
-    sku: product.colors[0]?.sku,
+    sku: product.variants[0]?.sku,
     brand: { "@type": "Brand", name: product.storeName },
     offers: {
       "@type": "Offer",
@@ -288,53 +292,27 @@ export default async function ProductDetailPage({
 
               {/* Sidebar */}
               <aside className="space-y-6">
-                <div className="rounded-2xl border border-border/50 bg-card/80 p-4 backdrop-blur-sm">
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="relative size-12 overflow-hidden rounded-full">
-                      <Image
-                        src="https://placehold.co/96x96/2563eb/ffffff/png?text=PJ"
-                        alt="Logo toko Pratama Jaya"
-                        fill
-                        sizes="48px"
-                        className="object-cover"
-                      />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-foreground">{product.storeName}</h4>
-                      <div className="flex items-center gap-1 text-xs text-secondary">
-                        <ShieldCheck className="size-3.5" />
-                        <span>Premium Seller</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mb-4 grid grid-cols-2 gap-2">
-                    <div className="rounded-lg border border-border/30 bg-background p-2 text-center">
-                      <p className="text-xs text-muted-foreground">Rating</p>
-                      <p className="text-sm font-bold">4.9/5.0</p>
-                    </div>
-                    <div className="rounded-lg border border-border/30 bg-background p-2 text-center">
-                      <p className="text-xs text-muted-foreground">Pesanan</p>
-                      <p className="text-sm font-bold">1.2jt+</p>
+                {activeVouchers.length > 0 && (
+                  <div className="rounded-2xl border border-border bg-card p-4">
+                    <h4 className="mb-4 font-bold">Promo Menarik</h4>
+                    <div className="flex flex-col gap-2">
+                      {activeVouchers.map((voucher) => (
+                        <div
+                          key={voucher.id}
+                          className="flex items-center gap-2 rounded-lg bg-secondary/10 p-3 text-secondary"
+                        >
+                          <Ticket className="size-5" />
+                          <span className="text-xs font-bold">
+                            {voucher.code} —{" "}
+                            {voucher.type === "PERCENTAGE"
+                              ? `Diskon ${Number(voucher.value)}%`
+                              : `Diskon ${formatIDR(Number(voucher.value))}`}
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                  <Button className="mb-2 w-full">Follow Toko</Button>
-                  <Button variant="outline" className="w-full">
-                    Kunjungi Toko
-                  </Button>
-                </div>
-                <div className="rounded-2xl border border-border bg-card p-4">
-                  <h4 className="mb-4 font-bold">Promo Menarik</h4>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2 rounded-lg bg-secondary/10 p-3 text-secondary">
-                      <Ticket className="size-5" />
-                      <span className="text-xs font-bold">Cashback Rp 50.000</span>
-                    </div>
-                    <div className="flex items-center gap-2 rounded-lg bg-preorder/10 p-3 text-preorder">
-                      <Gift className="size-5" />
-                      <span className="text-xs font-bold">Bonus Travel Case</span>
-                    </div>
-                  </div>
-                </div>
+                )}
               </aside>
             </div>
           </Tabs>

@@ -3,7 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
-import { sendWhatsappMessage } from "@/lib/whatsapp";
+import { sendWhatsappMessage, formatWhatsappOrderItems, buildWhatsappMessage } from "@/lib/whatsapp";
+import { formatIDR } from "@/app/_data";
+import { SITE_URL } from "@/lib/site";
 
 export async function submitPaymentProofAction(orderId: string, proofUrl: string) {
   const session = await auth();
@@ -18,7 +20,11 @@ export async function submitPaymentProofAction(orderId: string, proofUrl: string
 
   const order = await db.order.findUnique({
     where: { id: orderId },
-    include: { payments: { orderBy: { createdAt: "desc" }, take: 1 } },
+    include: {
+      payments: { orderBy: { createdAt: "desc" }, take: 1 },
+      user: { select: { name: true } },
+      items: { select: { productNameSnapshot: true, quantity: true } },
+    },
   });
 
   if (!order || order.userId !== session.user.id) {
@@ -60,7 +66,18 @@ export async function submitPaymentProofAction(orderId: string, proofUrl: string
     try {
       await sendWhatsappMessage(
         process.env.ADMIN_WHATSAPP_NUMBER,
-        `Pembayaran perlu diapprove\nOrder #${order.orderNumber} baru saja mengirim bukti transfer. Cek & konfirmasi di dashboard admin.`
+        buildWhatsappMessage([
+          "🔔 *Pembayaran Perlu Diapprove*",
+          "",
+          `Order: #${order.orderNumber}`,
+          `Customer: ${order.user.name}`,
+          `Total: ${formatIDR(Number(order.total))}`,
+          "",
+          "Item:",
+          formatWhatsappOrderItems(order.items),
+          "",
+          `Cek & konfirmasi: ${SITE_URL}/admin/orders`,
+        ])
       );
     } catch (err) {
       console.warn("Gagal mengirim notifikasi WhatsApp ke admin:", err);

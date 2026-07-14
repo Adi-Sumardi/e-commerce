@@ -3,7 +3,9 @@
 import { auth } from "@/lib/auth";
 import { CheckoutService } from "@/server/services/checkout-service";
 import { AddressRepository } from "@/server/repositories/address-repository";
-import { sendWhatsappMessage } from "@/lib/whatsapp";
+import { sendWhatsappMessage, formatWhatsappOrderItems, buildWhatsappMessage } from "@/lib/whatsapp";
+import { formatIDR } from "@/app/_data";
+import { SITE_URL } from "@/lib/site";
 import { db } from "@/lib/db";
 
 export async function getCheckoutDataAction(items: { productVariantId: string; quantity: number }[]) {
@@ -203,7 +205,10 @@ export async function simulateMockPaymentAction(paymentId: string) {
         warehouseId: true,
         orderNumber: true,
         userId: true,
+        total: true,
         warehouse: { select: { phone: true } },
+        user: { select: { name: true } },
+        items: { select: { productNameSnapshot: true, quantity: true } },
       },
     });
 
@@ -222,7 +227,18 @@ export async function simulateMockPaymentAction(paymentId: string) {
       if (order.warehouse?.phone) {
         await sendWhatsappMessage(
           order.warehouse.phone,
-          `Order siap dikirim\nOrder #${order.orderNumber} sudah dibayar (simulasi). Segera proses & kirim barangnya.`
+          buildWhatsappMessage([
+            "📦 *Order Siap Dikirim*",
+            "",
+            `Order: #${order.orderNumber}`,
+            `Customer: ${order.user.name}`,
+            `Total: ${formatIDR(Number(order.total))}`,
+            "",
+            "Item:",
+            formatWhatsappOrderItems(order.items),
+            "",
+            `Proses & kirim: ${SITE_URL}/admin/warehouses/dashboard`,
+          ])
         );
       }
     }

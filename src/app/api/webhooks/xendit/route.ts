@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyXenditCallbackToken } from "@/lib/xendit";
-import { sendWhatsappMessage } from "@/lib/whatsapp";
+import { sendWhatsappMessage, formatWhatsappOrderItems, buildWhatsappMessage } from "@/lib/whatsapp";
+import { formatIDR } from "@/app/_data";
+import { SITE_URL } from "@/lib/site";
 import { db } from "@/lib/db";
 
 // Referensi: docs/SRS.md FR-4.2, FR-4.3 — webhook wajib idempotent & terverifikasi.
@@ -64,7 +66,10 @@ export async function POST(req: NextRequest) {
           warehouseId: true,
           orderNumber: true,
           userId: true,
+          total: true,
           warehouse: { select: { phone: true } },
+          user: { select: { name: true } },
+          items: { select: { productNameSnapshot: true, quantity: true } },
         },
       });
 
@@ -83,7 +88,18 @@ export async function POST(req: NextRequest) {
         if (order.warehouse?.phone) {
           await sendWhatsappMessage(
             order.warehouse.phone,
-            `Order siap dikirim\nOrder #${order.orderNumber} sudah sukses dibayar via Xendit. Segera proses & kirim barangnya.`
+            buildWhatsappMessage([
+              "📦 *Order Siap Dikirim*",
+              "",
+              `Order: #${order.orderNumber}`,
+              `Customer: ${order.user.name}`,
+              `Total: ${formatIDR(Number(order.total))}`,
+              "",
+              "Item:",
+              formatWhatsappOrderItems(order.items),
+              "",
+              `Proses & kirim: ${SITE_URL}/admin/warehouses/dashboard`,
+            ])
           );
         }
       }

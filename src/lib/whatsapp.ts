@@ -10,6 +10,16 @@ function normalizeIndonesianPhone(phone: string): string {
   return digits;
 }
 
+const WA_FOOTER = "\n\n_Notifikasi by Pratama Jaya_";
+
+export function formatWhatsappOrderItems(items: { productNameSnapshot: string; quantity: number }[]): string {
+  return items.map((item) => `• ${item.quantity}x ${item.productNameSnapshot}`).join("\n");
+}
+
+export function buildWhatsappMessage(lines: string[]): string {
+  return lines.join("\n") + WA_FOOTER;
+}
+
 // Fire-and-forget dari pemanggil (dibungkus try/catch) — kegagalan kirim WA
 // tidak boleh menggagalkan alur order/pembayaran.
 export async function sendWhatsappMessage(phone: string, message: string): Promise<void> {

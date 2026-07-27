@@ -523,6 +523,7 @@ model Banner {
   title     String
   subtitle  String?
   imageUrl  String
+  videoUrl  String?
   ctaLabel  String?
   ctaLink   String?
   sortOrder Int      @default(0)

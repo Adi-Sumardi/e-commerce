@@ -10,9 +10,17 @@ interface FileUploadInputProps {
   value: string;
   onChange: (url: string) => void;
   label?: string;
+  accept?: string;
+  isVideo?: boolean;
 }
 
-export function FileUploadInput({ value, onChange, label = "Upload Gambar" }: FileUploadInputProps) {
+export function FileUploadInput({
+  value,
+  onChange,
+  label = "Upload Gambar",
+  accept = "image/png,image/jpeg,image/webp",
+  isVideo = false,
+}: FileUploadInputProps) {
   const [uploading, setUploading] = useState(false);
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -36,7 +44,11 @@ export function FileUploadInput({ value, onChange, label = "Upload Gambar" }: Fi
     <div className="flex flex-col gap-2">
       {value && (
         <div className="relative size-32 overflow-hidden rounded-lg border border-border bg-muted">
-          <Image src={value} alt="Preview" fill className="object-cover" unoptimized />
+          {isVideo ? (
+            <video src={value} className="size-full object-cover" muted loop autoPlay playsInline />
+          ) : (
+            <Image src={value} alt="Preview" fill className="object-cover" unoptimized />
+          )}
         </div>
       )}
       <label className="flex w-fit cursor-pointer items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm transition-colors hover:bg-muted">
@@ -44,7 +56,7 @@ export function FileUploadInput({ value, onChange, label = "Upload Gambar" }: Fi
         {value ? "Ganti File" : label}
         <input
           type="file"
-          accept="image/png,image/jpeg,image/webp"
+          accept={accept}
           className="hidden"
           onChange={handleFile}
           disabled={uploading}

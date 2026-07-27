@@ -25,6 +25,7 @@ interface BannerFormDialogProps {
     title: string;
     subtitle: string | null;
     imageUrl: string;
+    videoUrl: string | null;
     ctaLabel: string | null;
     ctaLink: string | null;
     sortOrder: number;
@@ -37,6 +38,7 @@ export function BannerFormDialog({ mode, action, initialValues }: BannerFormDial
   const [isPending, startTransition] = useTransition();
   const [isActive, setIsActive] = useState(initialValues?.isActive ?? true);
   const [imageUrl, setImageUrl] = useState(initialValues?.imageUrl ?? "");
+  const [videoUrl, setVideoUrl] = useState(initialValues?.videoUrl ?? "");
 
   function handleSubmit(formData: FormData) {
     if (!imageUrl) {
@@ -126,6 +128,33 @@ export function BannerFormDialog({ mode, action, initialValues }: BannerFormDial
             <Label htmlFor={`${idPrefix}-imageUrl`}>Gambar Banner</Label>
             <FileUploadInput value={imageUrl} onChange={setImageUrl} label="Upload Gambar Banner" />
             <input type="hidden" id={`${idPrefix}-imageUrl`} name="imageUrl" value={imageUrl} readOnly />
+            <p className="text-xs text-muted-foreground">
+              Dipakai sebagai poster/fallback kalau video di bawah diisi.
+            </p>
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label htmlFor={`${idPrefix}-videoUrl`}>Video Banner (opsional)</Label>
+            <FileUploadInput
+              value={videoUrl}
+              onChange={setVideoUrl}
+              label="Upload Video Banner"
+              accept="video/mp4,video/webm"
+              isVideo
+            />
+            {videoUrl && (
+              <button
+                type="button"
+                onClick={() => setVideoUrl("")}
+                className="w-fit cursor-pointer text-xs text-destructive hover:underline"
+              >
+                Hapus video, pakai gambar saja
+              </button>
+            )}
+            <input type="hidden" id={`${idPrefix}-videoUrl`} name="videoUrl" value={videoUrl} readOnly />
+            <p className="text-xs text-muted-foreground">
+              Format MP4/WebM, maksimal 30MB. Kalau diisi, video ini yang tampil (auto-play, tanpa suara,
+              berulang) menggantikan gambar di storefront.
+            </p>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1">

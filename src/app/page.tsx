@@ -73,15 +73,27 @@ export default async function Home({
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             {/* Main Banner */}
             <div className="group relative col-span-1 overflow-hidden rounded-2xl lg:col-span-2" style={{ aspectRatio: "2.2/1" }}>
-              <Image
-                src={mainBanner.imageUrl}
-                alt={mainBanner.title}
-                fill
-                priority
-                unoptimized
-                sizes="(max-width: 1024px) 100vw, 66vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-              />
+              {mainBanner.videoUrl ? (
+                <video
+                  src={mainBanner.videoUrl}
+                  poster={mainBanner.imageUrl}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              ) : (
+                <Image
+                  src={mainBanner.imageUrl}
+                  alt={mainBanner.title}
+                  fill
+                  priority
+                  unoptimized
+                  sizes="(max-width: 1024px) 100vw, 66vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              )}
               <div className="absolute inset-0 bg-linear-to-r from-foreground/90 via-foreground/50 to-transparent" />
               <div className="absolute inset-0 z-10 flex flex-col justify-center px-8 text-white md:px-12">
                 {mainBanner.badgeText && (
@@ -117,14 +129,26 @@ export default async function Home({
               <div className="hidden gap-4 lg:grid lg:grid-rows-2">
                 {sideBanners.slice(0, 2).map((banner) => (
                   <div key={banner.id} className="group relative overflow-hidden rounded-2xl">
-                    <Image
-                      src={banner.imageUrl}
-                      alt={banner.title}
-                      fill
-                      unoptimized
-                      sizes="33vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
+                    {banner.videoUrl ? (
+                      <video
+                        src={banner.videoUrl}
+                        poster={banner.imageUrl}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    ) : (
+                      <Image
+                        src={banner.imageUrl}
+                        alt={banner.title}
+                        fill
+                        unoptimized
+                        sizes="33vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    )}
                     <div className="absolute inset-0 bg-linear-to-t from-foreground/80 to-transparent" />
                     <Link
                       href={banner.ctaLink ?? "/products"}

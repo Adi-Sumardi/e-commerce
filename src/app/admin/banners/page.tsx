@@ -68,7 +68,12 @@ export default async function AdminBannersPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <p className="font-semibold text-sm">{banner.title}</p>
+                      <div className="flex items-center gap-1.5">
+                        <p className="font-semibold text-sm">{banner.title}</p>
+                        {banner.videoUrl && (
+                          <Badge variant="outline" className="text-[10px]">Video</Badge>
+                        )}
+                      </div>
                       {banner.subtitle && (
                         <p className="text-xs text-muted-foreground line-clamp-1">{banner.subtitle}</p>
                       )}
@@ -89,6 +94,7 @@ export default async function AdminBannersPage() {
                             title: banner.title,
                             subtitle: banner.subtitle,
                             imageUrl: banner.imageUrl,
+                            videoUrl: banner.videoUrl,
                             ctaLabel: banner.ctaLabel,
                             ctaLink: banner.ctaLink,
                             sortOrder: banner.sortOrder,

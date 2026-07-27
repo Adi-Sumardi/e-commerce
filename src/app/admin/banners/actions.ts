@@ -24,6 +24,7 @@ function parseBannerForm(formData: FormData) {
     title,
     subtitle: (formData.get("subtitle") as string)?.trim() || null,
     imageUrl,
+    videoUrl: (formData.get("videoUrl") as string)?.trim() || null,
     ctaLabel: (formData.get("ctaLabel") as string)?.trim() || null,
     ctaLink: (formData.get("ctaLink") as string)?.trim() || null,
     sortOrder: parseInt(formData.get("sortOrder") as string, 10) || 0,

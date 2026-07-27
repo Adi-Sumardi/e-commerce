@@ -28,13 +28,19 @@ interface SpecRow {
   value: string;
 }
 
+function Required() {
+  return <span className="text-destructive"> *</span>;
+}
+
 interface ProductFormProps {
   categories: { id: string; name: string }[];
+  warehouses: { id: string; name: string }[];
   action: (formData: FormData) => Promise<{ id: string } | void>;
   submitLabel: string;
   initialValues?: {
     name: string;
     categoryId: string;
+    warehouseId: string | null;
     description: string;
     basePrice: number;
     compareAtPrice: number | null;
@@ -66,7 +72,7 @@ function makeKey() {
   return Math.random().toString(36).slice(2);
 }
 
-export function ProductForm({ categories, action, submitLabel, initialValues }: ProductFormProps) {
+export function ProductForm({ categories, warehouses, action, submitLabel, initialValues }: ProductFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isPreorder, setIsPreorder] = useState(initialValues?.isPreorder ?? false);
@@ -175,11 +181,11 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
         <h2 className="mb-4 text-base font-semibold">Informasi Dasar</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-1 sm:col-span-2">
-            <Label htmlFor="name">Nama Produk</Label>
+            <Label htmlFor="name">Nama Produk<Required /></Label>
             <Input id="name" name="name" defaultValue={initialValues?.name} required />
           </div>
           <div className="flex flex-col gap-1">
-            <Label htmlFor="categoryId">Kategori</Label>
+            <Label htmlFor="categoryId">Kategori<Required /></Label>
             <select
               id="categoryId"
               name="categoryId"
@@ -198,6 +204,25 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
             </select>
           </div>
           <div className="flex flex-col gap-1">
+            <Label htmlFor="warehouseId">Gudang<Required /></Label>
+            <select
+              id="warehouseId"
+              name="warehouseId"
+              defaultValue={initialValues?.warehouseId ?? ""}
+              required
+              className="h-10 rounded-md border border-border bg-background px-3 text-sm"
+            >
+              <option value="" disabled>
+                Pilih gudang
+              </option>
+              {warehouses.map((w) => (
+                <option key={w.id} value={w.id}>
+                  {w.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col gap-1">
             <Label htmlFor="status">Status</Label>
             <select
               id="status"
@@ -211,7 +236,7 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
             </select>
           </div>
           <div className="flex flex-col gap-1 sm:col-span-2">
-            <Label htmlFor="description">Deskripsi</Label>
+            <Label htmlFor="description">Deskripsi<Required /></Label>
             <Textarea
               id="description"
               name="description"
@@ -227,7 +252,7 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
         <h2 className="mb-4 text-base font-semibold">Harga & Diskon</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-1">
-            <Label htmlFor="basePrice">Harga Jual (Rp)</Label>
+            <Label htmlFor="basePrice">Harga Jual (Rp)<Required /></Label>
             <Input
               id="basePrice"
               name="basePrice"
@@ -279,19 +304,19 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
         <h2 className="mb-4 text-base font-semibold">Berat & Dimensi (untuk kalkulasi ongkir)</h2>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           <div className="flex flex-col gap-1">
-            <Label htmlFor="weightGrams">Berat (gram)</Label>
+            <Label htmlFor="weightGrams">Berat (gram)<Required /></Label>
             <Input id="weightGrams" name="weightGrams" type="number" min={0} defaultValue={initialValues?.weightGrams ?? 100} required />
           </div>
           <div className="flex flex-col gap-1">
-            <Label htmlFor="lengthCm">Panjang (cm)</Label>
+            <Label htmlFor="lengthCm">Panjang (cm)<Required /></Label>
             <Input id="lengthCm" name="lengthCm" type="number" min={0} defaultValue={initialValues?.lengthCm ?? 10} required />
           </div>
           <div className="flex flex-col gap-1">
-            <Label htmlFor="widthCm">Lebar (cm)</Label>
+            <Label htmlFor="widthCm">Lebar (cm)<Required /></Label>
             <Input id="widthCm" name="widthCm" type="number" min={0} defaultValue={initialValues?.widthCm ?? 10} required />
           </div>
           <div className="flex flex-col gap-1">
-            <Label htmlFor="heightCm">Tinggi (cm)</Label>
+            <Label htmlFor="heightCm">Tinggi (cm)<Required /></Label>
             <Input id="heightCm" name="heightCm" type="number" min={0} defaultValue={initialValues?.heightCm ?? 10} required />
           </div>
         </div>
@@ -353,7 +378,7 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
       </div>
 
       <div className="rounded-xl border border-border bg-card p-6">
-        <h2 className="mb-2 text-base font-semibold">Gambar Produk</h2>
+        <h2 className="mb-2 text-base font-semibold">Gambar Produk<Required /></h2>
         <p className="mb-3 text-xs text-muted-foreground">Upload satu atau beberapa gambar. Gambar pertama jadi foto utama.</p>
         {images.length > 0 && (
           <div className="mb-3 flex flex-wrap gap-3">
@@ -441,7 +466,7 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
               </div>
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-[1fr_1fr_1fr_1fr_auto]">
                 <div className="flex flex-col gap-1">
-                  <Label className="text-xs">SKU</Label>
+                  <Label className="text-xs">SKU<Required /></Label>
                   <Input
                     name="variant_sku"
                     value={v.sku}
@@ -451,7 +476,7 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <Label className="text-xs">Nama Varian</Label>
+                  <Label className="text-xs">Nama Varian<Required /></Label>
                   <Input
                     name="variant_name"
                     value={v.name}
@@ -461,7 +486,7 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <Label className="text-xs">Harga (Rp)</Label>
+                  <Label className="text-xs">Harga (Rp)<Required /></Label>
                   <Input
                     name="variant_price"
                     type="number"
@@ -472,7 +497,7 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <Label className="text-xs">Stok</Label>
+                  <Label className="text-xs">Stok<Required /></Label>
                   <Input
                     name="variant_stock"
                     type="number"

@@ -25,6 +25,7 @@ interface ParsedProductForm {
   name: string;
   slug: string;
   categoryId: string;
+  warehouseId: string;
   description: string;
   basePrice: number;
   compareAtPrice: number | null;
@@ -54,6 +55,7 @@ interface ParsedProductForm {
 function parseProductForm(formData: FormData): ParsedProductForm {
   const name = (formData.get("name") as string)?.trim();
   const categoryId = formData.get("categoryId") as string;
+  const warehouseId = formData.get("warehouseId") as string;
   const description = (formData.get("description") as string)?.trim() ?? "";
   const basePrice = parseFloat(formData.get("basePrice") as string);
   const compareAtPriceRaw = formData.get("compareAtPrice") as string;
@@ -115,6 +117,9 @@ function parseProductForm(formData: FormData): ParsedProductForm {
   if (!name || !categoryId || isNaN(basePrice)) {
     throw new Error("Nama, kategori, dan harga dasar wajib diisi dengan benar.");
   }
+  if (!warehouseId) {
+    throw new Error("Gudang wajib dipilih.");
+  }
   if (variants.length === 0) {
     throw new Error("Minimal harus ada 1 varian produk (SKU, nama, harga, stok).");
   }
@@ -126,6 +131,7 @@ function parseProductForm(formData: FormData): ParsedProductForm {
     name,
     slug: slugify(name),
     categoryId,
+    warehouseId,
     description,
     basePrice,
     compareAtPrice,
@@ -160,6 +166,7 @@ export async function createProductAction(formData: FormData) {
       name: parsed.name,
       slug: parsed.slug,
       categoryId: parsed.categoryId,
+      warehouseId: parsed.warehouseId,
       description: parsed.description,
       basePrice: parsed.basePrice,
       compareAtPrice: parsed.compareAtPrice,
@@ -209,6 +216,7 @@ export async function updateProductAction(productId: string, formData: FormData)
         name: parsed.name,
         slug: parsed.slug,
         categoryId: parsed.categoryId,
+        warehouseId: parsed.warehouseId,
         description: parsed.description,
         basePrice: parsed.basePrice,
         compareAtPrice: parsed.compareAtPrice,

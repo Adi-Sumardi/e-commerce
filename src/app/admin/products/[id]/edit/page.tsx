@@ -19,8 +19,9 @@ export default async function EditProductPage({
 
   const { id } = await params;
 
-  const [categories, product] = await Promise.all([
+  const [categories, warehouses, product] = await Promise.all([
     db.category.findMany({ orderBy: { name: "asc" } }),
+    db.warehouse.findMany({ where: { isActive: true }, orderBy: { name: "asc" } }),
     db.product.findUnique({
       where: { id },
       include: {
@@ -53,11 +54,13 @@ export default async function EditProductPage({
 
         <ProductForm
           categories={categories}
+          warehouses={warehouses}
           action={updateProductAction.bind(null, product.id)}
           submitLabel="Simpan Perubahan"
           initialValues={{
             name: product.name,
             categoryId: product.categoryId,
+            warehouseId: product.warehouseId,
             description: product.description,
             basePrice: Number(product.basePrice),
             compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,

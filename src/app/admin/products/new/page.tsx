@@ -13,7 +13,10 @@ export default async function NewProductPage() {
     redirect("/login");
   }
 
-  const categories = await db.category.findMany({ orderBy: { name: "asc" } });
+  const [categories, warehouses] = await Promise.all([
+    db.category.findMany({ orderBy: { name: "asc" } }),
+    db.warehouse.findMany({ where: { isActive: true }, orderBy: { name: "asc" } }),
+  ]);
 
   return (
     <>
@@ -32,6 +35,7 @@ export default async function NewProductPage() {
 
         <ProductForm
           categories={categories}
+          warehouses={warehouses}
           action={createProductAction}
           submitLabel="Simpan Produk"
         />

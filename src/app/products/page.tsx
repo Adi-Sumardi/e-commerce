@@ -18,6 +18,7 @@ import {
   Star,
   SlidersHorizontal,
   Tag,
+  Search,
 } from "lucide-react";
 import { SiteHeader, BottomNavBar } from "@/components/storefront/site-header";
 import { SiteFooter } from "@/components/storefront/site-footer";
@@ -176,6 +177,22 @@ export default async function ProductsPage({
                   : "Belum ada produk di kategori ini"}
               </p>
             </div>
+
+            {/* Search */}
+            <form action="/products" method="GET" className="relative mb-6">
+              {category && <input type="hidden" name="category" value={category} />}
+              {sort && <input type="hidden" name="sort" value={sort} />}
+              {priceRange && <input type="hidden" name="priceRange" value={priceRange} />}
+              {rating && <input type="hidden" name="rating" value={rating} />}
+              <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="text"
+                name="search"
+                defaultValue={search ?? ""}
+                placeholder="Cari nama atau deskripsi produk..."
+                className="h-11 w-full rounded-xl border border-border bg-card pl-10 pr-4 text-sm focus:border-primary focus:outline-none"
+              />
+            </form>
 
             {/* Sort + View Toolbar */}
             <div className="mb-6 flex flex-wrap items-center justify-between gap-3">

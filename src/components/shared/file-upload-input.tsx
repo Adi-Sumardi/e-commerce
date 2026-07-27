@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Loader2, Upload } from "lucide-react";
 import { toast } from "sonner";
+import { uploadFile } from "@/lib/upload-client";
 
 interface FileUploadInputProps {
   value: string;
@@ -20,12 +21,8 @@ export function FileUploadInput({ value, onChange, label = "Upload Gambar" }: Fi
 
     setUploading(true);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Gagal upload file.");
-      onChange(data.url);
+      const url = await uploadFile(file);
+      onChange(url);
       toast.success("File berhasil diupload.");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Gagal upload file.");

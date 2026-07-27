@@ -27,22 +27,13 @@ export class CheckoutService {
       };
     }
 
-    // 2. Fetch warehouse (fallback to WH-JKT-01 as primary/default for sandbox/fase 1)
-    const warehouse = await db.warehouse.findFirst({
-      where: { code: "WH-JKT-01" },
-    });
-
-    if (!warehouse || !warehouse.biteshipAreaId || !defaultAddress.biteshipAreaId) {
-      return {
-        address: defaultAddress,
-        shippingOptions: this.getMockShippingOptions(),
-        paymentChannels,
-      };
-    }
-
-    // 3. Prepare items for Biteship
+    // 2. Prepare items for Biteship, dan tentukan gudang asal dari produk itu sendiri
+    //    (bukan hardcode WH-JKT-01 lagi — tiap produk wajib punya warehouseId sendiri
+    //    sejak form produk admin mewajibkan pemilihan gudang).
     const biteshipItems: BiteshipRateItem[] = [];
     let totalWeight = 0;
+    let originWarehouseId: string | null = null;
+    const distinctWarehouseIds = new Set<string>();
 
     for (const item of items) {
       const variant = await ProductRepository.findVariantById(item.productVariantId);
@@ -50,12 +41,38 @@ export class CheckoutService {
       const weight = Number(variant.product.weightGrams) || 200;
       totalWeight += weight * item.quantity;
 
+      if (variant.product.warehouseId) {
+        distinctWarehouseIds.add(variant.product.warehouseId);
+        if (!originWarehouseId) originWarehouseId = variant.product.warehouseId;
+      }
+
       biteshipItems.push({
         name: `${variant.product.name} - ${variant.name}`,
         value: Number(variant.price ?? variant.product.basePrice),
         weight,
         quantity: item.quantity,
       } as any); // cast safely
+    }
+
+    if (distinctWarehouseIds.size > 1) {
+      // Keranjang campur produk dari beberapa gudang — order masih dikirim dari satu
+      // titik saja (Order.warehouseId tunggal), jadi ongkir dihitung dari gudang produk
+      // pertama di keranjang. Split pengiriman per gudang belum didukung.
+      console.warn(
+        `Checkout: keranjang berisi produk dari ${distinctWarehouseIds.size} gudang berbeda, ongkir dihitung dari gudang produk pertama.`
+      );
+    }
+
+    const warehouse = originWarehouseId
+      ? await db.warehouse.findUnique({ where: { id: originWarehouseId } })
+      : await db.warehouse.findFirst({ where: { isActive: true }, orderBy: { createdAt: "asc" } });
+
+    if (!warehouse || !warehouse.biteshipAreaId || !defaultAddress.biteshipAreaId) {
+      return {
+        address: defaultAddress,
+        shippingOptions: this.getMockShippingOptions(),
+        paymentChannels,
+      };
     }
 
     try {
@@ -121,14 +138,13 @@ export class CheckoutService {
     const address = await AddressRepository.findById(params.addressId);
     if (!address) throw new Error("Alamat pengiriman tidak ditemukan.");
 
-    const warehouse = await db.warehouse.findFirst({
-      where: { code: "WH-JKT-01" },
-    });
-    const warehouseId = warehouse?.id ?? null;
-
     let subtotal = 0;
     const orderItemsInput: any[] = [];
     let isPreorder = false;
+    // Gudang tujuan pengiriman order ditentukan dari gudang produk pertama di
+    // keranjang (bukan hardcode WH-JKT-01 lagi) — lihat catatan split-gudang di
+    // getCheckoutData di atas kalau keranjang berisi produk dari beberapa gudang.
+    let warehouseId: string | null = null;
 
     for (const cartItem of params.items) {
       const variant = await ProductRepository.findVariantById(cartItem.productVariantId);
@@ -136,6 +152,9 @@ export class CheckoutService {
 
       if (variant.product.isPreorder) {
         isPreorder = true;
+      }
+      if (!warehouseId && variant.product.warehouseId) {
+        warehouseId = variant.product.warehouseId;
       }
 
       const price = Number(variant.price);

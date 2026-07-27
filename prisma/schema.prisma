@@ -119,8 +119,21 @@ model User {
   cart          Cart?
   notifications Notification[]
   warehouses    WarehouseStaff[]
+  wishlist      Wishlist[]
 
   @@map("users")
+}
+
+model Wishlist {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@map("wishlists")
 }
 
 model Address {
@@ -234,10 +247,11 @@ model Product {
   createdAt             DateTime             @default(now())
   updatedAt             DateTime             @updatedAt
 
-  variants ProductVariant[]
-  images   ProductImage[]
-  specs    ProductSpec[]
-  reviews  Review[]
+  variants  ProductVariant[]
+  images    ProductImage[]
+  specs     ProductSpec[]
+  reviews   Review[]
+  wishlists Wishlist[]
 
   @@map("products")
 }

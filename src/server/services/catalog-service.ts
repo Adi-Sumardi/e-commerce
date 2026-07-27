@@ -12,6 +12,40 @@ function isDiscountScheduleActive(startDate: Date | null, endDate: Date | null):
   return true;
 }
 
+function mapProductToCard(prod: any) {
+  const price = prod.variants[0] ? Number(prod.variants[0].price) : Number(prod.basePrice);
+  const compareAtPrice = prod.compareAtPrice ? Number(prod.compareAtPrice) : null;
+  const hasDiscount =
+    compareAtPrice !== null &&
+    compareAtPrice > price &&
+    isDiscountScheduleActive(prod.discountStartDate, prod.discountEndDate);
+  const discountPercent = hasDiscount
+    ? Math.round(((compareAtPrice! - price) / compareAtPrice!) * 100)
+    : null;
+
+  const reviewCount = prod.reviews.length;
+  const averageRating =
+    reviewCount > 0
+      ? Number((prod.reviews.reduce((acc: number, r: { rating: number }) => acc + r.rating, 0) / reviewCount).toFixed(1))
+      : 0;
+
+  return {
+    id: prod.id as string,
+    slug: prod.slug as string,
+    name: prod.name as string,
+    category: prod.category.name as string,
+    storeName: "Pratama Jaya",
+    price,
+    originalPrice: hasDiscount ? compareAtPrice : null,
+    discount: discountPercent ? `${discountPercent}%` : null,
+    rating: averageRating,
+    reviewCount: reviewCount > 0 ? `${reviewCount} Ulasan` : "Belum ada ulasan",
+    soldLabel: "Produk Tersedia",
+    image: prod.images[0]?.url ?? "https://placehold.co/400x400/e2e8f0/64748b/png?text=Product",
+    isPreorder: prod.isPreorder as boolean,
+  };
+}
+
 export class CatalogService {
   static async getActiveBanners() {
     return db.banner.findMany({
@@ -79,39 +113,7 @@ export class CatalogService {
       sort,
     });
 
-    let mappedProducts = products.map((prod) => {
-      const price = prod.variants[0] ? Number(prod.variants[0].price) : Number(prod.basePrice);
-      const compareAtPrice = prod.compareAtPrice ? Number(prod.compareAtPrice) : null;
-      const hasDiscount =
-        compareAtPrice !== null &&
-        compareAtPrice > price &&
-        isDiscountScheduleActive(prod.discountStartDate, prod.discountEndDate);
-      const discountPercent = hasDiscount
-        ? Math.round(((compareAtPrice! - price) / compareAtPrice!) * 100)
-        : null;
-
-      const reviewCount = prod.reviews.length;
-      const averageRating =
-        reviewCount > 0
-          ? Number((prod.reviews.reduce((acc, r) => acc + r.rating, 0) / reviewCount).toFixed(1))
-          : 0;
-
-      return {
-        id: prod.id,
-        slug: prod.slug,
-        name: prod.name,
-        category: prod.category.name,
-        storeName: "Pratama Jaya",
-        price,
-        originalPrice: hasDiscount ? compareAtPrice : null,
-        discount: discountPercent ? `${discountPercent}%` : null,
-        rating: averageRating,
-        reviewCount: reviewCount > 0 ? `${reviewCount} Ulasan` : "Belum ada ulasan",
-        soldLabel: "Produk Tersedia",
-        image: prod.images[0]?.url ?? "https://placehold.co/400x400/e2e8f0/64748b/png?text=Product",
-        isPreorder: prod.isPreorder,
-      };
-    });
+    let mappedProducts = products.map(mapProductToCard);
 
     if (rating !== undefined) {
       mappedProducts = mappedProducts.filter((p) => p.rating >= rating);
@@ -122,6 +124,23 @@ export class CatalogService {
     }
 
     return mappedProducts;
+  }
+
+  static async getWishlistProducts(userId: string) {
+    const wishlisted = await db.wishlist.findMany({
+      where: { userId },
+      select: { productId: true },
+      orderBy: { createdAt: "desc" },
+    });
+    const productIds = wishlisted.map((w) => w.productId);
+    if (productIds.length === 0) return [];
+
+    const products = await ProductRepository.findByIds(productIds);
+    const cards = products.map(mapProductToCard);
+
+    // Pertahankan urutan sesuai kapan produk ditambahkan ke wishlist (terbaru dulu).
+    const order = new Map(productIds.map((id, i) => [id, i]));
+    return cards.sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
   }
 
   static async getProductDetail(slug: string) {

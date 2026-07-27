@@ -72,6 +72,18 @@ export class ProductRepository {
     });
   }
 
+  static async findByIds(ids: string[]) {
+    return db.product.findMany({
+      where: { id: { in: ids } },
+      include: {
+        category: true,
+        images: { orderBy: { sortOrder: "asc" } },
+        variants: { orderBy: { price: "asc" } },
+        reviews: true,
+      },
+    });
+  }
+
   static async findBySlug(slug: string) {
     return db.product.findUnique({
       where: { slug },

@@ -83,6 +83,12 @@ export default async function ProductDetailPage({
     notFound();
   }
 
+  const isWishlisted = session?.user?.id
+    ? (await db.wishlist.findUnique({
+        where: { userId_productId: { userId: session.user.id, productId: product.id } },
+      })) !== null
+    : false;
+
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -140,7 +146,7 @@ export default async function ProductDetailPage({
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <ProductGallery images={product.images} />
+            <ProductGallery images={product.images} productId={product.id} initialWishlisted={isWishlisted} />
           </div>
 
           <div className="flex flex-col gap-6 lg:col-span-5">

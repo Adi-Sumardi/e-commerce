@@ -6,7 +6,6 @@ import {
   ChevronRight,
   Gamepad2,
   Grid2x2,
-  Heart,
   Laptop,
   LayoutGrid,
   List,
@@ -27,6 +26,10 @@ import { Badge } from "@/components/ui/badge";
 import { CatalogService } from "@/server/services/catalog-service";
 import { formatIDR } from "../_data";
 import { SidebarFilters } from "./sidebar-filters";
+import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { WishlistButton } from "@/components/shared/wishlist-button";
+import { cn } from "@/lib/utils";
 
 const SORT_OPTIONS = [
   { label: "Terlaris", value: "best-seller" },
@@ -56,6 +59,17 @@ export default async function ProductsPage({
 }) {
   const { category, sort, search, priceRange, rating } = await searchParams;
   const categories = await CatalogService.getHomeCategories();
+  const session = await auth();
+  const wishlistedIds = session?.user?.id
+    ? new Set(
+        (
+          await db.wishlist.findMany({
+            where: { userId: session.user.id },
+            select: { productId: true },
+          })
+        ).map((w) => w.productId)
+      )
+    : new Set<string>();
 
   // Parse price range
   let minPrice: number | undefined;
@@ -257,12 +271,14 @@ export default async function ProductsPage({
                             PRE-ORDER
                           </Badge>
                         )}
-                        <button
-                          className="absolute right-3 bottom-3 rounded-full bg-card/80 p-2 opacity-0 shadow backdrop-blur transition-all group-hover:opacity-100 hover:bg-destructive hover:text-white"
-                          aria-label="Tambah ke wishlist"
-                        >
-                          <Heart className="size-4" />
-                        </button>
+                        <WishlistButton
+                          productId={product.id}
+                          initialWishlisted={wishlistedIds.has(product.id)}
+                          className={cn(
+                            "absolute right-3 bottom-3 rounded-full bg-card/80 p-2 shadow backdrop-blur transition-all hover:bg-destructive/10",
+                            wishlistedIds.has(product.id) ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                          )}
+                        />
                       </div>
                       <div className="p-4">
                         <p className="text-[11px] font-semibold uppercase tracking-wider text-primary">

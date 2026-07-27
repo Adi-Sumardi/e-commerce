@@ -164,11 +164,35 @@ function HeaderSearchParamsConsumer({
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") ?? "");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [wishlistCount, setWishlistCount] = useState(0);
   const cartItems = useCartStore((state) => state.items);
+  const { data: session } = useSession();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!session?.user) {
+      setWishlistCount(0);
+      return;
+    }
+    let cancelled = false;
+    function fetchCount() {
+      fetch("/api/wishlist/count")
+        .then((res) => res.json())
+        .then((data) => {
+          if (!cancelled) setWishlistCount(data.count ?? 0);
+        })
+        .catch(() => {});
+    }
+    fetchCount();
+    window.addEventListener("wishlist:changed", fetchCount);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("wishlist:changed", fetchCount);
+    };
+  }, [session?.user]);
 
   const totalCartCount = mounted
     ? cartItems.reduce((acc, curr) => acc + curr.quantity, 0)
@@ -236,12 +260,18 @@ function HeaderSearchParamsConsumer({
           )}
         </div>
         <nav className="flex items-center gap-2">
-          <button
+          <Link
+            href="/wishlist"
             aria-label="Wishlist"
             className="relative p-2 text-muted-foreground hover:text-primary hidden sm:flex cursor-pointer"
           >
             <Heart className="size-5" />
-          </button>
+            {wishlistCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 flex size-5 items-center justify-center rounded-full bg-secondary text-[10px] font-bold text-secondary-foreground">
+                {wishlistCount}
+              </span>
+            )}
+          </Link>
           <Link
             href="/cart"
             aria-label="Keranjang"

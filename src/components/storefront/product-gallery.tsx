@@ -2,14 +2,16 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Heart } from "lucide-react";
 import type { ProductImage } from "@/app/products/_data";
+import { WishlistButton } from "@/components/shared/wishlist-button";
 
 interface ProductGalleryProps {
   images: ProductImage[];
+  productId: string;
+  initialWishlisted: boolean;
 }
 
-export function ProductGallery({ images }: ProductGalleryProps) {
+export function ProductGallery({ images, productId, initialWishlisted }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const active = images[activeIndex] ?? images[0];
   const thumbnails = images.slice(1);
@@ -27,12 +29,12 @@ export function ProductGallery({ images }: ProductGalleryProps) {
           sizes="(max-width: 1024px) 100vw, 60vw"
           className="object-contain transition-transform duration-700 group-hover:scale-105"
         />
-        <button
-          aria-label="Tambahkan ke favorit"
-          className="absolute top-4 right-4 rounded-full bg-card/90 p-2 shadow-lg transition-colors hover:text-destructive"
-        >
-          <Heart className="size-5" />
-        </button>
+        <WishlistButton
+          productId={productId}
+          initialWishlisted={initialWishlisted}
+          className="absolute top-4 right-4 rounded-full bg-card/90 p-2 shadow-lg"
+          iconClassName="size-5"
+        />
       </div>
       {thumbnails.slice(0, 4).map((image, index) => {
         const isLast = index === 3 && extraCount > 0;

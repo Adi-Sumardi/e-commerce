@@ -5,7 +5,6 @@ import {
   ChefHat,
   CreditCard,
   Gamepad2,
-  Heart,
   Laptop,
   Shirt,
   ShoppingBasket,
@@ -24,6 +23,10 @@ import { Badge } from "@/components/ui/badge";
 import { StarRating } from "@/components/shared/star-rating";
 import { formatIDR } from "./_data";
 import { CatalogService } from "@/server/services/catalog-service";
+import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { WishlistButton } from "@/components/shared/wishlist-button";
+import { cn } from "@/lib/utils";
 
 const CATEGORY_ICONS = {
   laptop: Laptop,
@@ -43,10 +46,22 @@ export default async function Home({
   searchParams: Promise<{ category?: string }>;
 }) {
   const { category } = await searchParams;
+  const session = await auth();
   const homeCategories = await CatalogService.getHomeCategories();
   const bestSellerProducts = await CatalogService.getBestSellers(category);
   const banners = await CatalogService.getActiveBanners();
   const [mainBanner, ...sideBanners] = banners;
+
+  const wishlistedIds = session?.user?.id
+    ? new Set(
+        (
+          await db.wishlist.findMany({
+            where: { userId: session.user.id },
+            select: { productId: true },
+          })
+        ).map((w) => w.productId)
+      )
+    : new Set<string>();
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -245,12 +260,14 @@ export default async function Home({
                           PRE-ORDER
                         </Badge>
                       )}
-                      <button
-                        className="absolute right-3 bottom-3 rounded-full bg-card/70 p-1.5 opacity-0 shadow-md backdrop-blur transition-opacity group-hover:opacity-100"
-                        aria-label="Tambah ke wishlist"
-                      >
-                        <Heart className="size-4 text-muted-foreground" />
-                      </button>
+                      <WishlistButton
+                        productId={product.id}
+                        initialWishlisted={wishlistedIds.has(product.id)}
+                        className={cn(
+                          "absolute right-3 bottom-3 rounded-full bg-card/70 p-1.5 shadow-md backdrop-blur transition-opacity",
+                          wishlistedIds.has(product.id) ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                        )}
+                      />
                     </div>
                     <div className="p-4">
                       <p className="text-xs font-semibold text-primary">

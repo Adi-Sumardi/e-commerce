@@ -3,6 +3,15 @@ import { CategoryRepository } from "@/server/repositories/category-repository";
 import { db } from "@/lib/db";
 import { formatRelativeTime } from "@/lib/format";
 
+// Tanpa tanggal mulai/selesai, diskon dianggap selalu aktif (kompatibel dengan
+// produk lama yang cuma pakai compareAtPrice tanpa jadwal).
+function isDiscountScheduleActive(startDate: Date | null, endDate: Date | null): boolean {
+  const now = new Date();
+  if (startDate && now < startDate) return false;
+  if (endDate && now > endDate) return false;
+  return true;
+}
+
 export class CatalogService {
   static async getActiveBanners() {
     return db.banner.findMany({
@@ -73,7 +82,10 @@ export class CatalogService {
     let mappedProducts = products.map((prod) => {
       const price = prod.variants[0] ? Number(prod.variants[0].price) : Number(prod.basePrice);
       const compareAtPrice = prod.compareAtPrice ? Number(prod.compareAtPrice) : null;
-      const hasDiscount = compareAtPrice !== null && compareAtPrice > price;
+      const hasDiscount =
+        compareAtPrice !== null &&
+        compareAtPrice > price &&
+        isDiscountScheduleActive(prod.discountStartDate, prod.discountEndDate);
       const discountPercent = hasDiscount
         ? Math.round(((compareAtPrice! - price) / compareAtPrice!) * 100)
         : null;
@@ -118,7 +130,10 @@ export class CatalogService {
 
     const basePrice = Number(prod.basePrice);
     const compareAtPrice = prod.compareAtPrice ? Number(prod.compareAtPrice) : null;
-    const hasDiscount = compareAtPrice !== null && compareAtPrice > basePrice;
+    const hasDiscount =
+      compareAtPrice !== null &&
+      compareAtPrice > basePrice &&
+      isDiscountScheduleActive(prod.discountStartDate, prod.discountEndDate);
     const originalPrice = hasDiscount ? compareAtPrice : null;
     const discountLabel = hasDiscount
       ? `${Math.round(((compareAtPrice! - basePrice) / compareAtPrice!) * 100)}% OFF`

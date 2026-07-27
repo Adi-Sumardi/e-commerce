@@ -61,6 +61,12 @@ export default async function EditProductPage({
             description: product.description,
             basePrice: Number(product.basePrice),
             compareAtPrice: product.compareAtPrice ? Number(product.compareAtPrice) : null,
+            discountStartDate: product.discountStartDate
+              ? product.discountStartDate.toISOString().slice(0, 10)
+              : null,
+            discountEndDate: product.discountEndDate
+              ? product.discountEndDate.toISOString().slice(0, 10)
+              : null,
             weightGrams: Number(product.weightGrams),
             lengthCm: Number(product.lengthCm),
             widthCm: Number(product.widthCm),

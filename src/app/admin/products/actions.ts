@@ -28,6 +28,8 @@ interface ParsedProductForm {
   description: string;
   basePrice: number;
   compareAtPrice: number | null;
+  discountStartDate: Date | null;
+  discountEndDate: Date | null;
   weightGrams: number;
   lengthCm: number;
   widthCm: number;
@@ -56,6 +58,10 @@ function parseProductForm(formData: FormData): ParsedProductForm {
   const basePrice = parseFloat(formData.get("basePrice") as string);
   const compareAtPriceRaw = formData.get("compareAtPrice") as string;
   const compareAtPrice = compareAtPriceRaw ? parseFloat(compareAtPriceRaw) : null;
+  const discountStartDateRaw = formData.get("discountStartDate") as string;
+  const discountStartDate = discountStartDateRaw ? new Date(discountStartDateRaw) : null;
+  const discountEndDateRaw = formData.get("discountEndDate") as string;
+  const discountEndDate = discountEndDateRaw ? new Date(discountEndDateRaw) : null;
   const weightGrams = parseFloat(formData.get("weightGrams") as string) || 0;
   const lengthCm = parseFloat(formData.get("lengthCm") as string) || 0;
   const widthCm = parseFloat(formData.get("widthCm") as string) || 0;
@@ -112,6 +118,9 @@ function parseProductForm(formData: FormData): ParsedProductForm {
   if (variants.length === 0) {
     throw new Error("Minimal harus ada 1 varian produk (SKU, nama, harga, stok).");
   }
+  if (discountStartDate && discountEndDate && discountStartDate > discountEndDate) {
+    throw new Error("Tanggal mulai diskon harus sebelum tanggal selesai.");
+  }
 
   return {
     name,
@@ -120,6 +129,8 @@ function parseProductForm(formData: FormData): ParsedProductForm {
     description,
     basePrice,
     compareAtPrice,
+    discountStartDate,
+    discountEndDate,
     weightGrams,
     lengthCm,
     widthCm,
@@ -152,6 +163,8 @@ export async function createProductAction(formData: FormData) {
       description: parsed.description,
       basePrice: parsed.basePrice,
       compareAtPrice: parsed.compareAtPrice,
+      discountStartDate: parsed.discountStartDate,
+      discountEndDate: parsed.discountEndDate,
       weightGrams: parsed.weightGrams,
       lengthCm: parsed.lengthCm,
       widthCm: parsed.widthCm,
@@ -199,6 +212,8 @@ export async function updateProductAction(productId: string, formData: FormData)
         description: parsed.description,
         basePrice: parsed.basePrice,
         compareAtPrice: parsed.compareAtPrice,
+        discountStartDate: parsed.discountStartDate,
+        discountEndDate: parsed.discountEndDate,
         weightGrams: parsed.weightGrams,
         lengthCm: parsed.lengthCm,
         widthCm: parsed.widthCm,

@@ -220,6 +220,8 @@ model Product {
   description           String               @db.Text
   basePrice             Decimal              @db.Decimal(12, 2)
   compareAtPrice        Decimal?             @db.Decimal(12, 2)
+  discountStartDate     DateTime?
+  discountEndDate       DateTime?
   weightGrams           Decimal              @db.Decimal(10, 2)
   lengthCm              Decimal              @db.Decimal(10, 2)
   widthCm               Decimal              @db.Decimal(10, 2)

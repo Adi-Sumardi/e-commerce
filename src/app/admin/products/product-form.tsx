@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { uploadFile } from "@/lib/upload-client";
 
 interface VariantRow {
   key: string;
@@ -37,6 +38,8 @@ interface ProductFormProps {
     description: string;
     basePrice: number;
     compareAtPrice: number | null;
+    discountStartDate: string | null;
+    discountEndDate: string | null;
     weightGrams: number;
     lengthCm: number;
     widthCm: number;
@@ -130,12 +133,7 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
     try {
       const uploaded: string[] = [];
       for (const file of files) {
-        const formData = new FormData();
-        formData.append("file", file);
-        const res = await fetch("/api/upload", { method: "POST", body: formData });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Gagal upload gambar.");
-        uploaded.push(data.url);
+        uploaded.push(await uploadFile(file));
       }
       setImages((prev) => [...prev, ...uploaded]);
       toast.success(`${uploaded.length} gambar berhasil diupload.`);
@@ -251,6 +249,27 @@ export function ProductForm({ categories, action, submitLabel, initialValues }: 
             />
             <p className="text-xs text-muted-foreground">
               Isi lebih besar dari Harga Jual supaya badge diskon otomatis muncul di storefront.
+            </p>
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="discountStartDate">Diskon Mulai (opsional)</Label>
+            <Input
+              id="discountStartDate"
+              name="discountStartDate"
+              type="date"
+              defaultValue={initialValues?.discountStartDate ?? ""}
+            />
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="discountEndDate">Diskon Selesai (opsional)</Label>
+            <Input
+              id="discountEndDate"
+              name="discountEndDate"
+              type="date"
+              defaultValue={initialValues?.discountEndDate ?? ""}
+            />
+            <p className="text-xs text-muted-foreground">
+              Kosongkan kalau diskon berlaku terus tanpa batas tanggal.
             </p>
           </div>
         </div>

@@ -1,15 +1,7 @@
-# Panduan Deploy ke Hostinger (Business Web Hosting)
+Dokumen ini menjelaskan **setup manual satu kali** di hPanel Hostinger serta konfigurasi **CI/CD Otomatis via GitHub Actions** pada `.github/workflows/ci.yml`.
 
-Dokumen ini menjelaskan **setup manual satu kali** yang wajib kamu lakukan sendiri di hPanel
-Hostinger (Claude tidak punya akses ke akun hosting kamu). Deploy aktualnya (build + kirim
-file + migrate + restart) dilakukan **manual via SSH/Termius** pakai script di
-[`deploy/deploy.sh`](../deploy/deploy.sh) dan [`deploy/update.sh`](../deploy/update.sh) —
-lihat [`deploy/README.md`](../deploy/README.md) untuk cara pakainya.
+> **Mekanisme Auto-Deploy**: Setiap kali ada `git push` ke branch `main`, GitHub Actions akan menjalankan build/typecheck/lint, lalu otomatis mengeksekusi script update via SSH di server Hostinger.
 
-> Sempat dicoba pakai GitHub Actions CI/CD otomatis, tapi diputuskan pindah ke deploy manual
-> karena lebih gampang di-debug pas awal-awal setup di Hostinger (tiap error kelihatan
-> langsung di terminal, gak perlu bolak-balik cek log GitHub Actions). `.github/workflows/ci.yml`
-> yang tersisa cuma jalanin build/lint/typecheck sebagai gerbang kualitas, **tidak** deploy.
 
 ---
 

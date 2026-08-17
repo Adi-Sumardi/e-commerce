@@ -1,8 +1,4 @@
-name: CI
-
-# Deploy ke Hostinger sekarang dilakukan MANUAL via SSH/Termius, lihat deploy/README.md.
-# Workflow ini cuma jadi gerbang kualitas (build/lint/typecheck) di tiap push/PR,
-# TIDAK deploy otomatis.
+name: CI & Auto Deploy
 
 on:
   push:
@@ -46,9 +42,26 @@ jobs:
       - name: Build (standalone output)
         run: pnpm build
         env:
-          # Placeholder format-valid, bukan kredensial produksi asli — build tidak
-          # pernah benar-benar query ke DB.
           DATABASE_URL: "mysql://build:build@127.0.0.1:3306/build_placeholder"
           NEXTAUTH_SECRET: "build-placeholder"
           AUTH_SECRET: "build-placeholder"
           NEXTAUTH_URL: "https://pratamajaya.id"
+
+  deploy:
+    name: Deploy to Hostinger
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute remote SSH update script on Hostinger
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOSTINGER_HOST }}
+          username: ${{ secrets.HOSTINGER_USER }}
+          key: ${{ secrets.HOSTINGER_SSH_KEY }}
+          port: ${{ secrets.HOSTINGER_PORT || '65002' }}
+          script: |
+            cd ~/repo
+            git pull origin main
+            bash deploy/update.sh
+

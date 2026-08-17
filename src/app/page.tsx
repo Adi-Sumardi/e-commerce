@@ -243,48 +243,7 @@ export default async function Home({
           </div>
         </section>
 
-        {/* Categories */}
-        <section className="mx-auto w-full max-w-7xl px-4 py-8 lg:px-8">
-          <div className="mb-6 flex items-end justify-between">
-            <div>
-              <h2 className="text-2xl font-semibold text-foreground">Kategori Pilihan</h2>
-              <p className="text-sm text-muted-foreground">
-                Telusuri berbagai kebutuhan harian Anda
-              </p>
-            </div>
-            <Link href="/products" className="text-sm font-bold text-primary hover:underline">
-              Lihat Semua
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
-            {homeCategories.map((cat) => {
-              const Icon = CATEGORY_ICONS[cat.icon];
-              const isActive = category === cat.slug;
-              return (
-                <Link key={cat.slug} href={`/products?category=${cat.slug}`} className="group">
-                  <div
-                    className={`flex aspect-square flex-col items-center justify-center rounded-2xl border p-4 text-center transition-all hover:shadow-md ${
-                      isActive
-                        ? "border-primary bg-primary/5 shadow-md"
-                        : "border-border bg-muted hover:bg-accent"
-                    }`}
-                  >
-                    <div
-                      className={`mb-4 flex size-16 items-center justify-center rounded-full shadow-sm transition-transform group-hover:scale-110 ${
-                        isActive ? "bg-primary text-primary-foreground" : "bg-card"
-                      }`}
-                    >
-                      <Icon className={`size-8 ${isActive ? "text-primary-foreground" : "text-primary"}`} />
-                    </div>
-                    <span className={`text-sm font-semibold ${isActive ? "text-primary" : ""}`}>
-                      {cat.name}
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
+
 
         {/* Best Sellers / Filtered Products */}
         <section className="mx-auto w-full max-w-7xl px-4 py-6 lg:px-8">

@@ -118,7 +118,12 @@ export function BannerFormDialog({ mode, action, initialValues }: BannerFormDial
               </p>
               <p>
                 <strong className="text-foreground">Banner Samping</strong> (urutan 1 &amp; 2): ukuran{" "}
-                <strong className="text-foreground">600 × 270 px</strong> (rasio 2.2:1 juga, cuma lebih kecil).
+                <strong className="text-foreground">600 × 270 px</strong>.
+              </p>
+              <p>
+                <strong className="text-foreground">Foto Bukti Stok &amp; Pengiriman</strong>: beri awalan{" "}
+                <code className="text-primary font-bold">PROOF:</code> pada Badge Text (contoh:{" "}
+                <code className="text-foreground">PROOF: Gudang Utama</code>, <code className="text-foreground">PROOF: Standar QC</code>). Gambar ini akan otomatis muncul pada section <strong>Bukti Pengiriman &amp; Kepuasan Pelanggan</strong> di Homepage.
               </p>
               <p>Format JPG/PNG/WebP, maksimal ±500KB. Teks penting taruh di area kiri/tengah (bagian kanan gambar akan sedikit tertutup gradasi gelap).</p>
               <p>Setelah export dari Canva, upload langsung lewat tombol di bawah ini.</p>

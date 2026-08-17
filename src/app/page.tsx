@@ -28,17 +28,29 @@ import { db } from "@/lib/db";
 import { WishlistButton } from "@/components/shared/wishlist-button";
 import { cn } from "@/lib/utils";
 
-const CATEGORY_ICONS = {
-  laptop: Laptop,
-  shirt: Shirt,
-  chair: ChefHat,
-  sparkles: Sparkles,
-  gamepad: Gamepad2,
-  "shopping-basket": ShoppingBasket,
-} as const;
-
 const COURIERS = ["JNE", "J&T", "GoSend", "SiCepat", "GrabExpress"];
 const PAYMENT_METHODS = ["BCA", "BNI", "Mandiri", "GOPAY", "OVO", "DANA"];
+
+const DEFAULT_PROOF_CARDS = [
+  {
+    title: "Stok Gudang Siap Kirim",
+    desc: "Persediaan produk kompor, blender, mixer & perabotan rumah tangga selalu terjaga.",
+    tag: "Gudang Utama",
+    img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop",
+  },
+  {
+    title: "Packing Bubble Wrap Double",
+    desc: "Setiap pesanan dibungkus tebal dan rapi untuk memastikan barang tiba tanpa cacat.",
+    tag: "Standar QC",
+    img: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=800&auto=format&fit=crop",
+  },
+  {
+    title: "Pengiriman Kurir Setiap Hari",
+    desc: "Kerjasama resmi dengan JNE, J&T, SiCepat, GoSend, dan GrabExpress.",
+    tag: "Resi Cepat",
+    img: "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?q=80&w=800&auto=format&fit=crop",
+  },
+];
 
 export default async function Home({
   searchParams,
@@ -50,7 +62,21 @@ export default async function Home({
   const homeCategories = await CatalogService.getHomeCategories();
   const bestSellerProducts = await CatalogService.getBestSellers(category);
   const banners = await CatalogService.getActiveBanners();
-  const [mainBanner, ...sideBanners] = banners;
+
+  // Banner dengan badge PROOF: dijadikan kartu foto Bukti Pengiriman/Stok di Homepage
+  const proofBanners = banners.filter((b) => b.badgeText?.startsWith("PROOF:"));
+  const heroBanners = banners.filter((b) => !b.badgeText?.startsWith("PROOF:"));
+  const [mainBanner, ...sideBanners] = heroBanners.length > 0 ? heroBanners : banners;
+
+  const socialProofCards =
+    proofBanners.length > 0
+      ? proofBanners.map((b) => ({
+          title: b.title,
+          desc: b.subtitle ?? "",
+          tag: b.badgeText?.replace(/^PROOF:\s*/i, "") ?? "Bukti Pengiriman",
+          img: b.imageUrl,
+        }))
+      : DEFAULT_PROOF_CARDS;
 
   const wishlistedIds = session?.user?.id
     ? new Set(
@@ -67,106 +93,106 @@ export default async function Home({
     <div className="flex min-h-screen flex-col bg-background">
       <SiteHeader />
       <main className="flex-1 pb-16 md:pb-8">
-        {/* Hero Section - Premium Multi-Banner (dinamis dari /admin/banners) */}
+        {/* Hero Section - Premium Multi-Banner */}
         {mainBanner && (
-        <section className="mx-auto w-full max-w-7xl px-4 py-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-            {/* Main Banner */}
-            <div className="group relative col-span-1 overflow-hidden rounded-2xl lg:col-span-2" style={{ aspectRatio: "2.2/1" }}>
-              {mainBanner.videoUrl ? (
-                <video
-                  src={mainBanner.videoUrl}
-                  poster={mainBanner.imageUrl}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-              ) : (
-                <Image
-                  src={mainBanner.imageUrl}
-                  alt={mainBanner.title}
-                  fill
-                  priority
-                  unoptimized
-                  sizes="(max-width: 1024px) 100vw, 66vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-              )}
-              <div className="absolute inset-0 bg-linear-to-r from-foreground/90 via-foreground/50 to-transparent" />
-              <div className="absolute inset-0 z-10 flex flex-col justify-center px-8 text-white md:px-12">
-                {mainBanner.badgeText && (
-                  <Badge className="mb-3 w-fit bg-secondary text-secondary-foreground text-[10px] font-bold uppercase tracking-wider shadow-md">
-                    <Zap className="size-3 mr-1" />
-                    {mainBanner.badgeText}
-                  </Badge>
+          <section className="mx-auto w-full max-w-7xl px-4 py-6 lg:px-8">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+              {/* Main Banner */}
+              <div className="group relative col-span-1 overflow-hidden rounded-2xl lg:col-span-2" style={{ aspectRatio: "2.2/1" }}>
+                {mainBanner.videoUrl ? (
+                  <video
+                    src={mainBanner.videoUrl}
+                    poster={mainBanner.imageUrl}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                ) : (
+                  <Image
+                    src={mainBanner.imageUrl}
+                    alt={mainBanner.title}
+                    fill
+                    priority
+                    unoptimized
+                    sizes="(max-width: 1024px) 100vw, 66vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
                 )}
-                <h1 className="mb-2 max-w-sm text-2xl leading-tight font-extrabold md:text-4xl tracking-tight">
-                  {mainBanner.title}
-                </h1>
-                {mainBanner.subtitle && (
-                  <p className="mb-6 max-w-sm text-xs opacity-85 md:text-sm leading-relaxed">
-                    {mainBanner.subtitle}
-                  </p>
-                )}
-                {mainBanner.ctaLabel && (
-                  <Link href={mainBanner.ctaLink ?? "/products"}>
-                    <Button
-                      size="lg"
-                      className="w-fit bg-secondary text-secondary-foreground shadow-lg hover:bg-secondary/90 active:scale-95 gap-2 cursor-pointer font-bold"
-                    >
-                      {mainBanner.ctaLabel}
-                      <ArrowRight className="size-4" />
-                    </Button>
-                  </Link>
-                )}
-              </div>
-            </div>
-
-            {/* Side Banners */}
-            {sideBanners.length > 0 && (
-              <div className="hidden gap-4 lg:grid lg:grid-rows-2">
-                {sideBanners.slice(0, 2).map((banner) => (
-                  <div key={banner.id} className="group relative overflow-hidden rounded-2xl">
-                    {banner.videoUrl ? (
-                      <video
-                        src={banner.videoUrl}
-                        poster={banner.imageUrl}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    ) : (
-                      <Image
-                        src={banner.imageUrl}
-                        alt={banner.title}
-                        fill
-                        unoptimized
-                        sizes="33vw"
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-linear-to-t from-foreground/80 to-transparent" />
-                    <Link
-                      href={banner.ctaLink ?? "/products"}
-                      className="absolute inset-0 z-10 flex flex-col justify-end p-5 text-white"
-                    >
-                      {banner.badgeText && (
-                        <Badge className="mb-2 w-fit bg-primary/90 text-primary-foreground text-[10px] font-bold uppercase">
-                          {banner.badgeText}
-                        </Badge>
-                      )}
-                      <p className="text-sm font-bold leading-snug">{banner.title}</p>
+                <div className="absolute inset-0 bg-linear-to-r from-foreground/90 via-foreground/50 to-transparent" />
+                <div className="absolute inset-0 z-10 flex flex-col justify-center px-8 text-white md:px-12">
+                  {mainBanner.badgeText && (
+                    <Badge className="mb-3 w-fit bg-secondary text-secondary-foreground text-[10px] font-bold uppercase tracking-wider shadow-md">
+                      <Zap className="size-3 mr-1" />
+                      {mainBanner.badgeText}
+                    </Badge>
+                  )}
+                  <h1 className="mb-2 max-w-sm text-2xl leading-tight font-extrabold md:text-4xl tracking-tight">
+                    {mainBanner.title}
+                  </h1>
+                  {mainBanner.subtitle && (
+                    <p className="mb-6 max-w-sm text-xs opacity-85 md:text-sm leading-relaxed">
+                      {mainBanner.subtitle}
+                    </p>
+                  )}
+                  {mainBanner.ctaLabel && (
+                    <Link href={mainBanner.ctaLink ?? "/products"}>
+                      <Button
+                        size="lg"
+                        className="w-fit bg-secondary text-secondary-foreground shadow-lg hover:bg-secondary/90 active:scale-95 gap-2 cursor-pointer font-bold"
+                      >
+                        {mainBanner.ctaLabel}
+                        <ArrowRight className="size-4" />
+                      </Button>
                     </Link>
-                  </div>
-                ))}
+                  )}
+                </div>
               </div>
-            )}
-          </div>
-        </section>
+
+              {/* Side Banners */}
+              {sideBanners.length > 0 && (
+                <div className="hidden gap-4 lg:grid lg:grid-rows-2">
+                  {sideBanners.slice(0, 2).map((banner) => (
+                    <div key={banner.id} className="group relative overflow-hidden rounded-2xl">
+                      {banner.videoUrl ? (
+                        <video
+                          src={banner.videoUrl}
+                          poster={banner.imageUrl}
+                          autoPlay
+                          muted
+                          loop
+                          playsInline
+                          className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      ) : (
+                        <Image
+                          src={banner.imageUrl}
+                          alt={banner.title}
+                          fill
+                          unoptimized
+                          sizes="33vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-linear-to-t from-foreground/80 to-transparent" />
+                      <Link
+                        href={banner.ctaLink ?? "/products"}
+                        className="absolute inset-0 z-10 flex flex-col justify-end p-5 text-white"
+                      >
+                        {banner.badgeText && (
+                          <Badge className="mb-2 w-fit bg-primary/90 text-primary-foreground text-[10px] font-bold uppercase">
+                            {banner.badgeText}
+                          </Badge>
+                        )}
+                        <p className="text-sm font-bold leading-snug">{banner.title}</p>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
         )}
 
         {/* Trust Badges */}
@@ -191,7 +217,7 @@ export default async function Home({
           </div>
         </section>
 
-        {/* Section: Kenapa Belanja di Pratama Jaya? (Prioritas 4) */}
+        {/* Section: Kenapa Belanja di Pratama Jaya? */}
         <section className="mx-auto w-full max-w-7xl px-4 py-10 lg:px-8">
           <div className="rounded-3xl border border-primary/20 bg-linear-to-br from-primary/10 via-background to-secondary/10 p-8 shadow-sm">
             <div className="mb-8 text-center">
@@ -243,14 +269,12 @@ export default async function Home({
           </div>
         </section>
 
-
-
         {/* Best Sellers / Filtered Products */}
         <section className="mx-auto w-full max-w-7xl px-4 py-6 lg:px-8">
           <div className="mb-6 flex items-center gap-3">
             <Award className="size-8 text-secondary" />
             <h2 className="text-2xl font-semibold text-foreground">
-              {category ? `Produk ${homeCategories.find(c => c.slug === category)?.name ?? ""}` : "Produk Terlaris"}
+              {category ? `Produk ${homeCategories.find((c) => c.slug === category)?.name ?? ""}` : "Produk Terlaris"}
             </h2>
             {category && (
               <Link href="/" className="ml-auto text-xs font-bold text-primary hover:underline">
@@ -344,7 +368,7 @@ export default async function Home({
           )}
         </section>
 
-        {/* Social Proof Section (Prioritas 7) */}
+        {/* Social Proof Section (Bisa dikelola Admin dari Menu Banner dengan badge PROOF: Nama Tag) */}
         <section className="mx-auto w-full max-w-7xl px-4 py-12 lg:px-8 border-t border-border/40">
           <div className="mb-8 text-center">
             <Badge className="mb-2 bg-secondary text-secondary-foreground font-bold text-xs uppercase tracking-wider">
@@ -359,26 +383,7 @@ export default async function Home({
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3 mb-10">
-            {[
-              {
-                title: "Stok Gudang Siap Kirim",
-                desc: "Persediaan produk kompor, blender, mixer & perabotan rumah tangga selalu terjaga.",
-                tag: "Gudang Utama",
-                img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop",
-              },
-              {
-                title: "Packing Bubble Wrap Double",
-                desc: "Setiap pesanan dibungkus tebal dan rapi untuk memastikan barang tiba tanpa cacat.",
-                tag: "Standar QC",
-                img: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=800&auto=format&fit=crop",
-              },
-              {
-                title: "Pengiriman Kurir Setiap Hari",
-                desc: "Kerjasama resmi dengan JNE, J&T, SiCepat, GoSend, dan GrabExpress.",
-                tag: "Resi Cepat",
-                img: "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?q=80&w=800&auto=format&fit=crop",
-              },
-            ].map((card, i) => (
+            {socialProofCards.map((card, i) => (
               <div key={i} className="group overflow-hidden rounded-2xl border border-border bg-card shadow-xs transition-all hover:shadow-md">
                 <div className="relative h-48 w-full overflow-hidden bg-muted">
                   <Image

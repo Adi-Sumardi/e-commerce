@@ -22,6 +22,46 @@ function getNaturalSoldCount(id: string, name: string): number {
   return Math.abs(hash % 285) + 38;
 }
 
+function getNaturalReviewCount(id: string, name: string): number {
+  let hash = 0;
+  const str = name + id + "rev_count";
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash % 247) + 4; // Menghasilkan acak natural antara 4 - 250 ulasan
+}
+
+function getNaturalRating(id: string, name: string): number {
+  let hash = 0;
+  const str = id + name + "rev_rating";
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  const sampleRatings = [4.7, 4.8, 4.8, 4.9, 4.9, 5.0];
+  return sampleRatings[Math.abs(hash) % sampleRatings.length];
+}
+
+function getNaturalStoreName(id: string, name: string): string {
+  let hash = 0;
+  const str = id + name + "store_name";
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  const storeNames = [
+    "Pratama Jaya Official",
+    "Pratama Jaya Pusat",
+    "Pratama Jaya Direct",
+    "Pratama Jaya Store",
+    "Pratama Jaya Home",
+    "Pratama Jaya Jakarta",
+    "Pratama Jaya Official Store",
+  ];
+  return storeNames[Math.abs(hash) % storeNames.length];
+}
+
 const DEFAULT_NATURAL_REVIEWS = [
   {
     name: "Budi Santoso",
@@ -65,11 +105,11 @@ function mapProductToCard(prod: any) {
     : null;
 
   const dbReviewCount = prod.reviews ? prod.reviews.length : 0;
-  const reviewCount = dbReviewCount > 0 ? dbReviewCount : 4;
+  const reviewCount = dbReviewCount > 0 ? dbReviewCount : getNaturalReviewCount(prod.id || "", prod.name || "");
   const averageRating =
     dbReviewCount > 0
       ? Number((prod.reviews.reduce((acc: number, r: { rating: number }) => acc + r.rating, 0) / dbReviewCount).toFixed(1))
-      : 4.8;
+      : getNaturalRating(prod.id || "", prod.name || "");
 
   const totalStock = prod.variants
     ? prod.variants.reduce((acc: number, v: any) => acc + (Number(v.stock) || 0), 0)
@@ -82,7 +122,7 @@ function mapProductToCard(prod: any) {
     slug: prod.slug as string,
     name: prod.name as string,
     category: prod.category.name as string,
-    storeName: "Pratama Jaya",
+    storeName: getNaturalStoreName(prod.id || "", prod.name || ""),
     price,
     originalPrice: hasDiscount ? compareAtPrice : null,
     discount: discountPercent ? `${discountPercent}%` : null,
@@ -245,17 +285,20 @@ export class CatalogService {
     }));
 
     const reviews = dbReviews.length > 0 ? dbReviews : DEFAULT_NATURAL_REVIEWS;
-    const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
-    const averageRating = Number((totalRating / reviews.length).toFixed(1));
+    const reviewCountNum = dbReviews.length > 0 ? dbReviews.length : getNaturalReviewCount(prod.id, prod.name);
+    const averageRating =
+      dbReviews.length > 0
+        ? Number((reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1))
+        : getNaturalRating(prod.id, prod.name);
     const soldCount = getNaturalSoldCount(prod.id, prod.name);
 
     return {
       id: prod.id,
       slug: prod.slug,
       name: prod.name,
-      storeName: "Pratama Jaya",
+      storeName: getNaturalStoreName(prod.id, prod.name),
       rating: averageRating,
-      reviewCount: `${reviews.length} Ulasan`,
+      reviewCount: `${reviewCountNum} Ulasan`,
       soldLabel: `Terjual ${soldCount}+`,
       price: basePrice,
       originalPrice,

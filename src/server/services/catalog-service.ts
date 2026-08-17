@@ -62,111 +62,80 @@ function getNaturalStoreName(id: string, name: string): string {
   return storeNames[Math.abs(hash) % storeNames.length];
 }
 
-const ALL_NATURAL_REVIEWS = [
-  {
-    name: "Budi Santoso",
-    rating: 5,
-    timeAgo: "1 hari yang lalu",
-    comment: "Barang mendarat selamat! Packing super rapi kardus + bubble wrap tebal. Kualitas original dan berfungsi sangat baik.",
-  },
-  {
-    name: "Siska Putri",
-    rating: 5,
-    timeAgo: "3 hari yang lalu",
-    comment: "Pengiriman cepat banget, seller responsif di WA. Barang sesuai foto dan garansi aman. Recommended seller!",
-  },
-  {
-    name: "Hendra Wijaya",
-    rating: 4,
-    timeAgo: "5 hari yang lalu",
-    comment: "Kualitas produk sangat bagus, material kokoh dan berfungsi normal. Worth it banget untuk harga segini.",
-  },
-  {
-    name: "Maya Rosita",
-    rating: 5,
-    timeAgo: "1 minggu yang lalu",
-    comment: "Sudah dicoba dan hasilnya berfungsi 100% lancar. Pelayanan fast respon di WA, puas belanja di Pratama Jaya!",
-  },
-  {
-    name: "Agus Pratama",
-    rating: 5,
-    timeAgo: "1 minggu yang lalu",
-    comment: "Produk mantap, original bergaransi resmi. Pengiriman cepat langsung dikirim hari yang sama saat order.",
-  },
-  {
-    name: "Rina Rahmawati",
-    rating: 5,
-    timeAgo: "2 minggu yang lalu",
-    comment: "Beli kompor & peralatan rumah tangga di sini rekomended banget. Respon admin ramah dan pengiriman via GoSend sangat cepat.",
-  },
-  {
-    name: "Dewi Lestari",
-    rating: 4,
-    timeAgo: "2 minggu yang lalu",
-    comment: "Barang bagus, nyampe dengan selamat tanpa lecet sedikitpun. Dus mulus dan alat berfungsi normal.",
-  },
-  {
-    name: "Fajar Nugraha",
-    rating: 5,
-    timeAgo: "3 minggu yang lalu",
-    comment: "Sudah langganan di Pratama Jaya. Kualitas perabotan dan alat dapur selalu memuaskan!",
-  },
-  {
-    name: "Ahmad Fauzi",
-    rating: 5,
-    timeAgo: "1 bulan yang lalu",
-    comment: "Barang original 100%, garansi terjamin. Pengemasan sangat rapi dan bubble wrap aman.",
-  },
-  {
-    name: "Eka Fitriani",
-    rating: 5,
-    timeAgo: "1 bulan yang lalu",
-    comment: "Sangat puas dengan barangnya. Nyaman dipakai dan beneran berkualitas. Terima kasih seller!",
-  },
-  {
-    name: "Bambang Pamungkas",
-    rating: 4,
-    timeAgo: "1 bulan yang lalu",
-    comment: "Fungsi produk sesuai ekspektasi, harga lebih terjangkau dibanding toko lain. Mantap!",
-  },
-  {
-    name: "Tri Wahyuni",
-    rating: 5,
-    timeAgo: "2 bulan yang lalu",
-    comment: "Fast response banget admin WA-nya. Langsung dibantu proses kirim sore itu juga.",
-  },
-  {
-    name: "Dian Sastro",
-    rating: 5,
-    timeAgo: "2 bulan yang lalu",
-    comment: "Sesuai deskripsi dan foto produk. Kualitas pengerjaan sangat rapi dan estetik.",
-  },
-  {
-    name: "Ari Wibowo",
-    rating: 5,
-    timeAgo: "3 bulan yang lalu",
-    comment: "Penjual jujur dan amanah. Kompor / perabotan berjalan lancar tanpa kendala.",
-  },
+const CUSTOMER_NAMES = [
+  "Budi Santoso", "Siska Putri", "Hendra Wijaya", "Maya Rosita", "Agus Pratama",
+  "Rina Rahmawati", "Dewi Lestari", "Fajar Nugraha", "Ahmad Fauzi", "Eka Fitriani",
+  "Bambang Pamungkas", "Tri Wahyuni", "Dian Sastro", "Ari Wibowo", "Rizky Febrian",
+  "Nurul Hidayah", "Dedi Mulyadi", "Citra Kirana", "Raffi Ahmad", "Nagita Slavina",
+  "Indra Wijaya", "Lestari Rahayu", "Siti Aminah", "Muhammad Ridwan", "Ayu Tingting",
+  "Bowo Suwandi", "Toni Sucipto", "Ratna Sari", "Irfan Bachdim", "Prilly Latuconsina",
+  "Aliando Syarief", "Reza Rahadian", "Chicco Jerikho", "Vino G Bastian", "Marsha Timothy",
+  "Laudya Bella", "Zaskia Sungkar", "Shireen Sungkar", "Teuku Wisnu", "Irwansyah",
+  "Surya Saputra", "Cynthia Lamusu", "Ringgo Agus", "Sabai Morscheck", "Gading Marten",
+  "Gisella Anastasia", "Andhika Pratama", "Ussy Sulistiawaty", "Atta Halilintar", "Aurel Hermansyah"
 ];
 
-function getNaturalReviewsForProduct(id: string, name: string) {
+const CUSTOMER_COMMENTS = [
+  "Barang mendarat selamat! Packing super rapi kardus + bubble wrap tebal. Kualitas original dan berfungsi sangat baik.",
+  "Pengiriman cepat banget, seller responsif di WA. Barang sesuai foto dan garansi aman. Recommended seller!",
+  "Kualitas produk sangat bagus, material kokoh dan berfungsi normal. Worth it banget untuk harga segini.",
+  "Sudah dicoba dan hasilnya berfungsi 100% lancar. Pelayanan fast respon di WA, puas belanja di Pratama Jaya!",
+  "Produk mantap, original bergaransi resmi. Pengiriman cepat langsung dikirim hari yang sama saat order.",
+  "Beli kompor & peralatan rumah tangga di sini rekomended banget. Respon admin ramah dan pengiriman via GoSend sangat cepat.",
+  "Barang bagus, nyampe dengan selamat tanpa lecet sedikitpun. Dus mulus dan alat berfungsi normal.",
+  "Sudah langganan di Pratama Jaya. Kualitas perabotan dan alat dapur selalu memuaskan!",
+  "Barang original 100%, garansi terjamin. Pengemasan sangat rapi dan bubble wrap aman.",
+  "Sangat puas dengan barangnya. Nyaman dipakai dan beneran berkualitas. Terima kasih seller!",
+  "Fungsi produk sesuai ekspektasi, harga lebih terjangkau dibanding toko lain. Mantap!",
+  "Fast response banget admin WA-nya. Langsung dibantu proses kirim sore itu juga.",
+  "Sesuai deskripsi dan foto produk. Kualitas pengerjaan sangat rapi dan estetik.",
+  "Penjual jujur dan amanah. Kompor / perabotan berjalan lancar tanpa kendala.",
+  "Respon cepat, paking rapi aman bubble wrap tebel bener. Barang belum dites tapi mulus 100%.",
+  "Beli pas promo gratis ongkir, sampai Jakarta Selatan cuma 1 hari. Mantap banget pelayanannya!",
+  "Garansi aman, kelengkapan fullset. Nggak rugi beli produk Omicko / perabotan di sini.",
+  "Kualitasnya terjamin oke, fisik mulus nggak ada baret. Langsung dipasang di dapur dan siap pakai.",
+  "Bintang 5 buat Pratama Jaya! Toko terpercaya barang original dan CS-nya responsif banget.",
+  "Bungkusnya rapi dan rapat. Tidak ada yang rusak / lecet. Kualitas jempolan!",
+  "Keren banget, respon seller sangat baik dan barang cepat diproses. Nanti bakal order alat dapur lain.",
+  "Barang oke banget, garansi sesuai yang tertulis. Terima kasih banyak seller!",
+  "Packing kencang, aman dari guncangan kurir. Suara mesin halus & pengerjaan rapi.",
+  "Pengiriman ekstra cepat! Pesan pagi, besok siang sudah mendarat di rumah. Top!",
+  "Suka banget sama produknya. Warnanya cantik, kokoh, dan bergaransi resmi.",
+];
+
+function getTimeAgoForIndex(i: number): string {
+  if (i === 0) return "Hari ini";
+  if (i === 1) return "1 hari yang lalu";
+  if (i === 2) return "2 hari yang lalu";
+  if (i < 7) return `${i} hari yang lalu`;
+  if (i < 30) return `${Math.floor(i / 7)} minggu yang lalu`;
+  if (i < 180) return `${Math.floor(i / 30)} bulan yang lalu`;
+  return `${Math.floor(i / 180)} tahun yang lalu`;
+}
+
+function getNaturalReviewsForProduct(id: string, name: string, targetCount: number) {
   let hash = 0;
   const str = id + name;
   for (let i = 0; i < str.length; i++) {
     hash = (hash << 5) - hash + str.charCodeAt(i);
     hash |= 0;
   }
-  const startIndex = Math.abs(hash) % ALL_NATURAL_REVIEWS.length;
-  const count = 12; // Tampilkan 12 nama pembeli natural bervariasi
+  const nameOffset = Math.abs(hash);
+  const commentOffset = Math.abs(hash * 3);
+
   const result = [];
-  for (let i = 0; i < count; i++) {
-    const item = ALL_NATURAL_REVIEWS[(startIndex + i) % ALL_NATURAL_REVIEWS.length];
+  for (let i = 0; i < targetCount; i++) {
+    const nameIndex = (nameOffset + i) % CUSTOMER_NAMES.length;
+    const commentIndex = (commentOffset + i) % CUSTOMER_COMMENTS.length;
+    const reviewerName = CUSTOMER_NAMES[nameIndex];
+    const rating = (i + nameOffset) % 7 === 0 ? 4 : 5;
+
     result.push({
-      name: item.name,
-      initial: item.name.charAt(0).toUpperCase(),
-      rating: item.rating,
-      timeAgo: item.timeAgo,
-      comment: item.comment,
+      name: reviewerName,
+      initial: reviewerName.charAt(0).toUpperCase(),
+      rating,
+      timeAgo: getTimeAgoForIndex(i),
+      comment: CUSTOMER_COMMENTS[commentIndex],
     });
   }
   return result;
@@ -364,13 +333,15 @@ export class CatalogService {
       comment: r.comment ?? "",
     }));
 
-    const naturalReviews = getNaturalReviewsForProduct(prod.id, prod.name);
-    const reviews = dbReviews.length > 0 ? [...dbReviews, ...naturalReviews] : naturalReviews;
-    const reviewCountNum = getNaturalReviewCount(prod.id, prod.name) + dbReviews.length;
+    const targetCount = getNaturalReviewCount(prod.id, prod.name);
+    const neededNaturalCount = Math.max(0, targetCount - dbReviews.length);
+    const naturalReviews = getNaturalReviewsForProduct(prod.id, prod.name, neededNaturalCount);
+    const reviews = [...dbReviews, ...naturalReviews];
+    const reviewCountNum = reviews.length;
     const averageRating =
-      dbReviews.length > 0
+      reviews.length > 0
         ? Number((reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1))
-        : getNaturalRating(prod.id, prod.name);
+        : 4.9;
     const soldCount = getNaturalSoldCount(prod.id, prod.name);
 
     return {

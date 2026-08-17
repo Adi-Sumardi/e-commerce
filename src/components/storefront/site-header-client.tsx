@@ -344,6 +344,9 @@ function HeaderSearchParamsConsumer({
 export function SiteHeaderClient({ variant = "default", categories }: SiteHeaderProps) {
   return (
     <header className="sticky top-0 z-50 flex flex-col bg-card shadow-sm">
+      <div className="bg-primary px-4 py-1.5 text-center text-xs font-bold text-primary-foreground">
+        GRATIS ONGKIR JABODETABEK • LUAR JABODETABEK POTONG ONGKIR Rp30.000
+      </div>
       <Suspense
         fallback={
           <div className="mx-auto flex h-16 w-full max-w-7xl items-center gap-6 px-4 lg:px-8">

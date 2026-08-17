@@ -103,7 +103,7 @@ export function BannerFormDialog({ mode, action, initialValues }: BannerFormDial
             <Input
               id={`${idPrefix}-subtitle`}
               name="subtitle"
-              placeholder="Gratis ongkir se-Indonesia!"
+              placeholder="Gratis Ongkir Jabodetabek • Luar Jabodetabek Potong Ongkir Rp30.000"
               defaultValue={initialValues?.subtitle ?? ""}
             />
           </div>

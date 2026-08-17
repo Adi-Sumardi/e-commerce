@@ -6,6 +6,8 @@ import { Toaster } from "sonner";
 import { StorefrontSessionProvider } from "@/components/storefront/storefront-session-provider";
 import { AuthToast } from "@/components/shared/auth-toast";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
+import { FloatingWhatsapp } from "@/components/shared/floating-whatsapp";
+import { AnalyticsScripts } from "@/components/shared/analytics-scripts";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -66,9 +68,13 @@ export default function RootLayout({
       lang="id"
       className={`${inter.variable} ${geist.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <AnalyticsScripts />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <StorefrontSessionProvider>
           {children}
+          <FloatingWhatsapp />
           <Toaster position="top-center" richColors />
           <Suspense fallback={null}>
             <AuthToast />
@@ -78,4 +84,3 @@ export default function RootLayout({
     </html>
   );
 }
-

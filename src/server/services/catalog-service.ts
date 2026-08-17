@@ -29,6 +29,10 @@ function mapProductToCard(prod: any) {
       ? Number((prod.reviews.reduce((acc: number, r: { rating: number }) => acc + r.rating, 0) / reviewCount).toFixed(1))
       : 0;
 
+  const totalStock = prod.variants
+    ? prod.variants.reduce((acc: number, v: any) => acc + (Number(v.stock) || 0), 0)
+    : 0;
+
   return {
     id: prod.id as string,
     slug: prod.slug as string,
@@ -42,7 +46,7 @@ function mapProductToCard(prod: any) {
     reviewCount: reviewCount > 0 ? `${reviewCount} Ulasan` : "Belum ada ulasan",
     soldLabel: "Produk Tersedia",
     image: prod.images[0]?.url ?? "https://placehold.co/400x400/e2e8f0/64748b/png?text=Product",
-    isPreorder: prod.isPreorder as boolean,
+    isPreorder: Boolean(prod.isPreorder && totalStock === 0),
   };
 }
 
@@ -56,8 +60,8 @@ export class CatalogService {
 
   static async getHomeCategories() {
     const categories = await CategoryRepository.findAll();
-    // Map icons based on category slug/name
-    return categories.map((cat) => {
+    // Utamakan kategori Rumah Tangga / Perabotan Dapur di posisi paling depan
+    const mapped = categories.map((cat) => {
       let icon: "laptop" | "shirt" | "chair" | "sparkles" | "gamepad" | "shopping-basket" = "shopping-basket";
       if (cat.slug === "elektronik") icon = "laptop";
       else if (cat.slug === "fashion") icon = "shirt";
@@ -71,6 +75,12 @@ export class CatalogService {
         slug: cat.slug,
         icon,
       };
+    });
+
+    return mapped.sort((a, b) => {
+      if (a.slug === "rumah-tangga") return -1;
+      if (b.slug === "rumah-tangga") return 1;
+      return 0;
     });
   }
 
@@ -210,7 +220,7 @@ export class CatalogService {
       description: prod.description,
       specs: prod.specs.map((s) => ({ title: s.label, detail: s.value })),
       reviews,
-      isPreorder: prod.isPreorder,
+      isPreorder: Boolean(prod.isPreorder && totalStock === 0),
       preorderPaymentType: prod.preorderPaymentType,
       preorderDpPercentage: prod.preorderDpPercentage ? Number(prod.preorderDpPercentage) : null,
       preorderEstimatedDate: prod.preorderEstimatedDate,

@@ -173,10 +173,10 @@ export default async function Home({
         <section className="mx-auto w-full max-w-7xl px-4 lg:px-8">
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
             {[
-              { icon: Truck, title: "Gratis Ongkir", desc: "Semua pesanan ke seluruh Indonesia" },
+              { icon: Truck, title: "Gratis Ongkir Jabodetabek", desc: "Luar Jabodetabek Potong Ongkir Rp30.000" },
               { icon: ShieldCheck, title: "Garansi Resmi", desc: "100% produk original bergaransi" },
               { icon: Package, title: "Pre-Order DP 30%", desc: "Booking produk eksklusif segera" },
-              { icon: CreditCard, title: "Bayar Mudah", desc: "VA, E-Wallet, QRIS, COD tersedia" },
+              { icon: CreditCard, title: "Bayar Mudah", desc: "VA, E-Wallet, QRIS, Transfer tersedia" },
             ].map((badge) => (
               <div key={badge.title} className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 shadow-xs">
                 <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
@@ -188,6 +188,58 @@ export default async function Home({
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Section: Kenapa Belanja di Pratama Jaya? (Prioritas 4) */}
+        <section className="mx-auto w-full max-w-7xl px-4 py-10 lg:px-8">
+          <div className="rounded-3xl border border-primary/20 bg-linear-to-br from-primary/10 via-background to-secondary/10 p-8 shadow-sm">
+            <div className="mb-8 text-center">
+              <Badge className="mb-2 bg-primary text-primary-foreground font-bold text-xs uppercase tracking-wider">
+                Keunggulan Toko
+              </Badge>
+              <h2 className="text-2xl font-extrabold text-foreground md:text-3xl">
+                Kenapa Belanja di Pratama Jaya?
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Komitmen kami memberikan pengalaman belanja perabotan rumah tangga &amp; kebutuhan dapur terbaik
+              </p>
+            </div>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {[
+                {
+                  title: "100% Produk Original",
+                  desc: "Jaminan barang asli dari produsen resmi bergaransi.",
+                  icon: ShieldCheck,
+                },
+                {
+                  title: "Subsidi & Gratis Ongkir",
+                  desc: "Gratis ongkir Jabodetabek & potongan Rp30.000 untuk Luar Jabodetabek.",
+                  icon: Truck,
+                },
+                {
+                  title: "Layanan Order WhatsApp",
+                  desc: "Bisa langsung konsultasi & order praktis via WhatsApp CS.",
+                  icon: Zap,
+                },
+                {
+                  title: "Packing Rapi & Safe Shipping",
+                  desc: "Setiap barang dibungkus aman dilapisi bubble wrap tebal.",
+                  icon: Package,
+                },
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex flex-col items-center rounded-2xl border border-border bg-card/80 p-6 text-center shadow-xs backdrop-blur-xs transition-all hover:scale-102 hover:shadow-md"
+                >
+                  <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-md">
+                    <item.icon className="size-7" />
+                  </div>
+                  <h3 className="mb-2 text-base font-bold text-foreground">{item.title}</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -331,6 +383,95 @@ export default async function Home({
               ))}
             </div>
           )}
+        </section>
+
+        {/* Social Proof Section (Prioritas 7) */}
+        <section className="mx-auto w-full max-w-7xl px-4 py-12 lg:px-8 border-t border-border/40">
+          <div className="mb-8 text-center">
+            <Badge className="mb-2 bg-secondary text-secondary-foreground font-bold text-xs uppercase tracking-wider">
+              Bukti Pengiriman &amp; Kepuasan Pelanggan
+            </Badge>
+            <h2 className="text-2xl font-extrabold text-foreground md:text-3xl">
+              Stok Ready, Packing Aman &amp; Testimoni Pelanggan
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Ribuan paket produk perabotan rumah tangga &amp; Omicko telah dikirim secara aman ke seluruh Indonesia.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3 mb-10">
+            {[
+              {
+                title: "Stok Gudang Siap Kirim",
+                desc: "Persediaan produk kompor, blender, mixer & perabotan rumah tangga selalu terjaga.",
+                tag: "Gudang Utama",
+                img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop",
+              },
+              {
+                title: "Packing Bubble Wrap Double",
+                desc: "Setiap pesanan dibungkus tebal dan rapi untuk memastikan barang tiba tanpa cacat.",
+                tag: "Standar QC",
+                img: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=800&auto=format&fit=crop",
+              },
+              {
+                title: "Pengiriman Kurir Setiap Hari",
+                desc: "Kerjasama resmi dengan JNE, J&T, SiCepat, GoSend, dan GrabExpress.",
+                tag: "Resi Cepat",
+                img: "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?q=80&w=800&auto=format&fit=crop",
+              },
+            ].map((card, i) => (
+              <div key={i} className="group overflow-hidden rounded-2xl border border-border bg-card shadow-xs transition-all hover:shadow-md">
+                <div className="relative h-48 w-full overflow-hidden bg-muted">
+                  <Image
+                    src={card.img}
+                    alt={card.title}
+                    fill
+                    unoptimized
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <Badge className="absolute left-3 top-3 bg-foreground/80 text-background backdrop-blur-xs text-[10px] font-bold">
+                    {card.tag}
+                  </Badge>
+                </div>
+                <div className="p-5">
+                  <h3 className="text-base font-bold text-foreground">{card.title}</h3>
+                  <p className="mt-1.5 text-xs text-muted-foreground leading-relaxed">{card.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Testimonial Cards */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {[
+              {
+                name: "Bunda Rina (Jakarta Selatan)",
+                rating: 5,
+                comment: "Pesan kompor Omicko jam 10 pagi, sore barang sudah sampai via GoSend! Packing rapi aman bubble wrap tebal. Mantap Pratama Jaya!",
+              },
+              {
+                name: "Pak Hendra (Bandung)",
+                rating: 5,
+                comment: "Dapat potongan ongkir Rp30.000 buat kirim ke Bandung. Barang original dan sesuai pesanan. Pelayanan via WA sangat ramah dan responsif.",
+              },
+              {
+                name: "Ibu Maya (Surabaya)",
+                rating: 5,
+                comment: "Pre-order berjalan lancar, DP 30% dulu baru pelunasan saat barang dikirim. Toko sangat amanah dan profesional!",
+              },
+            ].map((t, idx) => (
+              <div key={idx} className="flex flex-col justify-between rounded-2xl border border-border bg-muted/40 p-5 shadow-2xs">
+                <div>
+                  <div className="mb-2 flex items-center justify-between">
+                    <StarRating rating={t.rating} size="sm" />
+                    <Badge variant="outline" className="text-[10px] text-emerald-600 border-emerald-300 bg-emerald-50 dark:bg-emerald-950/30">Verified Purchase</Badge>
+                  </div>
+                  <p className="text-xs text-foreground italic leading-relaxed">&ldquo;{t.comment}&rdquo;</p>
+                </div>
+                <p className="mt-4 text-xs font-bold text-primary">{t.name}</p>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Partners */}

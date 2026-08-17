@@ -507,10 +507,16 @@ export default function CheckoutForm({ user }: CheckoutFormProps) {
             {/* Courier Selection */}
             {address && (
               <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
-                <h2 className="mb-6 flex items-center gap-2 text-xl font-bold">
-                  <Truck className="size-5 text-primary" />
-                  Pilih Kurir Pengiriman (Biteship Live Rates)
-                </h2>
+                <div className="mb-4 flex items-center justify-between flex-wrap gap-2">
+                  <h2 className="flex items-center gap-2 text-xl font-bold">
+                    <Truck className="size-5 text-primary" />
+                    Pilih Kurir Pengiriman (Biteship Live Rates)
+                  </h2>
+                </div>
+                <div className="mb-4 flex items-center gap-2 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/40 p-3 text-xs text-emerald-700 dark:text-emerald-300 font-medium">
+                  <Truck className="size-4 shrink-0" />
+                  <span><strong>Promo Aktif:</strong> Gratis Ongkir Jabodetabek • Luar Jabodetabek Potong Ongkir Rp30.000</span>
+                </div>
                 <RadioGroup
                   value={selectedCourier}
                   onValueChange={setSelectedCourier}

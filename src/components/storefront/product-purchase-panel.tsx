@@ -211,13 +211,14 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
               min={1}
               type="number"
               value={quantity}
-              onChange={(e) =>
-                setQuantity(Math.min(currentStock, Math.max(1, Number(e.target.value) || 1)))
-              }
+              onChange={(e) => {
+                const maxVal = product.isPreorder ? 999 : currentStock;
+                setQuantity(Math.min(maxVal, Math.max(1, Number(e.target.value) || 1)));
+              }}
             />
             <button
               aria-label="Tambah jumlah"
-              disabled={quantity >= currentStock}
+              disabled={quantity >= (product.isPreorder ? 999 : currentStock)}
               onClick={() => changeQty(1)}
               className="flex size-8 items-center justify-center rounded transition-colors hover:bg-accent disabled:opacity-50"
             >
@@ -225,13 +226,17 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
             </button>
           </div>
           <span className="text-sm text-muted-foreground">
-            Stok: <span className="font-bold text-foreground">{currentStock}</span>
+            {product.isPreorder ? (
+              <span className="font-bold text-preorder">Pre-Order (Stok Diproses)</span>
+            ) : (
+              <>Stok: <span className="font-bold text-foreground">{currentStock}</span></>
+            )}
           </span>
         </div>
       </div>
 
-      <div className="mt-4 flex flex-col gap-2">
-        <div className="grid grid-cols-2 gap-4">
+      <div className="mt-4 flex flex-col gap-3">
+        <div className="grid grid-cols-2 gap-3">
           <Button
             variant="outline"
             onClick={() => handleAddToCart(false)}
@@ -247,6 +252,20 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
             Beli Sekarang
           </Button>
         </div>
+        <Button
+          onClick={() => {
+            const phone = (process.env.NEXT_PUBLIC_STORE_WHATSAPP || "6281234567890").replace(/\D/g, "");
+            const formattedPhone = phone.startsWith("0") ? `62${phone.slice(1)}` : phone;
+            const message = encodeURIComponent(
+              `Halo Pratama Jaya, saya ingin order:\n• Produk: ${product.name}\n• Varian: ${selectedColor?.name || "-"}\n• Jumlah: ${quantity}\n• Link: ${window.location.href}`
+            );
+            window.open(`https://wa.me/${formattedPhone}?text=${message}`, "_blank");
+          }}
+          className="w-full gap-2 bg-[#25D366] py-6 font-extrabold text-white shadow-md hover:bg-[#20bd5a] active:scale-95 cursor-pointer text-base"
+        >
+          <WhatsappIcon className="size-5 fill-current" />
+          ORDER VIA WHATSAPP
+        </Button>
         <div className="mt-2 flex items-center justify-center gap-4 border-t border-border/30 py-2">
           <button className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary cursor-pointer">
             <MessageCircle className="size-4" />

@@ -63,18 +63,20 @@ function getNaturalStoreName(id: string, name: string): string {
 }
 
 const CUSTOMER_NAMES = [
-  "Ibu Ratna", "Mas Bowo", "Kiki W.", "Pak Bambang", "Siti Aisyah",
-  "Hafiz M.", "Mbak Tika", "Agus S.", "Bu Nunik", "Dimas Prasetyo",
-  "Mbak Erna", "Doni H.", "Tante Lilis", "Pak Yudi", "Wawan S.",
-  "Yulianti", "Rizky K.", "Bunda Nita", "Dadan C.", "Endang S.",
-  "Sri Lestari", "Pak Totok", "Mba Tari", "Pak Joko", "Fitriana N.",
-  "Asep Kurnia", "Mba Dian", "Pak Dwi", "Mulyanto", "Bunda Tari",
-  "Hendra P.", "Bu Nur", "Mas Rio", "Eko Prasetyo", "Mbak Yani",
-  "Pak Sugeng", "Novi R.", "Imam Hidayat", "Bunda Shinta", "Wibowo",
-  "Ibu Ning", "Mas Febri", "Randi A.", "Mbak Umi", "Pak Slamet",
-  "Dewi S.", "Gita M.", "Pak Supri", "Mbak Nuning", "Bayu W.",
-  "Bunda Melly", "Pak Toto", "Ririn N.", "Aris Kurniawan", "Mbak Vivi",
-  "Ibu Wiwiek", "Mas Ginanjar", "Om Gunawan", "Bu Haryati", "Mbak Lusi"
+  "wahyu66", "Siti27", "budi_s99", "ratna.p", "doni_h88",
+  "yuliana88", "hendra_w", "kiki2023", "dimas_pras", "erna_s",
+  "agus_p77", "rina_rahma", "dewi_l", "fajar_n92", "ahmad_fauzi89",
+  "eka_f", "tri_w", "rizky_f95", "nurul_h", "citra_k88",
+  "indra_w", "lestari_r", "siti_aminah", "m_ridwan", "bowo_s",
+  "toni_s", "ratna_s99", "bayu_w99", "vivi_k", "wiwiek_s",
+  "ginanjar_r", "gunawan_h", "lusi_m88", "agung_pratama", "fitri_n",
+  "deni_k", "nita_s", "novi_r", "yudi_p", "slamets",
+  "supri_y", "arif_b", "rudi_h88", "nining_s", "melly_a",
+  "toto_s", "ririn_a", "anis_k", "wawan_setiawan", "endang_p",
+  "totok_h", "tari_w", "joko_s", "mulyanto99", "hendra_prasetyo",
+  "rio_f", "eko_p99", "yani_s", "sugeng_r", "imam_h",
+  "wibowo_k", "febri_a", "randi_p", "umi_k", "dewi_septiani",
+  "gita_m", "dadan_c", "mira_s", "rudianto_k", "tuty_h"
 ];
 
 const CUSTOMER_COMMENTS = [

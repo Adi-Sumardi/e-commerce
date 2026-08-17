@@ -541,8 +541,8 @@ model StoreSettings {
   name        String   @default("Pratama Jaya")
   email       String   @default("info@pratamajaya.com")
   description String   @db.Text
-  phone       String   @default("+62 812-3456-7890")
-  whatsapp    String   @default("+62 812-3456-7890")
+  phone       String   @default("+62 812-8586-9280")
+  whatsapp    String   @default("+62 812-8586-9280")
   updatedAt   DateTime @updatedAt
 
   @@map("store_settings")

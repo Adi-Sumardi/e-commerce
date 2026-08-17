@@ -6,7 +6,7 @@ interface FloatingWhatsappProps {
   phone?: string;
 }
 
-export function FloatingWhatsapp({ phone = "6281234567890" }: FloatingWhatsappProps) {
+export function FloatingWhatsapp({ phone = "6281285869280" }: FloatingWhatsappProps) {
   const cleanPhone = (process.env.NEXT_PUBLIC_STORE_WHATSAPP || phone).replace(/\D/g, "");
   const formattedPhone = cleanPhone.startsWith("0") ? `62${cleanPhone.slice(1)}` : cleanPhone;
   const message = encodeURIComponent("Halo Pratama Jaya, saya ingin tanya stok & order produk.");

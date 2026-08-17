@@ -254,7 +254,7 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
         </div>
         <Button
           onClick={() => {
-            const phone = (process.env.NEXT_PUBLIC_STORE_WHATSAPP || "6281234567890").replace(/\D/g, "");
+            const phone = (process.env.NEXT_PUBLIC_STORE_WHATSAPP || "6281285869280").replace(/\D/g, "");
             const formattedPhone = phone.startsWith("0") ? `62${phone.slice(1)}` : phone;
             const message = encodeURIComponent(
               `Halo Pratama Jaya, saya ingin order:\n• Produk: ${product.name}\n• Varian: ${selectedColor?.name || "-"}\n• Jumlah: ${quantity}\n• Link: ${window.location.href}`

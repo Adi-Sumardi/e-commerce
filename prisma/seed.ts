@@ -456,7 +456,7 @@ async function main() {
       bankName: "BCA",
       accountNumber: "1234567890",
       accountHolder: "PT Pratama Jaya Sejahtera",
-      instructions: "Konfirmasi ke WhatsApp 0812-3456-7890 setelah transfer.",
+      instructions: "Konfirmasi ke WhatsApp 0812-8586-9280 setelah transfer.",
       sortOrder: 0,
       isActive: true,
     },

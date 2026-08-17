@@ -107,6 +107,45 @@ async function main() {
       role: "CUSTOMER",
     },
   });
+  const reviewerHendra = await db.user.upsert({
+    where: { email: "hendra.w@example.com" },
+    update: {},
+    create: {
+      name: "Hendra Wijaya",
+      email: "hendra.w@example.com",
+      passwordHash: reviewerPassword,
+      role: "CUSTOMER",
+    },
+  });
+  const reviewerMaya = await db.user.upsert({
+    where: { email: "maya.rosita@example.com" },
+    update: {},
+    create: {
+      name: "Maya Rosita",
+      email: "maya.rosita@example.com",
+      passwordHash: reviewerPassword,
+      role: "CUSTOMER",
+    },
+  });
+  const reviewerRina = await db.user.upsert({
+    where: { email: "rina.rahma@example.com" },
+    update: {},
+    create: {
+      name: "Rina Rahmawati",
+      email: "rina.rahma@example.com",
+      passwordHash: reviewerPassword,
+      role: "CUSTOMER",
+    },
+  });
+
+  const reviewerUsers: Record<string, any> = {
+    andi: reviewerAndi,
+    siska: reviewerSiska,
+    hendra: reviewerHendra,
+    maya: reviewerMaya,
+    rina: reviewerRina,
+    customer: customer,
+  };
 
   // 3. Seed Categories
   const categoriesData = [
@@ -321,11 +360,7 @@ async function main() {
     },
   ];
 
-  const reviewerUsers: Record<string, { id: string }> = {
-    customer,
-    andi: reviewerAndi,
-    siska: reviewerSiska,
-  };
+
 
   for (const prod of productsData) {
     const { images, variants, reviews, ...prodData } = prod as typeof prod & {

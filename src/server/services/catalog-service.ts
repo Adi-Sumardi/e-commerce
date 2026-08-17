@@ -104,8 +104,9 @@ function mapProductToCard(prod: any) {
     ? Math.round(((compareAtPrice! - price) / compareAtPrice!) * 100)
     : null;
 
+  const baseNaturalReviews = getNaturalReviewCount(prod.id || "", prod.name || "");
   const dbReviewCount = prod.reviews ? prod.reviews.length : 0;
-  const reviewCount = dbReviewCount > 0 ? dbReviewCount : getNaturalReviewCount(prod.id || "", prod.name || "");
+  const reviewCount = baseNaturalReviews + dbReviewCount;
   const averageRating =
     dbReviewCount > 0
       ? Number((prod.reviews.reduce((acc: number, r: { rating: number }) => acc + r.rating, 0) / dbReviewCount).toFixed(1))
@@ -285,7 +286,7 @@ export class CatalogService {
     }));
 
     const reviews = dbReviews.length > 0 ? dbReviews : DEFAULT_NATURAL_REVIEWS;
-    const reviewCountNum = dbReviews.length > 0 ? dbReviews.length : getNaturalReviewCount(prod.id, prod.name);
+    const reviewCountNum = getNaturalReviewCount(prod.id, prod.name) + dbReviews.length;
     const averageRating =
       dbReviews.length > 0
         ? Number((reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1))

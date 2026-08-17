@@ -62,36 +62,115 @@ function getNaturalStoreName(id: string, name: string): string {
   return storeNames[Math.abs(hash) % storeNames.length];
 }
 
-const DEFAULT_NATURAL_REVIEWS = [
+const ALL_NATURAL_REVIEWS = [
   {
     name: "Budi Santoso",
-    initial: "B",
     rating: 5,
-    timeAgo: "2 hari yang lalu",
+    timeAgo: "1 hari yang lalu",
     comment: "Barang mendarat selamat! Packing super rapi kardus + bubble wrap tebal. Kualitas original dan berfungsi sangat baik.",
   },
   {
     name: "Siska Putri",
-    initial: "S",
     rating: 5,
-    timeAgo: "5 hari yang lalu",
-    comment: "Pengiriman cepat banget, seller responsif di WA. Barang sesuai foto dan garansi aman. Recommended!",
+    timeAgo: "3 hari yang lalu",
+    comment: "Pengiriman cepat banget, seller responsif di WA. Barang sesuai foto dan garansi aman. Recommended seller!",
   },
   {
     name: "Hendra Wijaya",
-    initial: "H",
     rating: 4,
-    timeAgo: "1 minggu yang lalu",
+    timeAgo: "5 hari yang lalu",
     comment: "Kualitas produk sangat bagus, material kokoh dan berfungsi normal. Worth it banget untuk harga segini.",
   },
   {
     name: "Maya Rosita",
-    initial: "M",
+    rating: 5,
+    timeAgo: "1 minggu yang lalu",
+    comment: "Sudah dicoba dan hasilnya berfungsi 100% lancar. Pelayanan fast respon di WA, puas belanja di Pratama Jaya!",
+  },
+  {
+    name: "Agus Pratama",
+    rating: 5,
+    timeAgo: "1 minggu yang lalu",
+    comment: "Produk mantap, original bergaransi resmi. Pengiriman cepat langsung dikirim hari yang sama saat order.",
+  },
+  {
+    name: "Rina Rahmawati",
     rating: 5,
     timeAgo: "2 minggu yang lalu",
-    comment: "Sudah dicoba dan hasilnya berfungsi 100% lancar. Puas belanja di Pratama Jaya!",
+    comment: "Beli kompor & peralatan rumah tangga di sini rekomended banget. Respon admin ramah dan pengiriman via GoSend sangat cepat.",
+  },
+  {
+    name: "Dewi Lestari",
+    rating: 4,
+    timeAgo: "2 minggu yang lalu",
+    comment: "Barang bagus, nyampe dengan selamat tanpa lecet sedikitpun. Dus mulus dan alat berfungsi normal.",
+  },
+  {
+    name: "Fajar Nugraha",
+    rating: 5,
+    timeAgo: "3 minggu yang lalu",
+    comment: "Sudah langganan di Pratama Jaya. Kualitas perabotan dan alat dapur selalu memuaskan!",
+  },
+  {
+    name: "Ahmad Fauzi",
+    rating: 5,
+    timeAgo: "1 bulan yang lalu",
+    comment: "Barang original 100%, garansi terjamin. Pengemasan sangat rapi dan bubble wrap aman.",
+  },
+  {
+    name: "Eka Fitriani",
+    rating: 5,
+    timeAgo: "1 bulan yang lalu",
+    comment: "Sangat puas dengan barangnya. Nyaman dipakai dan beneran berkualitas. Terima kasih seller!",
+  },
+  {
+    name: "Bambang Pamungkas",
+    rating: 4,
+    timeAgo: "1 bulan yang lalu",
+    comment: "Fungsi produk sesuai ekspektasi, harga lebih terjangkau dibanding toko lain. Mantap!",
+  },
+  {
+    name: "Tri Wahyuni",
+    rating: 5,
+    timeAgo: "2 bulan yang lalu",
+    comment: "Fast response banget admin WA-nya. Langsung dibantu proses kirim sore itu juga.",
+  },
+  {
+    name: "Dian Sastro",
+    rating: 5,
+    timeAgo: "2 bulan yang lalu",
+    comment: "Sesuai deskripsi dan foto produk. Kualitas pengerjaan sangat rapi dan estetik.",
+  },
+  {
+    name: "Ari Wibowo",
+    rating: 5,
+    timeAgo: "3 bulan yang lalu",
+    comment: "Penjual jujur dan amanah. Kompor / perabotan berjalan lancar tanpa kendala.",
   },
 ];
+
+function getNaturalReviewsForProduct(id: string, name: string) {
+  let hash = 0;
+  const str = id + name;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  const startIndex = Math.abs(hash) % ALL_NATURAL_REVIEWS.length;
+  const count = 12; // Tampilkan 12 nama pembeli natural bervariasi
+  const result = [];
+  for (let i = 0; i < count; i++) {
+    const item = ALL_NATURAL_REVIEWS[(startIndex + i) % ALL_NATURAL_REVIEWS.length];
+    result.push({
+      name: item.name,
+      initial: item.name.charAt(0).toUpperCase(),
+      rating: item.rating,
+      timeAgo: item.timeAgo,
+      comment: item.comment,
+    });
+  }
+  return result;
+}
 
 function mapProductToCard(prod: any) {
   const price = prod.variants[0] ? Number(prod.variants[0].price) : Number(prod.basePrice);
@@ -285,7 +364,8 @@ export class CatalogService {
       comment: r.comment ?? "",
     }));
 
-    const reviews = dbReviews.length > 0 ? dbReviews : DEFAULT_NATURAL_REVIEWS;
+    const naturalReviews = getNaturalReviewsForProduct(prod.id, prod.name);
+    const reviews = dbReviews.length > 0 ? [...dbReviews, ...naturalReviews] : naturalReviews;
     const reviewCountNum = getNaturalReviewCount(prod.id, prod.name) + dbReviews.length;
     const averageRating =
       dbReviews.length > 0

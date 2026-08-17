@@ -305,16 +305,24 @@ export function ProductPurchasePanel({ product }: ProductPurchasePanelProps) {
 
       <section className="flex flex-col gap-4 rounded-xl border border-border p-4">
         <div>
-          <h4 className="mb-2 text-lg font-semibold">Pengiriman</h4>
-          <div className="flex cursor-pointer items-center justify-between rounded-lg bg-muted p-3 transition-colors hover:bg-accent">
+          <h4 className="mb-2 text-lg font-semibold flex items-center justify-between">
+            <span>Pengiriman</span>
+            <Badge className="bg-emerald-600 text-white text-[10px] font-bold">
+              PROMO ONGKIR
+            </Badge>
+          </h4>
+          <div className="flex cursor-pointer items-center justify-between rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/40 p-3 transition-colors">
             <div className="flex items-center gap-3">
-              <Truck className="size-5 text-primary" />
+              <Truck className="size-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <div>
-                <p className="text-sm font-bold">Pengiriman via Biteship</p>
-                <p className="text-xs text-muted-foreground">Reguler &amp; Instant tersedia saat checkout</p>
+                <p className="text-xs font-extrabold text-emerald-800 dark:text-emerald-200">
+                  Gratis Ongkir Jabodetabek
+                </p>
+                <p className="text-[11px] text-emerald-700/80 dark:text-emerald-300/80 leading-snug">
+                  Luar Jabodetabek Potong Ongkir Rp30.000 (Otomatis saat checkout via Biteship)
+                </p>
               </div>
             </div>
-            <ChevronRight className="size-5" />
           </div>
         </div>
       </section>

@@ -36,6 +36,7 @@ interface ParsedProductForm {
   widthCm: number;
   heightCm: number;
   status: ProductStatus;
+  isFeatured: boolean;
   isPreorder: boolean;
   preorderPaymentType: PreorderPaymentType | null;
   preorderDpPercentage: number | null;
@@ -69,6 +70,7 @@ function parseProductForm(formData: FormData): ParsedProductForm {
   const widthCm = parseFloat(formData.get("widthCm") as string) || 0;
   const heightCm = parseFloat(formData.get("heightCm") as string) || 0;
   const status = formData.get("status") as ProductStatus;
+  const isFeatured = formData.get("isFeatured") === "on";
   const isPreorder = formData.get("isPreorder") === "on";
   const preorderPaymentType = isPreorder
     ? ((formData.get("preorderPaymentType") as string) as PreorderPaymentType) || null
@@ -142,6 +144,7 @@ function parseProductForm(formData: FormData): ParsedProductForm {
     widthCm,
     heightCm,
     status,
+    isFeatured,
     isPreorder,
     preorderPaymentType,
     preorderDpPercentage,
@@ -177,6 +180,7 @@ export async function createProductAction(formData: FormData) {
       widthCm: parsed.widthCm,
       heightCm: parsed.heightCm,
       status: parsed.status,
+      isFeatured: parsed.isFeatured,
       isPreorder: parsed.isPreorder,
       preorderPaymentType: parsed.preorderPaymentType,
       preorderDpPercentage: parsed.preorderDpPercentage,
@@ -227,6 +231,7 @@ export async function updateProductAction(productId: string, formData: FormData)
         widthCm: parsed.widthCm,
         heightCm: parsed.heightCm,
         status: parsed.status,
+        isFeatured: parsed.isFeatured,
         isPreorder: parsed.isPreorder,
         preorderPaymentType: parsed.preorderPaymentType,
         preorderDpPercentage: parsed.preorderDpPercentage,

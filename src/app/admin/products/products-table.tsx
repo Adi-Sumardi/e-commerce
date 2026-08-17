@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Package, Search, Eye, Edit } from "lucide-react";
+import { Package, Search, Eye, Edit, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -28,6 +28,7 @@ interface ProductRow {
   slug: string;
   basePrice: number;
   status: string;
+  isFeatured?: boolean;
   categoryId: string;
   categoryName: string;
   variantCount: number;
@@ -126,7 +127,15 @@ export function ProductsTable({
                         />
                       </div>
                       <div>
-                        <p className="font-semibold text-sm text-foreground line-clamp-1">{product.name}</p>
+                        <div className="flex items-center gap-1.5">
+                          <p className="font-semibold text-sm text-foreground line-clamp-1">{product.name}</p>
+                          {product.isFeatured && (
+                            <Badge className="bg-amber-500 hover:bg-amber-600 text-[10px] font-bold text-white px-1.5 py-0 shrink-0 gap-0.5">
+                              <Sparkles className="size-2.5 fill-white" />
+                              Unggulan
+                            </Badge>
+                          )}
+                        </div>
                         <p className="text-xs text-muted-foreground">{product.slug}</p>
                       </div>
                     </div>

@@ -3,6 +3,7 @@ import { OrderRepository } from "@/server/repositories/order-repository";
 import { ProductRepository } from "@/server/repositories/product-repository";
 import { db } from "@/lib/db";
 import { getBiteshipRates, BiteshipRateItem } from "@/lib/biteship";
+import { calculateDiscountedShippingCost } from "@/lib/shipping";
 import { xenditClient } from "@/lib/xendit";
 import { PaymentMethod, PaymentStage, OrderType, OrderStatus } from "@prisma/client";
 
@@ -70,7 +71,7 @@ export class CheckoutService {
     if (!warehouse || !warehouse.biteshipAreaId || !defaultAddress.biteshipAreaId) {
       return {
         address: defaultAddress,
-        shippingOptions: this.getMockShippingOptions(),
+        shippingOptions: this.getMockShippingOptions(defaultAddress),
         paymentChannels,
       };
     }
@@ -91,12 +92,23 @@ export class CheckoutService {
       if (ratesResult && ratesResult.pricing) {
         return {
           address: defaultAddress,
-          shippingOptions: ratesResult.pricing.map((price: any) => ({
-            id: `${price.courier_code}_${price.courier_service}`,
-            name: `${price.courier_name} (${price.courier_service})`,
-            eta: price.duration || "Estimasi 2-3 Hari",
-            price: price.price,
-          })),
+          shippingOptions: ratesResult.pricing.map((price: any) => {
+            const rawPrice = Number(price.price) || 0;
+            const discounted = calculateDiscountedShippingCost(
+              rawPrice,
+              defaultAddress.province,
+              defaultAddress.city,
+              defaultAddress.district
+            );
+            return {
+              id: `${price.courier_code}_${price.courier_service}`,
+              name: `${price.courier_name} (${price.courier_service})`,
+              eta: price.duration || "Estimasi 2-3 Hari",
+              price: discounted.discountedPrice,
+              originalPrice: discounted.originalPrice,
+              isFreeShipping: discounted.isFreeShipping,
+            };
+          }),
           paymentChannels,
         };
       }
@@ -106,18 +118,35 @@ export class CheckoutService {
       console.warn("Biteship API failed, falling back to mock options:", error);
       return {
         address: defaultAddress,
-        shippingOptions: this.getMockShippingOptions(),
+        shippingOptions: this.getMockShippingOptions(defaultAddress),
         paymentChannels,
       };
     }
   }
 
-  private static getMockShippingOptions() {
-    return [
+  private static getMockShippingOptions(address?: any) {
+    const rawOptions = [
       { id: "jne_reg", name: "JNE Reguler", eta: "Estimasi 2-3 Hari", price: 18000 },
       { id: "jnt_ez", name: "J&T Express", eta: "Estimasi 1-2 Hari", price: 22000 },
       { id: "sicepat_reg", name: "SiCepat REG", eta: "Estimasi 2-4 Hari", price: 17500 },
     ];
+
+    if (!address) return rawOptions;
+
+    return rawOptions.map((opt) => {
+      const discounted = calculateDiscountedShippingCost(
+        opt.price,
+        address.province,
+        address.city,
+        address.district
+      );
+      return {
+        ...opt,
+        price: discounted.discountedPrice,
+        originalPrice: discounted.originalPrice,
+        isFreeShipping: discounted.isFreeShipping,
+      };
+    });
   }
 
   static async placeOrder(params: {

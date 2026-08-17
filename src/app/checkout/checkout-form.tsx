@@ -18,6 +18,7 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useCartStore } from "@/store/cart-store";
@@ -533,8 +534,19 @@ export default function CheckoutForm({ user }: CheckoutFormProps) {
                     >
                       <div className="flex items-start justify-between">
                         <RadioGroupItem value={courier.id} className="sr-only" />
-                        <div className="flex h-6 w-14 items-center justify-center rounded bg-muted text-[9px] font-extrabold uppercase">
-                          {courier.name.split(" ")[0]}
+                        <div className="flex items-center gap-1.5">
+                          <div className="flex h-6 w-14 items-center justify-center rounded bg-muted text-[9px] font-extrabold uppercase">
+                            {courier.name.split(" ")[0]}
+                          </div>
+                          {courier.isFreeShipping || courier.price === 0 ? (
+                            <Badge className="bg-emerald-600 text-white text-[9px] font-bold px-1.5 py-0">
+                              GRATIS ONGKIR
+                            </Badge>
+                          ) : courier.originalPrice ? (
+                            <Badge className="bg-blue-600 text-white text-[9px] font-bold px-1.5 py-0">
+                              POTONG Rp30.000
+                            </Badge>
+                          ) : null}
                         </div>
                         {selectedCourier === courier.id && (
                           <Check className="size-5 text-primary" />
@@ -542,9 +554,31 @@ export default function CheckoutForm({ user }: CheckoutFormProps) {
                       </div>
                       <p className="mt-4 text-base font-bold">{courier.name}</p>
                       <p className="text-xs text-muted-foreground mt-0.5">{courier.eta}</p>
-                      <p className="mt-2 text-base font-extrabold text-primary">
-                        {formatIDR(courier.price)}
-                      </p>
+                      <div className="mt-2 flex items-baseline gap-2">
+                        {courier.price === 0 ? (
+                          <>
+                            <span className="text-base font-extrabold text-emerald-600 dark:text-emerald-400">
+                              FREE / Rp 0
+                            </span>
+                            {courier.originalPrice && (
+                              <span className="text-xs text-muted-foreground line-through">
+                                {formatIDR(courier.originalPrice)}
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <span className="text-base font-extrabold text-primary">
+                              {formatIDR(courier.price)}
+                            </span>
+                            {courier.originalPrice && (
+                              <span className="text-xs text-muted-foreground line-through">
+                                {formatIDR(courier.originalPrice)}
+                              </span>
+                            )}
+                          </>
+                        )}
+                      </div>
                     </label>
                   ))}
                 </RadioGroup>

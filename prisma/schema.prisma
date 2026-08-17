@@ -240,6 +240,7 @@ model Product {
   widthCm               Decimal              @db.Decimal(10, 2)
   heightCm              Decimal              @db.Decimal(10, 2)
   status                ProductStatus        @default(DRAFT)
+  isFeatured            Boolean              @default(false)
   isPreorder            Boolean              @default(false)
   preorderPaymentType   PreorderPaymentType?
   preorderDpPercentage  Decimal?             @db.Decimal(5, 2)

@@ -75,6 +75,7 @@ export default async function EditProductPage({
             widthCm: Number(product.widthCm),
             heightCm: Number(product.heightCm),
             status: product.status,
+            isFeatured: product.isFeatured,
             isPreorder: product.isPreorder,
             preorderPaymentType: product.preorderPaymentType,
             preorderDpPercentage: product.preorderDpPercentage

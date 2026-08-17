@@ -267,3 +267,19 @@ User minta project disimpan ke `github.com/Adi-Sumardi/e-commerce.git` dan CI/CD
   - `@typescript-eslint/no-explicit-any`, `react-hooks/set-state-in-effect`, `react-hooks/immutability` diturunkan dari `error` ke `warn` di `eslint.config.mjs` — jumlahnya banyak (73 warning) & tersebar di banyak file dari sesi-sesi sebelumnya, refactor penuh di luar scope task CI/CD ini. **Catatan buat sesi depan**: ini utang teknis yang didokumentasikan, bukan didiamkan selamanya — idealnya dibereskan bertahap.
 - **Repo pertama kali di-push**: `git init` → `.gitignore` ditambah `/.claude/` (state internal Claude Code, bukan bagian project) → commit awal (172 file) → `git remote add origin git@github.com:Adi-Sumardi/e-commerce.git` (autentikasi via SSH key yang sudah terdaftar di akun `Adi-Sumardi`, dicek duluan pakai `ssh -T git@github.com` sebelum push) → `git push -u origin main`. README.md ditulis ulang dari boilerplate `create-next-app` jadi dokumentasi project yang sebenarnya (setup lokal, akun contoh, scripts, link ke docs/).
 - **Belum dilakukan** (butuh aksi manual user, di luar kapasitas Claude): setup hPanel (database, Node.js App, SSH) sesuai `docs/DEPLOYMENT.md`, isi GitHub Secrets, lalu push/trigger workflow pertama kali buat validasi end-to-end di server Hostinger asli (workflow ini baru divalidasi struktur & logikanya secara lokal — `node server.js` jalan, YAML syntax valid — belum pernah benar-benar jalan di GitHub Actions + server Hostinger sungguhan).
+
+### 8.15 Fitur Produk Unggulan & Perbaikan Kalkulasi Gratis Ongkir Biteship (2026-08-17)
+- **Produk Unggulan**:
+  - Model `Product` di `prisma/schema.prisma` ditambah field `isFeatured Boolean @default(false)` dan disinkronkan ke database MySQL via `prisma db push`.
+  - Form Create & Edit Produk admin (`product-form.tsx`, `actions.ts`) ditambah opsi checkbox **"Set sebagai Produk Unggulan"** dengan ikon Sparkles.
+  - Tabel manajemen produk admin (`products-table.tsx`) menampilkan badge **"Unggulan"** berwarna amber.
+  - Backend `CatalogService.getFeaturedProducts()` menambahkan query produk unggulan bertipe `PUBLISHED`.
+  - Halaman Utama / Landing Page (`src/app/page.tsx`) menampilkan section khusus **"⭐ Produk Unggulan"** dengan desain badge eksklusif.
+- **Perbaikan Perhitungan Gratis Ongkir & Potongan Ongkir Biteship**:
+  - Dibuat helper `src/lib/shipping.ts` (`isJabodetabekAddress` & `calculateDiscountedShippingCost`) untuk mendeteksi alamat tujuan (Jakarta, Bogor, Depok, Tangerang, Bekasi).
+  - Backend `CheckoutService.getCheckoutData` & `CheckoutService.placeOrder` sekarang secara otomatis menghitung diskon ongkir:
+    - **Tujuan Jabodetabek**: Ongkir terpotong 100% (**Gratis Ongkir / Rp 0**).
+    - **Tujuan Luar Jabodetabek**: Ongkir terpotong **Rp 30.000**.
+  - UI Checkout (`checkout-form.tsx`) menampilkan badge **"GRATIS ONGKIR"** (hijau) atau **"POTONG Rp30.000"** (biru) pada pilihan kurir beserta harga asli yang dicoret dan label `FREE / Rp 0`.
+  - Halaman Detail Produk (`product-purchase-panel.tsx`) memperjelas banner promo pengiriman.
+

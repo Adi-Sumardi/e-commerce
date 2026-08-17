@@ -32,6 +32,7 @@ export default async function AdminProductsPage() {
     slug: product.slug,
     basePrice: Number(product.basePrice),
     status: product.status,
+    isFeatured: product.isFeatured,
     categoryId: product.categoryId,
     categoryName: product.category?.name ?? "—",
     variantCount: product.variants.length,

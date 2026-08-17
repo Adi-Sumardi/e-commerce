@@ -185,10 +185,16 @@ function mapProductToCard(prod: any) {
     soldLabel: `Terjual ${soldCount}+`,
     image: prod.images[0]?.url ?? "https://placehold.co/400x400/e2e8f0/64748b/png?text=Product",
     isPreorder: Boolean(prod.isPreorder && totalStock === 0),
+    isFeatured: Boolean(prod.isFeatured),
   };
 }
 
 export class CatalogService {
+  static async getFeaturedProducts(limit = 10) {
+    const products = await ProductRepository.findFeatured(limit);
+    return products.map(mapProductToCard);
+  }
+
   static async getActiveBanners() {
     return db.banner.findMany({
       where: { isActive: true },

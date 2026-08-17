@@ -72,6 +72,27 @@ export class ProductRepository {
     });
   }
 
+  static async findFeatured(limit = 10) {
+    return db.product.findMany({
+      where: {
+        status: "PUBLISHED",
+        isFeatured: true,
+      },
+      take: limit,
+      include: {
+        category: true,
+        images: {
+          orderBy: { sortOrder: "asc" },
+        },
+        variants: {
+          orderBy: { price: "asc" },
+        },
+        reviews: true,
+      },
+      orderBy: { updatedAt: "desc" },
+    });
+  }
+
   static async findByIds(ids: string[]) {
     return db.product.findMany({
       where: { id: { in: ids } },

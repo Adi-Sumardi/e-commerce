@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import NextImage from "next/image";
-import { Plus, Trash2, Loader2, Save, Upload, X } from "lucide-react";
+import { Plus, Trash2, Loader2, Save, Upload, X, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,6 +51,7 @@ interface ProductFormProps {
     widthCm: number;
     heightCm: number;
     status: string;
+    isFeatured?: boolean;
     isPreorder: boolean;
     preorderPaymentType: string | null;
     preorderDpPercentage: number | null;
@@ -75,6 +76,7 @@ function makeKey() {
 export function ProductForm({ categories, warehouses, action, submitLabel, initialValues }: ProductFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [isFeatured, setIsFeatured] = useState(initialValues?.isFeatured ?? false);
   const [isPreorder, setIsPreorder] = useState(initialValues?.isPreorder ?? false);
   const [preorderPaymentType, setPreorderPaymentType] = useState(
     initialValues?.preorderPaymentType ?? "FULL"
@@ -318,6 +320,27 @@ export function ProductForm({ categories, warehouses, action, submitLabel, initi
           <div className="flex flex-col gap-1">
             <Label htmlFor="heightCm">Tinggi (cm)<Required /></Label>
             <Input id="heightCm" name="heightCm" type="number" min={0} defaultValue={initialValues?.heightCm ?? 10} required />
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-6 dark:bg-amber-500/10">
+        <div className="flex items-start gap-3">
+          <Checkbox
+            id="isFeatured"
+            name="isFeatured"
+            checked={isFeatured}
+            onCheckedChange={(checked) => setIsFeatured(checked === true)}
+            className="mt-0.5 border-amber-500/60 data-[state=checked]:bg-amber-500 data-[state=checked]:text-white"
+          />
+          <div className="grid gap-1">
+            <Label htmlFor="isFeatured" className="text-base font-semibold flex items-center gap-1.5 text-amber-700 dark:text-amber-400 cursor-pointer">
+              <Sparkles className="size-4.5 fill-amber-400 text-amber-500" />
+              Set sebagai Produk Unggulan
+            </Label>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Produk unggulan akan ditampilkan secara khusus di section khusus Halaman Utama (Landing Page) toko.
+            </p>
           </div>
         </div>
       </div>

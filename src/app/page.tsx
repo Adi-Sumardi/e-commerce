@@ -60,6 +60,7 @@ export default async function Home({
   const { category } = await searchParams;
   const session = await auth();
   const homeCategories = await CatalogService.getHomeCategories();
+  const featuredProducts = await CatalogService.getFeaturedProducts();
   const bestSellerProducts = await CatalogService.getBestSellers(category);
   const banners = await CatalogService.getActiveBanners();
 
@@ -268,6 +269,105 @@ export default async function Home({
             </div>
           </div>
         </section>
+
+        {/* Featured Products / Produk Unggulan */}
+        {featuredProducts.length > 0 && (
+          <section className="mx-auto w-full max-w-7xl px-4 py-6 lg:px-8">
+            <div className="mb-6 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex size-10 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500 shadow-xs">
+                  <Sparkles className="size-6 fill-amber-400" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-extrabold text-foreground tracking-tight flex items-center gap-2">
+                    Produk Unggulan
+                    <Badge className="bg-amber-500 text-white text-[10px] font-bold uppercase tracking-wide">
+                      Rekomendasi
+                    </Badge>
+                  </h2>
+                  <p className="text-xs text-muted-foreground">Pilihan produk terbaik dengan penawaran dan kualitas pilihan</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+              {featuredProducts.map((product) => (
+                <article
+                  key={`featured-${product.slug}`}
+                  className="group relative overflow-hidden rounded-2xl border border-amber-500/30 bg-card shadow-sm transition-all hover:border-amber-500/60 hover:shadow-lg"
+                >
+                  <Link href={`/products/${product.slug}`} className="block">
+                    <div className="relative aspect-square overflow-hidden bg-muted">
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        fill
+                        unoptimized
+                        sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                        className="object-contain transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <Badge className="absolute left-3 top-3 bg-amber-500 text-white text-[10px] font-bold shadow-md flex items-center gap-1">
+                        <Sparkles className="size-3 fill-white" />
+                        UNGGULAN
+                      </Badge>
+                      {product.discount && (
+                        <Badge className="absolute left-3 bottom-3 bg-destructive text-[10px] font-bold text-white shadow-xs">
+                          -{product.discount}
+                        </Badge>
+                      )}
+                      {product.isPreorder && (
+                        <Badge className="absolute right-3 top-3 bg-preorder text-preorder-foreground text-[10px] font-bold">
+                          PRE-ORDER
+                        </Badge>
+                      )}
+                      <WishlistButton
+                        productId={product.id}
+                        initialWishlisted={wishlistedIds.has(product.id)}
+                        className={cn(
+                          "absolute right-3 bottom-3 rounded-full bg-card/70 p-1.5 shadow-md backdrop-blur transition-opacity",
+                          wishlistedIds.has(product.id) ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                        )}
+                      />
+                    </div>
+                    <div className="p-4">
+                      <p className="text-xs font-semibold text-primary">
+                        {product.storeName}
+                      </p>
+                      <h3 className="mt-1 line-clamp-2 text-sm font-semibold leading-snug text-foreground">
+                        {product.name}
+                      </h3>
+                      <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <StarRating rating={product.rating} size="sm" />
+                        <span>
+                          {product.rating > 0 && `${product.rating} · `}
+                          {product.reviewCount}
+                        </span>
+                      </div>
+                      <div className="mt-2 flex flex-col">
+                        <span className="text-lg font-bold text-destructive">
+                          {formatIDR(product.price)}
+                        </span>
+                        {product.originalPrice && (
+                          <span className="text-[11px] text-muted-foreground line-through">
+                            {formatIDR(product.originalPrice)}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </Link>
+                  <div className="px-4 pb-4">
+                    <Link href={`/products/${product.slug}`}>
+                      <Button className="w-full gap-2 active:scale-95 cursor-pointer bg-amber-500 hover:bg-amber-600 text-white font-bold shadow-xs">
+                        <ShoppingCart className="size-4" />
+                        Lihat Detail
+                      </Button>
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Best Sellers / Filtered Products */}
         <section className="mx-auto w-full max-w-7xl px-4 py-6 lg:px-8">

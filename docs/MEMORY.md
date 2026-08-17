@@ -270,7 +270,8 @@ User minta project disimpan ke `github.com/Adi-Sumardi/e-commerce.git` dan CI/CD
 
 ### 8.15 Fitur Produk Unggulan & Perbaikan Kalkulasi Gratis Ongkir Biteship (2026-08-17)
 - **Produk Unggulan**:
-  - Model `Product` di `prisma/schema.prisma` ditambah field `isFeatured Boolean @default(false)` dan disinkronkan ke database MySQL via `prisma db push`.
+  - Model `Product` di `prisma/schema.prisma` ditambah field `isFeatured Boolean @default(false)`.
+  - Migrasi `prisma/migrations/20260817205500_add_is_featured/migration.sql` dibuat & di-push ke GitHub untuk memperbarui tabel `products` di database MySQL produksi Hostinger (`npx prisma migrate deploy`).
   - Form Create & Edit Produk admin (`product-form.tsx`, `actions.ts`) ditambah opsi checkbox **"Set sebagai Produk Unggulan"** dengan ikon Sparkles.
   - Tabel manajemen produk admin (`products-table.tsx`) menampilkan badge **"Unggulan"** berwarna amber.
   - Backend `CatalogService.getFeaturedProducts()` menambahkan query produk unggulan bertipe `PUBLISHED`.

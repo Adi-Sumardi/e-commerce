@@ -63,16 +63,18 @@ function getNaturalStoreName(id: string, name: string): string {
 }
 
 const CUSTOMER_NAMES = [
-  "Budi Santoso", "Siska Putri", "Hendra Wijaya", "Maya Rosita", "Agus Pratama",
-  "Rina Rahmawati", "Dewi Lestari", "Fajar Nugraha", "Ahmad Fauzi", "Eka Fitriani",
-  "Bambang Pamungkas", "Tri Wahyuni", "Dian Sastro", "Ari Wibowo", "Rizky Febrian",
-  "Nurul Hidayah", "Dedi Mulyadi", "Citra Kirana", "Raffi Ahmad", "Nagita Slavina",
-  "Indra Wijaya", "Lestari Rahayu", "Siti Aminah", "Muhammad Ridwan", "Ayu Tingting",
-  "Bowo Suwandi", "Toni Sucipto", "Ratna Sari", "Irfan Bachdim", "Prilly Latuconsina",
-  "Aliando Syarief", "Reza Rahadian", "Chicco Jerikho", "Vino G Bastian", "Marsha Timothy",
-  "Laudya Bella", "Zaskia Sungkar", "Shireen Sungkar", "Teuku Wisnu", "Irwansyah",
-  "Surya Saputra", "Cynthia Lamusu", "Ringgo Agus", "Sabai Morscheck", "Gading Marten",
-  "Gisella Anastasia", "Andhika Pratama", "Ussy Sulistiawaty", "Atta Halilintar", "Aurel Hermansyah"
+  "Ibu Ratna", "Mas Bowo", "Kiki W.", "Pak Bambang", "Siti Aisyah",
+  "Hafiz M.", "Mbak Tika", "Agus S.", "Bu Nunik", "Dimas Prasetyo",
+  "Mbak Erna", "Doni H.", "Tante Lilis", "Pak Yudi", "Wawan S.",
+  "Yulianti", "Rizky K.", "Bunda Nita", "Dadan C.", "Endang S.",
+  "Sri Lestari", "Pak Totok", "Mba Tari", "Pak Joko", "Fitriana N.",
+  "Asep Kurnia", "Mba Dian", "Pak Dwi", "Mulyanto", "Bunda Tari",
+  "Hendra P.", "Bu Nur", "Mas Rio", "Eko Prasetyo", "Mbak Yani",
+  "Pak Sugeng", "Novi R.", "Imam Hidayat", "Bunda Shinta", "Wibowo",
+  "Ibu Ning", "Mas Febri", "Randi A.", "Mbak Umi", "Pak Slamet",
+  "Dewi S.", "Gita M.", "Pak Supri", "Mbak Nuning", "Bayu W.",
+  "Bunda Melly", "Pak Toto", "Ririn N.", "Aris Kurniawan", "Mbak Vivi",
+  "Ibu Wiwiek", "Mas Ginanjar", "Om Gunawan", "Bu Haryati", "Mbak Lusi"
 ];
 
 const CUSTOMER_COMMENTS = [

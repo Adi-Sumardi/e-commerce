@@ -424,18 +424,20 @@ export default function CheckoutForm({ user }: CheckoutFormProps) {
                     />
                   </div>
 
-                  <div className="flex gap-2 justify-end">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={() => setShowAddressForm(false)}
-                      disabled={addingAddress}
-                    >
-                      Batal
-                    </Button>
-                    <Button type="submit" disabled={addingAddress} className="font-bold cursor-pointer">
+                  <div className="flex items-center justify-center gap-3 pt-2">
+                    <Button type="submit" disabled={addingAddress} size="lg" className="min-w-[180px] font-bold cursor-pointer">
                       {addingAddress && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                       Simpan Alamat
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="lg"
+                      onClick={() => setShowAddressForm(false)}
+                      disabled={addingAddress}
+                      className="cursor-pointer"
+                    >
+                      Batal
                     </Button>
                   </div>
                 </form>

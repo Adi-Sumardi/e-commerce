@@ -45,8 +45,8 @@ export function ProfileForm({ name, email }: { name: string; email: string }) {
         <p className="text-xs text-muted-foreground">Email dipakai untuk login, tidak bisa diubah sendiri.</p>
       </div>
 
-      <div className="flex justify-end">
-        <Button type="submit" disabled={submitting} className="gap-2 cursor-pointer">
+      <div className="flex justify-center pt-2">
+        <Button type="submit" disabled={submitting} size="lg" className="min-w-[180px] gap-2 cursor-pointer font-bold">
           {submitting ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
           Simpan
         </Button>

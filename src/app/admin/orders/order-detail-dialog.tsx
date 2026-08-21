@@ -169,11 +169,11 @@ export function OrderDetailDialog({ order }: { order: OrderDetailData }) {
             </section>
           )}
 
-          <div className="flex justify-end border-t border-border pt-4">
+          <div className="flex justify-center border-t border-border pt-4">
             <Link
               href={`/track/${order.id}`}
               target="_blank"
-              className={cn(buttonVariants({ variant: "outline", size: "sm" }), "cursor-pointer")}
+              className={cn(buttonVariants({ variant: "outline", size: "default" }), "min-w-[180px] font-bold cursor-pointer")}
             >
               Buka Halaman Lacak Pesanan
             </Link>

@@ -55,10 +55,10 @@ export function AddressManager({ addresses }: { addresses: AddressItem[] }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-end">
-        <Button onClick={() => setMode("add")} size="sm" className="gap-1.5 cursor-pointer">
-          <Plus className="size-3.5" />
-          Tambah Alamat
+      <div className="flex justify-center">
+        <Button onClick={() => setMode("add")} size="default" className="min-w-[180px] gap-1.5 cursor-pointer font-bold">
+          <Plus className="size-4" />
+          Tambah Alamat Baru
         </Button>
       </div>
 

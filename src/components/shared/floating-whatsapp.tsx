@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { WhatsappIcon } from "./social-icons";
 
 interface FloatingWhatsappProps {
@@ -7,6 +8,13 @@ interface FloatingWhatsappProps {
 }
 
 export function FloatingWhatsapp({ phone = "6281285869280" }: FloatingWhatsappProps) {
+  const pathname = usePathname();
+
+  // Sembunyikan floating button WhatsApp di halaman admin
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
+
   const cleanPhone = (process.env.NEXT_PUBLIC_STORE_WHATSAPP || phone).replace(/\D/g, "");
   const formattedPhone = cleanPhone.startsWith("0") ? `62${cleanPhone.slice(1)}` : cleanPhone;
   const message = encodeURIComponent("Halo Pratama Jaya, saya ingin tanya stok & order produk.");

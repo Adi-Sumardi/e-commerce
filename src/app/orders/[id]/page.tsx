@@ -165,9 +165,9 @@ export default async function OrderDetailPage({
           </p>
         </section>
 
-        <div className="flex justify-end">
+        <div className="flex justify-center pt-2">
           <Link href={`/track/${order.id}`}>
-            <Button variant="outline" className="gap-2 cursor-pointer">
+            <Button size="lg" variant="outline" className="min-w-[180px] gap-2 cursor-pointer font-bold">
               <Truck className="size-4" />
               Lacak Pesanan
             </Button>

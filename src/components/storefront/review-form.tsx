@@ -104,8 +104,8 @@ export function ReviewForm({ productId, isAuthenticated }: ReviewFormProps) {
         />
       </div>
 
-      <div className="flex justify-end">
-        <Button type="submit" disabled={submitting} className="font-bold cursor-pointer">
+      <div className="flex justify-center pt-2">
+        <Button type="submit" disabled={submitting} size="lg" className="min-w-[180px] font-bold cursor-pointer">
           {submitting ? (
             <>
               <Loader2 className="mr-2 size-4 animate-spin" />

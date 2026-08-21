@@ -202,8 +202,8 @@ export function BannerFormDialog({ mode, action, initialValues }: BannerFormDial
               <Label htmlFor={`${idPrefix}-isActive`}>Aktif tampil di storefront</Label>
             </div>
           </div>
-          <DialogFooter>
-            <Button type="submit" disabled={isPending} className="cursor-pointer">
+          <DialogFooter className="sm:justify-center">
+            <Button type="submit" disabled={isPending} size="lg" className="min-w-[180px] cursor-pointer font-bold">
               Simpan
             </Button>
           </DialogFooter>

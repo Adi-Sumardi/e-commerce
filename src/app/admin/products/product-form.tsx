@@ -600,10 +600,19 @@ export function ProductForm({ categories, warehouses, action, submitLabel, initi
         )}
       </div>
 
-      <div className="flex justify-end">
-        <Button type="submit" disabled={isPending} className="gap-2 cursor-pointer">
+      <div className="flex items-center justify-center gap-3 pt-4 border-t border-border">
+        <Button type="submit" disabled={isPending} size="lg" className="min-w-[200px] gap-2 cursor-pointer font-bold">
           {isPending ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
           {submitLabel}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          size="lg"
+          onClick={() => router.push("/admin/products")}
+          className="cursor-pointer"
+        >
+          Batal
         </Button>
       </div>
     </form>

@@ -96,8 +96,8 @@ export default async function AdminVouchersPage() {
               <Label htmlFor="vc-end">Tgl Selesai</Label>
               <Input id="vc-end" name="endDate" type="date" required />
             </div>
-            <div className="col-span-2 sm:col-span-3 lg:col-span-6 flex justify-end">
-              <Button type="submit" className="gap-2 cursor-pointer">
+            <div className="col-span-2 sm:col-span-3 lg:col-span-6 flex justify-center pt-2">
+              <Button type="submit" size="lg" className="min-w-[180px] gap-2 cursor-pointer font-bold">
                 <Plus className="size-4" />
                 Buat Voucher
               </Button>

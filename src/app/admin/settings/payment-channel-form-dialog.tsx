@@ -184,8 +184,8 @@ export function PaymentChannelFormDialog({ mode, action, initialValues }: Paymen
             </div>
           </div>
 
-          <DialogFooter>
-            <Button type="submit" disabled={isPending} className="cursor-pointer">
+          <DialogFooter className="sm:justify-center">
+            <Button type="submit" disabled={isPending} size="lg" className="min-w-[180px] cursor-pointer font-bold">
               Simpan
             </Button>
           </DialogFooter>

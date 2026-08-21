@@ -121,13 +121,13 @@ export function AddressForm({ address, onDone }: AddressFormProps) {
         />
       </div>
 
-      <div className="flex justify-end gap-2">
-        <Button type="button" variant="ghost" onClick={onDone} disabled={submitting} className="cursor-pointer">
-          Batal
-        </Button>
-        <Button type="submit" disabled={submitting} className="gap-2 cursor-pointer">
+      <div className="flex items-center justify-center gap-3 pt-2">
+        <Button type="submit" disabled={submitting} size="lg" className="min-w-[160px] gap-2 cursor-pointer font-bold">
           {submitting && <Loader2 className="size-4 animate-spin" />}
           Simpan
+        </Button>
+        <Button type="button" variant="outline" size="lg" onClick={onDone} disabled={submitting} className="cursor-pointer">
+          Batal
         </Button>
       </div>
     </form>

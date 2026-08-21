@@ -63,8 +63,8 @@ export function StoreSettingsForm({ initialValues }: StoreSettingsFormProps) {
           <Input id="store-wa" name="whatsapp" defaultValue={initialValues.whatsapp} required />
         </div>
       </div>
-      <div>
-        <Button type="submit" disabled={isPending} className="cursor-pointer">
+      <div className="flex justify-center pt-2 border-t border-border">
+        <Button type="submit" disabled={isPending} size="lg" className="min-w-[200px] cursor-pointer font-bold">
           Simpan Perubahan
         </Button>
       </div>

@@ -185,8 +185,8 @@ export default async function AdminWarehousesPage() {
                   ))}
                 </select>
               </div>
-              <div className="sm:col-span-2 lg:col-span-4 flex justify-end">
-                <Button type="submit" className="gap-2 cursor-pointer">
+              <div className="sm:col-span-2 lg:col-span-4 flex justify-center pt-2">
+                <Button type="submit" size="lg" className="min-w-[200px] gap-2 cursor-pointer font-bold">
                   <UserPlus className="size-4" />
                   Buat Akun Staff Gudang
                 </Button>

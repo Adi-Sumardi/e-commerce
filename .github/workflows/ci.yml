@@ -15,6 +15,25 @@ jobs:
   build:
     name: Build & Test
     runs-on: ubuntu-latest
+    # `next build` statically prerenders pages that use SiteHeader (categories
+    # query) and similar server components — it needs a REAL, reachable MySQL
+    # to do that, not just a placeholder DATABASE_URL string. Without this
+    # service, "Build (standalone output)" fails on literally every run
+    # (verified: every workflow run since this pipeline was added had failed
+    # here). An empty schema is enough — pages just render with empty lists.
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+          MYSQL_DATABASE: ci_build
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
     steps:
       - uses: actions/checkout@v4
 
@@ -38,30 +57,27 @@ jobs:
 
       - name: Generate Prisma Client
         run: pnpm exec prisma generate
+        env:
+          DATABASE_URL: "mysql://root@127.0.0.1:3306/ci_build"
+
+      - name: Apply migrations to CI database
+        run: pnpm exec prisma migrate deploy
+        env:
+          DATABASE_URL: "mysql://root@127.0.0.1:3306/ci_build"
 
       - name: Build (standalone output)
         run: pnpm build
         env:
-          DATABASE_URL: "mysql://build:build@127.0.0.1:3306/build_placeholder"
+          DATABASE_URL: "mysql://root@127.0.0.1:3306/ci_build"
           NEXTAUTH_SECRET: "build-placeholder"
           AUTH_SECRET: "build-placeholder"
           NEXTAUTH_URL: "https://pratamajaya.id"
 
-  deploy:
-    name: Deploy to Hostinger
-    needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Execute remote SSH update script on Hostinger
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.HOSTINGER_HOST }}
-          username: ${{ secrets.HOSTINGER_USER }}
-          key: ${{ secrets.HOSTINGER_SSH_KEY }}
-          port: ${{ secrets.HOSTINGER_PORT || '65002' }}
-          script: |
-            cd ~/repo
-            git pull origin main
-            bash deploy/update.sh
+  # Deploy nyata dipegang oleh Hostinger native git-deploy (hPanel > Redeploy),
+  # BUKAN lewat job ini — job "Deploy to Hostinger" yang lama selalu gagal
+  # karena nunjuk ke ~/repo yang tidak pernah di-clone di server, jadi
+  # dihapus supaya CI tidak melapor "failure" palsu untuk step yang memang
+  # tidak pernah bisa jalan. Kalau suatu saat mau benar-benar pindah ke
+  # auto-deploy lewat SSH di sini, ~/repo harus di-clone & di-setup manual
+  # dulu di server (lihat deploy/README.md) sebelum job ini diaktifkan lagi.
 

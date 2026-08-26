@@ -43,8 +43,11 @@ export async function loginWithCredentials(
   redirect("/?login=success");
 }
 
-export async function loginWithGoogle() {
-  await signIn("google", { redirectTo: "/?login=success" });
+export async function loginWithGoogle(formData: FormData) {
+  const callbackUrl = String(formData.get("callbackUrl") ?? "/");
+  const redirectTo =
+    callbackUrl !== "/" ? appendQueryParam(callbackUrl, "login", "success") : "/?login=success";
+  await signIn("google", { redirectTo });
 }
 
 function appendQueryParam(url: string, key: string, value: string) {

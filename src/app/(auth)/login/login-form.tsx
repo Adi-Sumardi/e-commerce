@@ -115,6 +115,7 @@ export function LoginForm({ callbackUrl }: { callbackUrl: string }) {
 
       {/* Google Sign In */}
       <form action={loginWithGoogle}>
+        <input type="hidden" name="callbackUrl" value={callbackUrl} />
         <Button
           type="submit"
           variant="outline"

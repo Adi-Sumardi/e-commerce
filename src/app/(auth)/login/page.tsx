@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ShoppingBasket } from "lucide-react";
+import { ShoppingBasket, Info } from "lucide-react";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = {
@@ -7,12 +7,33 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+// Kasih tau user KENAPA mereka di-redirect ke sini, bukan cuma nampilin
+// form login polos — mengurangi kebingungan pas checkout/akses halaman
+// yang butuh login lalu tiba-tiba "dilempar" ke sini tanpa konteks.
+function getRedirectReasonMessage(callbackUrl: string | undefined): string | null {
+  if (!callbackUrl || callbackUrl === "/") return null;
+  if (callbackUrl.includes("/checkout")) {
+    return "Silakan masuk terlebih dahulu untuk melanjutkan checkout.";
+  }
+  if (callbackUrl.includes("/account")) {
+    return "Silakan masuk terlebih dahulu untuk mengakses akun Anda.";
+  }
+  if (callbackUrl.includes("/orders") || callbackUrl.includes("/track")) {
+    return "Silakan masuk terlebih dahulu untuk melihat pesanan Anda.";
+  }
+  if (callbackUrl.includes("/admin")) {
+    return "Halaman ini khusus admin/staf. Silakan masuk dengan akun yang sesuai.";
+  }
+  return "Silakan masuk terlebih dahulu untuk melanjutkan.";
+}
+
 export default async function LoginPage({
   searchParams,
 }: {
   searchParams: Promise<{ callbackUrl?: string }>;
 }) {
   const { callbackUrl } = await searchParams;
+  const redirectReason = getRedirectReasonMessage(callbackUrl);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 md:p-8 bg-muted/30">
@@ -29,6 +50,13 @@ export default async function LoginPage({
             <h1 className="text-2xl font-extrabold text-foreground mb-1">Masuk ke Pratama Jaya</h1>
             <p className="text-xs text-muted-foreground">Selamat datang kembali! Silakan masuk ke akun Anda.</p>
           </div>
+
+          {redirectReason && (
+            <div className="mb-6 flex items-start gap-2 rounded-xl border border-primary/20 bg-primary/5 p-3 text-xs text-foreground">
+              <Info className="mt-0.5 size-4 shrink-0 text-primary" />
+              <span>{redirectReason}</span>
+            </div>
+          )}
 
           <LoginForm callbackUrl={callbackUrl ?? "/"} />
         </div>

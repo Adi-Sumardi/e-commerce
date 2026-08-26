@@ -49,16 +49,22 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # MUST run before type check/lint/build — @prisma/client's generated
+      # types only exist after this runs. It used to work by accident via
+      # @prisma/client's own postinstall hook firing during `pnpm install`,
+      # but that depends on pnpm's build-script-approval state and isn't
+      # reliable (confirmed: this exact job order intermittently failed
+      # "Type check" with "no exported member" errors from @prisma/client).
+      - name: Generate Prisma Client
+        run: pnpm exec prisma generate
+        env:
+          DATABASE_URL: "mysql://root@127.0.0.1:3306/ci_build"
+
       - name: Type check
         run: pnpm exec tsc --noEmit
 
       - name: Lint
         run: pnpm lint
-
-      - name: Generate Prisma Client
-        run: pnpm exec prisma generate
-        env:
-          DATABASE_URL: "mysql://root@127.0.0.1:3306/ci_build"
 
       - name: Apply migrations to CI database
         run: pnpm exec prisma migrate deploy

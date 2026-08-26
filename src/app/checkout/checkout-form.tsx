@@ -21,6 +21,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useCartStore } from "@/store/cart-store";
 import { AreaSearchInput } from "@/components/shared/area-search-input";
 import { formatIDR } from "../_data";
@@ -40,6 +47,7 @@ export default function CheckoutForm({ user }: CheckoutFormProps) {
   const { items, clear } = useCartStore();
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [address, setAddress] = useState<any>(null);
   const [shippingOptions, setShippingOptions] = useState<any[]>([]);
   const [paymentChannels, setPaymentChannels] = useState<any[]>([]);
@@ -206,7 +214,7 @@ export default function CheckoutForm({ user }: CheckoutFormProps) {
     }
   }
 
-  async function handleCheckout() {
+  function handleReviewOrder() {
     if (!address) {
       toast.error("Harap tentukan alamat pengiriman terlebih dahulu.");
       return;
@@ -219,7 +227,10 @@ export default function CheckoutForm({ user }: CheckoutFormProps) {
       toast.error("Harap pilih rekening/QRIS tujuan transfer.");
       return;
     }
+    setShowConfirm(true);
+  }
 
+  async function handleCheckout() {
     setSubmitting(true);
     try {
       const res = await placeOrderAction({
@@ -732,21 +743,14 @@ export default function CheckoutForm({ user }: CheckoutFormProps) {
                 </div>
 
                 <Button
-                  onClick={handleCheckout}
+                  onClick={handleReviewOrder}
                   disabled={submitting}
                   size="lg"
                   className="mt-6 w-full bg-secondary py-6 text-base font-bold text-secondary-foreground shadow-md transition-all hover:bg-secondary/95 active:scale-95 cursor-pointer"
                 >
-                  {submitting ? (
-                    <span className="flex items-center gap-2">
-                      <Loader2 className="size-5 animate-spin" />
-                      Membuat Pesanan...
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      Buat Pesanan ({formatIDR(payNowAmount)})
-                    </span>
-                  )}
+                  <span className="flex items-center gap-2">
+                    Periksa &amp; Buat Pesanan ({formatIDR(payNowAmount)})
+                  </span>
                 </Button>
 
                 <p className="mt-4 text-center text-[10px] text-muted-foreground leading-normal">
@@ -773,6 +777,109 @@ export default function CheckoutForm({ user }: CheckoutFormProps) {
           </div>
         </div>
       </main>
+
+      <Dialog open={showConfirm} onOpenChange={setShowConfirm}>
+        <DialogContent className="max-h-[85vh] max-w-lg overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Periksa Pesanan Kamu</DialogTitle>
+          </DialogHeader>
+
+          <div className="flex min-w-0 flex-col gap-4 text-sm">
+            <div>
+              <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                Barang ({items.reduce((acc, i) => acc + i.quantity, 0)})
+              </p>
+              <div className="flex flex-col gap-2">
+                {items.map((item) => (
+                  <div key={item.productVariantId} className="flex items-center justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-semibold">{item.productName}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {item.variantName} × {item.quantity}
+                      </p>
+                    </div>
+                    <span className="shrink-0 font-semibold">{formatIDR(item.price * item.quantity)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="border-t border-border pt-3">
+              <p className="mb-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                Alamat Pengiriman
+              </p>
+              <p className="font-semibold">
+                {address?.recipientName} <span className="font-normal text-muted-foreground">({address?.label})</span>
+              </p>
+              <p className="break-words text-xs text-muted-foreground">
+                {address?.fullAddress}, {address?.district}, {address?.city}, {address?.province} {address?.postalCode}
+              </p>
+              <p className="text-xs text-muted-foreground">{address?.phone}</p>
+            </div>
+
+            <div className="border-t border-border pt-3">
+              <p className="mb-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">Kurir</p>
+              <p className="font-semibold">{selectedCourierObj?.name}</p>
+            </div>
+
+            <div className="border-t border-border pt-3">
+              <p className="mb-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                Metode Pembayaran
+              </p>
+              <p className="font-semibold">
+                {paymentChannels.find((c) => c.id === selectedPaymentChannelId)?.label}
+              </p>
+            </div>
+
+            <div className="space-y-1.5 border-t border-border pt-3">
+              <div className="flex justify-between text-muted-foreground">
+                <span>Subtotal</span>
+                <span className="text-foreground">{formatIDR(subtotal)}</span>
+              </div>
+              <div className="flex justify-between text-muted-foreground">
+                <span>Ongkos Kirim</span>
+                <span className="text-foreground">{formatIDR(courierPrice)}</span>
+              </div>
+              <div className="flex justify-between text-muted-foreground">
+                <span>Asuransi + Biaya Layanan</span>
+                <span className="text-foreground">{formatIDR(insurance + serviceFee)}</span>
+              </div>
+              {appliedVoucher && (
+                <div className="flex justify-between text-emerald-600">
+                  <span>Voucher {appliedVoucher.code}</span>
+                  <span>- {formatIDR(discount)}</span>
+                </div>
+              )}
+              <div className="flex justify-between border-t border-border pt-1.5 text-base font-bold">
+                <span>Total Bayar Sekarang</span>
+                <span className="text-primary">{formatIDR(payNowAmount)}</span>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowConfirm(false)}
+              disabled={submitting}
+              className="cursor-pointer"
+            >
+              Batal, Periksa Lagi
+            </Button>
+            <Button onClick={handleCheckout} disabled={submitting} className="cursor-pointer font-bold">
+              {submitting ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="size-4 animate-spin" />
+                  Membuat Pesanan...
+                </span>
+              ) : (
+                "Konfirmasi & Buat Pesanan"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

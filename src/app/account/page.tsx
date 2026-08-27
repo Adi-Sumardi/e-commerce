@@ -6,7 +6,6 @@ import {
   Phone,
   MapPin,
   ShoppingBag,
-  LogOut,
   ChevronRight,
   Shield,
   Home,
@@ -20,6 +19,7 @@ import { SiteFooter } from "@/components/storefront/site-footer";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { LogoutButton } from "./logout-button";
 
 const STATUS_LABEL: Partial<Record<OrderStatus, string>> = {
   PENDING_PAYMENT: "Pending",
@@ -122,15 +122,7 @@ export default async function AccountPage() {
                   <ChevronRight className="size-4 text-muted-foreground" />
                 </Link>
               ))}
-              <form action="/api/auth/signout" method="post">
-                <button
-                  type="submit"
-                  className="flex w-full items-center gap-3 px-5 py-3.5 text-sm text-destructive hover:bg-destructive/5 transition-colors"
-                >
-                  <LogOut className="size-4" />
-                  <span className="flex-1 text-left font-medium">Keluar</span>
-                </button>
-              </form>
+              <LogoutButton />
             </div>
           </div>
 

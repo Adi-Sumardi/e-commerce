@@ -16,6 +16,8 @@ function getAuthErrorMessage(error: string | undefined): string | null {
       return "Akses ditolak. Anda tidak memiliki izin untuk masuk.";
     case "Verification":
       return "Tautan verifikasi sudah tidak berlaku atau kedaluwarsa.";
+    case "MissingCSRF":
+      return "Sesi keamanan tidak valid atau telah kedaluwarsa. Silakan coba masuk kembali.";
     case "OAuthSignin":
     case "OAuthCallbackError":
     case "InvalidCheck":

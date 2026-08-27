@@ -548,8 +548,8 @@ export default function CheckoutForm({ user }: CheckoutFormProps) {
                       <div className="flex items-start justify-between">
                         <RadioGroupItem value={courier.id} className="sr-only" />
                         <div className="flex items-center gap-1.5">
-                          <div className="flex h-6 w-14 items-center justify-center rounded bg-muted text-[9px] font-extrabold uppercase">
-                            {courier.name.split(" ")[0]}
+                          <div className="flex h-6 px-2 min-w-12 items-center justify-center rounded bg-muted text-[9px] font-extrabold uppercase tracking-wide">
+                            {courier.courierCode ? courier.courierCode.toUpperCase() : courier.name.split(" ")[0]}
                           </div>
                           {courier.isFreeShipping || courier.price === 0 ? (
                             <Badge className="bg-emerald-600 text-white text-[9px] font-bold px-1.5 py-0">

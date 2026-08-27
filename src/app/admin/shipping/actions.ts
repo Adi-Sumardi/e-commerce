@@ -44,8 +44,13 @@ export async function checkShippingRatesAction(params: {
   }
 
   return (result.pricing as Array<Record<string, any>>).map((price) => ({
-    courierName: price.courier_name,
-    courierService: price.courier_service_name ?? price.courier_service,
+    courierName: price.courier_name || (price.courier_code || price.company || "").toUpperCase(),
+    courierService:
+      price.courier_service_name ??
+      price.courier_service_code ??
+      price.type ??
+      price.service_type ??
+      "-",
     duration: price.duration || "-",
     price: Number(price.price),
   }));

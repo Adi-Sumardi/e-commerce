@@ -1,11 +1,29 @@
 import type { Metadata } from "next";
-import { ShoppingBasket, Info } from "lucide-react";
+import { ShoppingBasket, Info, AlertTriangle } from "lucide-react";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = {
   title: "Masuk",
   robots: { index: false, follow: false },
 };
+
+function getAuthErrorMessage(error: string | undefined): string | null {
+  if (!error) return null;
+  switch (error) {
+    case "Configuration":
+      return "Terjadi kendala konfigurasi pada server autentikasi. Silakan masuk menggunakan Email dan Kata Sandi.";
+    case "AccessDenied":
+      return "Akses ditolak. Anda tidak memiliki izin untuk masuk.";
+    case "Verification":
+      return "Tautan verifikasi sudah tidak berlaku atau kedaluwarsa.";
+    case "OAuthSignin":
+    case "OAuthCallbackError":
+    case "InvalidCheck":
+      return "Gagal melakukan autentikasi dengan Google. Silakan coba beberapa saat lagi atau gunakan Email & Kata Sandi.";
+    default:
+      return "Terjadi kendala saat proses autentikasi. Silakan coba lagi.";
+  }
+}
 
 // Kasih tau user KENAPA mereka di-redirect ke sini, bukan cuma nampilin
 // form login polos — mengurangi kebingungan pas checkout/akses halaman
@@ -30,10 +48,11 @@ function getRedirectReasonMessage(callbackUrl: string | undefined): string | nul
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ callbackUrl?: string }>;
+  searchParams: Promise<{ callbackUrl?: string; error?: string }>;
 }) {
-  const { callbackUrl } = await searchParams;
+  const { callbackUrl, error } = await searchParams;
   const redirectReason = getRedirectReasonMessage(callbackUrl);
+  const authError = getAuthErrorMessage(error);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 md:p-8 bg-muted/30">
@@ -51,7 +70,14 @@ export default async function LoginPage({
             <p className="text-xs text-muted-foreground">Selamat datang kembali! Silakan masuk ke akun Anda.</p>
           </div>
 
-          {redirectReason && (
+          {authError && (
+            <div className="mb-6 flex items-start gap-2 rounded-xl border border-destructive/30 bg-destructive/10 p-3.5 text-xs text-destructive font-medium">
+              <AlertTriangle className="mt-0.5 size-4 shrink-0" />
+              <span>{authError}</span>
+            </div>
+          )}
+
+          {!authError && redirectReason && (
             <div className="mb-6 flex items-start gap-2 rounded-xl border border-primary/20 bg-primary/5 p-3 text-xs text-foreground">
               <Info className="mt-0.5 size-4 shrink-0 text-primary" />
               <span>{redirectReason}</span>

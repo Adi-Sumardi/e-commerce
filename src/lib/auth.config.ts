@@ -7,16 +7,11 @@ export const authConfig = {
   // Di belakang reverse proxy Hostinger, host asli datang dari header X-Forwarded-Host.
   // Tanpa ini NextAuth menolak semua request dengan error UntrustedHost (HTTP 503).
   trustHost: true,
-  // Dengan trustHost:true, NextAuth menebak protokol (http/https) dari header
-  // X-Forwarded-Proto tiap request untuk menentukan nama+flag cookie sesi
-  // (__Secure- prefix). Di belakang Cloudflare proxy, deteksi ini kadang
-  // tidak konsisten antar request (login berhasil set cookie __Secure-,
-  // tapi request berikutnya dibaca sebagai http sehingga cookie itu
-  // "hilang" dan user terlempar balik ke /login). Situs selalu HTTPS di
-  // production, jadi paksa cookie secure tanpa bergantung pada deteksi itu.
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   useSecureCookies: process.env.NODE_ENV === "production",
   pages: {
     signIn: "/login",
+    error: "/login",
   },
   session: { strategy: "jwt" },
   providers: [],

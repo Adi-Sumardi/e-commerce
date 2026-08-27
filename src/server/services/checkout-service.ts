@@ -100,9 +100,29 @@ export class CheckoutService {
               defaultAddress.city,
               defaultAddress.district
             );
+            const courierCode = (price.courier_code || price.company || "jne").toLowerCase().trim();
+            const courierName = (price.courier_name || courierCode.toUpperCase()).trim();
+            const serviceCode = (
+              price.courier_service_code ||
+              price.type ||
+              price.service_type ||
+              "reg"
+            ).toLowerCase().trim();
+            const serviceName = (
+              price.courier_service_name ||
+              price.description ||
+              serviceCode.toUpperCase()
+            ).trim();
+
+            const displayName = serviceName.toLowerCase().startsWith(courierName.toLowerCase())
+              ? serviceName
+              : `${courierName} (${serviceName})`;
+
             return {
-              id: `${price.courier_code}_${price.courier_service}`,
-              name: `${price.courier_name} (${price.courier_service})`,
+              id: `${courierCode}_${serviceCode}`,
+              courierCode,
+              courierService: serviceCode,
+              name: displayName,
               eta: price.duration || "Estimasi 2-3 Hari",
               price: discounted.discountedPrice,
               originalPrice: discounted.originalPrice,
@@ -283,7 +303,7 @@ export class CheckoutService {
       discount,
       total,
       courierCode: params.courierId.split("_")[0] || "jne",
-      courierService: params.courierId.split("_")[1] || "reg",
+      courierService: params.courierId.split("_").slice(1).join("_") || "reg",
       voucherId: params.voucherId,
       items: orderItemsInput,
       payment: {
